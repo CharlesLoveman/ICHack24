@@ -7,6 +7,7 @@ import { ConnectionManager } from './components/ConnectionManager';
 import { Events } from "./components/Events";
 import { MyForm } from './components/MyForm';
 import PokemonCard from './components/PokemonCard';
+import PokemonList from './components/PokemonList';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
@@ -44,9 +45,11 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
-        <ConnectionState isConnected={ isConnected } />
+        <ConnectionState isConnected={isConnected} />
         {pokemonCards.map(x => PokemonCard(x))}
+        {PokemonList(pokemonCards)}
         <ConnectionManager />
+
         <MyForm />
       </div>
     </ThemeProvider>
