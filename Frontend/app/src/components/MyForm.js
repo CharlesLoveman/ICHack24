@@ -9,7 +9,7 @@ export function MyForm() {
     event.preventDefault();
     setIsLoading(true);
 
-    socket.timeout(5000).emit('foo', value, () => {
+    socket.timeout(5000).emit('createPokemon', value, () => {
       setIsLoading(false);
     });
   }
