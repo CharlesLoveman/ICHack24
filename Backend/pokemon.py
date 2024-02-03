@@ -24,7 +24,8 @@ element_chart = np.array([[1, 1, 1, 1, 1, 0.5, 1, 0, 0.5, 1, 1, 1, 1, 1, 1, 1, 1
                           [1, 2, 1, 0.5, 1, 1, 1, 1, 0.5, 0.5, 1, 1, 1, 1, 1, 2, 2, 1]])
 
 class Pokemon:
-    """Create a Pokemon, with description and battle statistics."""
+    """Create a Pokemon, with description, battle statistics and an image id."""
+
     def __init__(self, name : str, description : str, element : str, stats : dict, attacks : list, image_id : str):
         self.name = name
         self.description = description
@@ -112,6 +113,8 @@ class Pokemon:
 
 
 class Attack:
+    """Create an attack, to be called when a Pokemon attacks."""
+
     def __init__(self, name : str, element : str, power : int = 0, special : bool = False, self_status : dict = {}, target_status : dict = {}):
         """Create an attack with a name, element and optional power and status effects."""
         self.name = name
@@ -173,14 +176,3 @@ class Battle:
             raise TypeError(f"Pokemon 1 must be a Pokemon, but {self.p1} is a {type(self.p1).__name__}")
         if not isinstance(self.p2, Pokemon):
             raise TypeError(f"Pokemon 2 must be a Pokemon, but {self.p2} is a {type(self.p2).__name__}")
-
-    def run(self, player_no, move : Attack):
-        move.use(self.p1, self.p2)
-
-
-
-# g = Game()
-
-
-# g.run(g.p1, move)
-
