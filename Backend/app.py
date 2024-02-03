@@ -6,9 +6,9 @@ from flask_socketio import SocketIO, send, emit
 from random import randrange
 
 app = Flask(__name__)
-CORS(app, resources={r"/app": {"origins": "*"}})
+CORS(app, resources={r"/app": {"origins": '*'}})
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app, cors_credentials=True, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_credentials=True, cors_allowed_origins='*')
 
 if __name__ == '__main__':
     socketio.run(app)
@@ -29,7 +29,7 @@ def handle_my_custom_event(json):
 def handle_createBattle(json):
     #game_id = createGame(json.id)
     game_id = randrange(0, 1000000)
-    emit('wait', {"game_id": game_id})
+    emit('joinWaitingRoom', {"game_id": game_id})
 
 
 
