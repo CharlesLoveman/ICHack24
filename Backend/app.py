@@ -3,6 +3,7 @@
 from flask import Flask, request
 from flask_cors import CORS
 from flask_socketio import SocketIO, send, emit
+from random import randrange
 
 app = Flask(__name__)
 CORS(app, resources={r"/app": {"origins": "*"}})
@@ -23,8 +24,12 @@ def handle_json(json):
 @socketio.on('createPokemon')
 def handle_my_custom_event(json):
     emit('createPokemonCard', {"name": "Squirtle", "element": "a bit wet", "description": "best boy 1997", "stats": {"attack": 0}})
-    #print(json)
-    #send('foo')
+
+@socketio.on('createBattle')
+def handle_createBattle(json):
+    #game_id = createGame(json.id)
+    game_id = randrange(0, 1000000)
+    emit('wait', {"game_id": game_id})
 
 
 

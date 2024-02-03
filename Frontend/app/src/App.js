@@ -16,6 +16,7 @@ const theme = createTheme({
 export default function App() {
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [pokemonCards, setPokemonCards] = useState([]);
+  const [state, setState] = useState({screen: MainScreen, data: {}});
 
   useEffect(() => {
     function onConnect() {
@@ -29,22 +30,29 @@ export default function App() {
     function onCreatePokemonCardEvent(pokemon) {
       setPokemonCards([...pokemonCards, pokemon]);
     }
+    
+    function onJoinWaitingRoom(data) {
+      setState({screen: WaitingRoomScreen, data: data})
+    }
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
     socket.on('createPokemonCard', onCreatePokemonCardEvent);
+    socket.on('joinWaitingRoom', onJoinWaitingRoom);
 
     return () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
       socket.off('createPokemonCard', onCreatePokemonCardEvent);
+      socket.off('joinWaitingRoom', onJoinWaitingRoom);
     };
-  }, [pokemonCards]);
+  }, [pokemonCards, state]);
 
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
         <ConnectionState isConnected={ isConnected } />
+        {s}
         {pokemonCards.map(x => PokemonCard(x))}
         <ConnectionManager />
         <MyForm />
