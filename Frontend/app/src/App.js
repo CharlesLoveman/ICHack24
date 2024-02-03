@@ -6,17 +6,10 @@ import { ConnectionState } from './components/ConnectionState';
 import { ConnectionManager } from './components/ConnectionManager';
 import { Events } from "./components/Events";
 import { MyForm } from './components/MyForm';
-import PokemonCard from './components/PokemonCard';
-import PokemonList from './components/PokemonList';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-
-const theme = createTheme({
-});
-
 
 export default function App() {
   const [isConnected, setIsConnected] = useState(socket.connected);
-  const [pokemonCards, setPokemonCards] = useState([]);
+  const [fooEvents, setFooEvents] = useState([]);
 
   useEffect(() => {
     function onConnect() {
@@ -27,31 +20,27 @@ export default function App() {
       setIsConnected(false);
     }
 
-    function onCreatePokemonCardEvent(pokemon) {
-      setPokemonCards([...pokemonCards, pokemon]);
+    function onFooEvent(value) {
+      setFooEvents(previous => [...previous, value]);
     }
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
-    socket.on('createPokemonCard', onCreatePokemonCardEvent);
+    socket.on('foo', onFooEvent);
 
     return () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
-      socket.off('createPokemonCard', onCreatePokemonCardEvent);
+      socket.off('foo', onFooEvent);
     };
-  }, [pokemonCards]);
+  }, []);
 
   return (
-    <ThemeProvider theme={theme}>
-      <div className="App">
-        <ConnectionState isConnected={isConnected} />
-        {pokemonCards.map(x => PokemonCard(x))}
-        {PokemonList(pokemonCards)}
-        <ConnectionManager />
-
-        <MyForm />
-      </div>
-    </ThemeProvider>
+    <div className="App">
+      <ConnectionState isConnected={isConnected} />
+      <Events events={fooEvents} />
+      <ConnectionManager />
+      <MyForm />
+    </div>
   );
 }

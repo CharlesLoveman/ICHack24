@@ -6,30 +6,32 @@ from flask_socketio import SocketIO, send, emit
 
 app = Flask(__name__)
 CORS(app, resources={r"/app": {"origins": "*"}})
-app.config['SECRET_KEY'] = 'secret!'
+app.config["SECRET_KEY"] = "secret!"
 socketio = SocketIO(app, cors_credentials=True, cors_allowed_origins="*")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     socketio.run(app)
 
-@socketio.on('message')
+
+@socketio.on("message")
 def handle_message(message):
     send(message)
 
-@socketio.on('json')
+
+@socketio.on("json")
 def handle_json(json):
     send(json, json=True)
 
-@socketio.on('createPokemon')
+
+@socketio.on("foo")
 def handle_my_custom_event(json):
-    emit('createPokemonCard', {"name": "Squirtle", "element": "a bit wet", "description": "best boy 1997", "stats": {"attack": 0}})
-    #print(json)
-    #send('foo')
+    emit("foo", json)
+    # print(json)
+    # send('foo')
 
 
-
-#@app.route("/", methods=["GET"])
-#def hello_world():
+# @app.route("/", methods=["GET"])
+# def hello_world():
 #    members = request.args.getlist("members[]")
 #    results = []
 #    results.append(
