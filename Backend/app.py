@@ -23,9 +23,17 @@ def handle_json(json):
     send(json, json=True)
 
 
-@socketio.on("foo")
+@socketio.on("createPokemon")
 def handle_my_custom_event(json):
-    emit("foo", json)
+    emit(
+        "createPokemonCard",
+        {
+            "name": "Squirtle",
+            "element": "a bit wet",
+            "description": "best boy 1997",
+            "stats": {"attack": 0},
+        },
+    )
     # print(json)
     # send('foo')
 
