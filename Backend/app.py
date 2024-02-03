@@ -35,8 +35,13 @@ def handle_my_custom_event(json):
             "stats": {"attack": 0},
         },
     )
-    # print(json)
-    # send('foo')
+
+
+@socketio.on("createBattle")
+def handle_createBattle(json):
+    # game_id = createGame(json.id)
+    game_id = randrange(0, 1000000)
+    emit("joinWaitingRoom", {"game_id": game_id})
 
 
 # @app.route("/", methods=["GET"])
