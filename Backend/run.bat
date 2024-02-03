@@ -1,1 +1,0 @@
-flask --app app run
