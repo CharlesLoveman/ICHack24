@@ -2,9 +2,14 @@
 
 import vertexai
 from vertexai.preview.generative_models import GenerativeModel, Image
+import re
 
 vertexai.init(project="crucial-bucksaw-413121")
 model = GenerativeModel("gemini-pro-vision")
+
+STATS_KEYS = [
+    "Type", "HP", "Attack", "Defence", "Special Attack", "Special Defence", "Speed"
+]
 
 
 def load_image_from_file(file_path):
@@ -35,10 +40,10 @@ def get_gemini_response(template, img, safety_feedback=False):
     if safety_feedback:
         return response.text, response.prompt_feedback
     else:
-        return response
+        return response.text
 
 
-def create_pokemon(prompt, img):
+def create_pokemon(template, img):
     """Create a new pokemon from an image.
 
     Args:
@@ -49,4 +54,28 @@ def create_pokemon(prompt, img):
         details (dict): The details of the created pokemon.
     """
 
-    return NotImplementedError
+    response = get_gemini_response(template, img)
+
+    sections = [
+        re.search(
+            rf"\[Start Output {key}\](.*)\[End Output {key}\]", response, re.DOTALL
+        ).group(1).strip() for key in ["Name", "Pokedex", "Stats"]
+    ]
+
+    # Extract the name
+    name = re.search(r"Name:(.*)", sections[0]).group(1).strip()
+
+    # Extract the pokedex entry
+    pokedex = sections[1]
+
+    # Extract the stats
+    stats = dict()
+    for key in STATS_KEYS:
+        value = re.search(rf"{key}:(.*)", sections[2]).group(1).strip()
+
+        if key == "Type":
+            stats[key.lower()] = value
+        else:
+            stats[key.lower()] = int(value)
+
+    return name, pokedex, stats
