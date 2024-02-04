@@ -1,9 +1,10 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import JoinRoomInputBox from '../JoinRoomInputBox.js'
+import Link from '@mui/material/Link';
 
 import { socket } from '../../socket';
 
@@ -11,7 +12,10 @@ export default function MainScreen() {
 
   function createBattle(pokemon) {
 
-    socket.emit('createBattle', { player_id: document.cookie["player_id"], pokemon_id: pokemon.id })
+    if (pokemon) {
+      socket.emit('createBattle', { player_id: document.cookie["player_id"], pokemon_id: pokemon.id })
+    }
+
   }
 
   const [pokemon, setPokemon] = useState();

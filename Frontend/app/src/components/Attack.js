@@ -1,5 +1,5 @@
 import React from 'react';
-import { socket } from './socket';
+import { socket } from '../socket';
 import Button from '@mui/material/Button';
 
 export default function Attack(attack) {
