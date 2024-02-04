@@ -5,6 +5,10 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import JoinRoomInputBox from '../JoinRoomInputBox.js'
 import { BrowserRouter as Router, Link } from "react-router-dom";
+import { GiBattleGear } from "react-icons/gi";
+import { MdCatchingPokemon } from "react-icons/md";
+import { GiHouse } from "react-icons/gi";
+import './styles.css';
 
 import { socket } from '../../socket';
 
@@ -29,16 +33,16 @@ export default function MainScreen() {
 
   return (
     <Card sx={{ minWidth: 275 }}>
-      <CardContent>
-        <Button onClick={() => createBattle(pokemon)}>Create Battle</Button>
-        <br />
+      <CardContent >
+        <Button onClick={() => createBattle(pokemon)} variant='contained' size='large' startIcon={<GiBattleGear />} color='secondary'>Create Battle</Button>
+        <br /><br />
         {JoinRoomInputBox(pokemon)}
-        <br />
-        <Button><Link style={{ textDecoration: 'none' }} to="../PokemonListScreen/id">View Pokemon</Link></Button>
-        <br />
-        <Button><Link style={{ textDecoration: 'none' }} to="../PokemonCaptureScreen/">Capture Pokemon!</Link></Button>
-
+        <br /><br />
+        <Button variant='contained' size='large' startIcon={< GiHouse />}><Link style={{ textDecoration: 'none' }} to="../PokemonListScreen/" >View Pokemon</Link></Button>
+        <br /><br />
+        <Button variant='contained' size='large' startIcon={<MdCatchingPokemon />}><Link style={{ textDecoration: 'none' }} to="../PokemonCaptureScreen/">Capture Pokemon!</Link></Button>
       </CardContent >
     </Card >
   );
 }
+
