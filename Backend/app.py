@@ -4,8 +4,9 @@ from flask import Flask, request
 from flask_cors import CORS
 from flask_socketio import SocketIO, send, emit
 from random import randrange
+import json
 
-from pokemon import Battle, Pokemon
+from pokemon import Battle, Pokemon, Attack
 from pymongo import MongoClient
 
 mongodb_client = MongoClient("localhost", 27017)
@@ -76,6 +77,21 @@ def ListPokemon(player):
             "description": "best boy 1997",
             "stats": {"attack": 0},
         }]
+
+@app.route("/FetchPokemon/<player>", methods=['GET'])
+def FetchAPokemon(player):
+    pokemon = Pokemon(
+    "Togepi",
+    "Based pokemon",
+    "Normal",
+    {"hp": 100, "attack": 101, "defense": 102, "special_attack": 103, "special_defense": 104, "speed": 105},
+    [Attack("HyperBeam1", "Dragon", 100, True, {"hp": 100, "attack": 101, "defense": 102, "special_attack": 103, "special_defense": 104, "speed": 105}, {"hp": -100, "attack": -101, "defense": -102, "special_attack": -103, "special_defense": -104, "speed": -105}),
+     Attack("HyperBeam2", "Dragon", 100, True, {"hp": 100, "attack": 101, "defense": 102, "special_attack": 103, "special_defense": 104, "speed": 105}, {"hp": -100, "attack": -101, "defense": -102, "special_attack": -103, "special_defense": -104, "speed": -105}),
+     Attack("HyperBeam3", "Dragon", 100, True, {"hp": 100, "attack": 101, "defense": 102, "special_attack": 103, "special_defense": 104, "speed": 105}, {"hp": -100, "attack": -101, "defense": -102, "special_attack": -103, "special_defense": -104, "speed": -105}),
+     Attack("HyperBeam4", "Dragon", 100, True, {"hp": 100, "attack": 101, "defense": 102, "special_attack": 103, "special_defense": 104, "speed": 105}, {"hp": -100, "attack": -101, "defense": -102, "special_attack": -103, "special_defense": -104, "speed": -105})],
+    "img"
+    )
+    return json.dumps(pokemon)
 
 @app.route("/CreatePokemon/<player_id>", methods=["POST"])
 def CreatePokemon(player_id):

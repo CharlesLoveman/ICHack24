@@ -10,6 +10,7 @@ import { GiBattleGear } from "react-icons/gi";
 import { MdCatchingPokemon } from "react-icons/md";
 import { GiHouse } from "react-icons/gi";
 import './styles.css';
+import PokemonDisplay from "../PokemonDisplay.js";
 
 import { socket } from '../../socket';
 
@@ -20,10 +21,7 @@ export default function MainScreen() {
   var pokemon
 
   function fetchPokemon() {
-    var pokemons = axios.get(`http://127.0.0.1:5000/ListPokemon/${player_id}`);
-    if (pokemons) {
-      pokemon = pokemons[0];
-    }
+    pokemon = axios.get(`http://127.0.0.1:5000/FetchPokemon/${player_id}`);
   }
 
   // fetchPokemon()
@@ -46,6 +44,7 @@ export default function MainScreen() {
         <Button variant='contained' size='large' startIcon={< GiHouse />}><Link style={{ textDecoration: 'none' }} to="../PokemonListScreen/" >View Pokemon</Link></Button>
         <br /><br />
         <Button variant='contained' size='large' startIcon={<MdCatchingPokemon />}><Link style={{ textDecoration: 'none' }} to="../PokemonCaptureScreen/">Capture Pokemon!</Link></Button>
+        <PokemonDisplay></PokemonDisplay>      
       </CardContent >
     </Card >
   );
