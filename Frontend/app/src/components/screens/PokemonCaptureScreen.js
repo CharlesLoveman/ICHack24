@@ -4,12 +4,9 @@ import NavBar from '../NavBar';
 import { MdUpload } from "react-icons/md";
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
-<<<<<<< HEAD
 import { FaCameraRetro } from "react-icons/fa";
 import { IoIosCheckmarkCircle } from "react-icons/io";
-=======
 import { useParams } from 'react-router-dom';
->>>>>>> main
 
 
 export default function PokemonCaptureScreen() {
@@ -71,10 +68,9 @@ export default function PokemonCaptureScreen() {
 
     return (
         <>{NavBar()}
-            <div>Capture a new Pokemon!</div>
-            <div>Take a picture an animal, object or anything else you would like to Pokefy and upload it here. Happy capturing!</div>
-
-            <Button><label htmlFor='imageUpload'><FaCameraRetro></FaCameraRetro></label ></Button >
+            <div style>Capture a new Pokemon!</div >
+            <Button><label htmlFor='imageUpload'><FaCameraRetro size='9rem'></FaCameraRetro></label ></Button >
+            <div>Take a picture an animal, object or anything else you would like to Pokefy and upload it here. If you're happy with the result, click the tick to adopt the Pokemon. Happy capturing!</div>
 
             <Input
                 id="imageUpload"
@@ -83,8 +79,8 @@ export default function PokemonCaptureScreen() {
                 style={{ display: "none" }}
             />
 
-            <Button>  <IoIosCheckmarkCircle onClick={onFileUpload} /></Button>
-            1``
+            <Button>  <IoIosCheckmarkCircle size='2rem' onClick={onFileUpload} /></Button>
+
             {<img src={url}></img>}
         </>
     );

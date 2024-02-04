@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import { useParams } from 'react-router-dom';
 
 export default function WaitingRoomScreen() {
-  params = useParams()
+  const params = useParams()
 
   return (
     <Card sx={{ minWidth: 275 }}>

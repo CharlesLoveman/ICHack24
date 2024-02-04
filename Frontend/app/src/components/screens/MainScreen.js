@@ -45,7 +45,7 @@ export default function MainScreen() {
         <br /><br />
         <Button fullWidth='true' variant='contained' size='large' startIcon={< GiHouse size="1rem" />}><Link style={{ textDecoration: 'none' }} to="../PokemonListScreen/" >View Pokemon</Link></Button>
         <br /><br />
-        <Button fullWidth='true' variant='contained' size='large' startIcon={<MdCatchingPokemon size="1rem" />}><Link style={{ textDecoration: 'none' }} to="../PokemonCaptureScreen/">Capture Pokemon!</Link></Button>
+        <Button fullWidth='true' variant='contained' size='large' startIcon={<MdCatchingPokemon size="1rem" />}><Link style={{ textDecoration: 'none' }} to="../PokemonCaptureScreen/id">Capture Pokemon!</Link></Button>
       </CardContent >
     </Card >
   );
