@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '@mui/material/Button';
-import useNavigate from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { IoIosArrowBack } from "react-icons/io";
 
 export default function NavBar() {
 
@@ -8,9 +9,7 @@ export default function NavBar() {
 
     return (
         <>
-            <Button onclick={() => navigate(-1)}>Go back</Button>
-            <div>a</div>
-            <div>NavBar</div>
+            <Button onClick={() => navigate(-1)}><IoIosArrowBack size="30px" /></Button>
         </>
     );
 }

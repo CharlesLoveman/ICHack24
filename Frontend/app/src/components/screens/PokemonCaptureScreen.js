@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import NavBar from '../NavBar';
+import { MdUpload } from "react-icons/md";
+import Input from '@mui/material/Input';
 
 
 export default function PokemonCaptureScreen() {
@@ -85,15 +88,16 @@ export default function PokemonCaptureScreen() {
 
 
     return (
-        <><div>Put a Camera here</div>
+        <>{NavBar()}
+            <div>Put a Camera here</div>
             <div>Put an upload button here</div>
-            <input
+
+            <MdUpload ></MdUpload><Input
                 type="file"
                 onChange={onFileChange}
             />
-            <button onClick={onFileUpload}>
-                Upload!
-            </button>
+
+            <MdUpload onClick={onFileUpload}></MdUpload>
             {fileData()}
         </>
     );

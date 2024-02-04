@@ -1,7 +1,8 @@
 """API for interfacing with the vision pipeline."""
 
-from Backend.prompt_templates import GEMINI_PROMPT_TEMPLATE, GEMINI_PROMPT_TEMPLATE_WITH_IMAGE
-from Backend.image_processing import generate_image, pixelate_image
+from prompt_templates import GEMINI_PROMPT_TEMPLATE, GEMINI_PROMPT_TEMPLATE_WITH_IMAGE, GEMINI_PROMPT_TEMPLATE_ATTACKS
+from image_processing import generate_image, pixelate_image
+from pokemon import Pokemon, generate_attack
 import vertexai
 from vertexai.preview.generative_models import GenerativeModel, Image
 import re
@@ -26,7 +27,7 @@ def load_image_from_file(file_path):
     return Image.from_bytes(open(file_path, "rb").read())
 
 
-def get_gemini_response(template, img, safety_feedback=False):
+def get_gemini_response(template, img=False, safety_feedback=False):
     """Get a response from the Gemini model.
 
     Args:
@@ -37,7 +38,10 @@ def get_gemini_response(template, img, safety_feedback=False):
     Returns:
         response (str): The response from the Gemini model.
     """
-    response = model.generate_content([img, template])
+    if img:
+        response = model.generate_content([img, template])
+    else:
+        response = model.generate_content([template])
 
     if safety_feedback:
         return response.text, response.prompt_feedback
@@ -103,3 +107,62 @@ def create_pokemon(img, create_image=False, return_prompt=False):
 
     else:
         return name, pokedex, stats
+
+
+def create_attacks(name, pokedex, element):
+    """Create attacks for a pokemon.
+
+    Args:
+        name (str): The name of the pokemon.
+        pokedex (str): The pokedex entry of the pokemon.
+        element (str): The element of the pokemon.
+
+    Returns:
+        attacks (list): The attacks for the pokemon.
+    """
+
+    prompt = GEMINI_PROMPT_TEMPLATE_ATTACKS.format(name, pokedex, element)
+    response = get_gemini_response(prompt)
+
+    # Extract the attack names, categories and types
+    attack_responses = [
+        re.search(
+            rf"\[Start Attack {key}\](.*)\[End Output {key}\]", response, re.DOTALL
+        ).group(1).strip() for key in range(1, 5)
+    ]
+
+    attacks = []
+    for attack in attack_responses:
+        name = re.search(r"Name:(.*)", attack).group(1).strip()
+        category = re.search(r"Category:(.*)", attack).group(1).strip()
+        element = re.search(r"Type:(.*)", attack).group(1).strip()
+        element = element.split("/")[0]
+
+        attacks.append(generate_attack(name, element, category))
+
+    return attacks
+
+
+def build_pokemon(img, create_image=False):
+    """Build a pokemon from its details.
+
+    Args:
+        img (Image): The image of the pokemon.
+        create_image (bool): Whether to create an image of the pokemon.
+
+    Returns:
+        pokemon (Pokemon): The pokemon built from its details.
+    """
+
+    if create_image:
+        name, pokedex, stats, img = create_pokemon(img, create_image)
+    else:
+        name, pokedex, stats = create_pokemon(img, create_image)
+
+    element = stats.pop("type")
+
+    attacks = create_attacks(name, pokedex, element)
+
+    element = element.split("/")[0]
+
+    return Pokemon(name, pokedex, element, stats, attacks, img)

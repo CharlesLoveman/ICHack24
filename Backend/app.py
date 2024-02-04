@@ -5,11 +5,12 @@ from flask_cors import CORS
 from flask_socketio import SocketIO, send, emit
 from random import randrange
 
-from Backend.pokemon import Battle
-#from pymongo import MongoClient
+from pokemon import Battle
+from pymongo import MongoClient
 
-#mongodb_client = MongoClient("localhost", 27017)
-#database = mongodb_client["ICHack"]
+mongodb_client = MongoClient("localhost", 27017)
+database = mongodb_client["ICHack"]
+users = {}
 
 app = Flask(__name__)
 CORS(app, resources={r"/app": {"origins": "*"}})
@@ -51,6 +52,7 @@ def handle_createBattle(json):
     print(request.sid)
     game_id = str(randrange(0, 1000000))
     battles[game_id] = Battle(request.sid, json["pokemon_id"])
+    users[request.sid] = request.sid
     emit("joinWaitingRoom", {"game_id": game_id})
 
 @socketio.on("joinBattle")
@@ -58,6 +60,11 @@ def handle_joinBattle(json):
     print(request.sid)
     battles[json["game_id"]].add_player(request.sid, json["pokemon_id"])
     emit("joinBattle", {})
+
+@socketio.on("attack")
+def handle_attack(json):
+    battles[json["game_id"]].handle_event("attack", json, request.sid, database)
+
 
 
 
