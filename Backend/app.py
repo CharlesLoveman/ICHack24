@@ -8,7 +8,8 @@ from random import randrange
 from pokemon import Battle
 from pymongo import MongoClient
 
-mongodb_client = MongoClient("localhost", 27017)
+mongodb_client = MongoClient("10.154.0.13", 27017)
+
 database = mongodb_client["ICHack"]
 users = {}
 
@@ -55,18 +56,17 @@ def handle_createBattle(json):
     users[request.sid] = request.sid
     emit("joinWaitingRoom", {"game_id": game_id})
 
+
 @socketio.on("joinBattle")
 def handle_joinBattle(json):
     print(request.sid)
     battles[json["game_id"]].add_player(request.sid, json["pokemon_id"])
     emit("joinBattle", {})
 
+
 @socketio.on("attack")
 def handle_attack(json):
     battles[json["game_id"]].handle_event("attack", json, request.sid, database)
-
-
-
 
 
 # @app.route("/", methods=["GET"])
