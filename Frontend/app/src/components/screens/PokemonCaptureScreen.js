@@ -44,8 +44,6 @@ export default function PokemonCaptureScreen() {
                         'Content-Type': 'multipart/form-data'
                     }
                 });
-
-                axios.post("api/uploadfile", formData);
             }
 
 
