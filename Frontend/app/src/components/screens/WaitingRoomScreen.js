@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import { useParams } from 'react-router-dom';
 import { FaMagnifyingGlass } from "react-icons/fa6";
 
-export default function WaitingRoomScreen(game_id) {
+export default function WaitingRoomScreen() {
   const params = useParams()
 
   return (
@@ -15,6 +15,7 @@ export default function WaitingRoomScreen(game_id) {
           Put a QR Code here \\
           Put some numbers/ a 6-digit code here \\
           Waiting Foreveeeer
+          {params.game_id}
         </Typography>
       </CardContent>
     </Card>
