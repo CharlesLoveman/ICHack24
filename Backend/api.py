@@ -1,5 +1,6 @@
 """API for interfacing with the vision pipeline."""
 
+from Backend.prompt_templates import GEMINI_PROMPT_TEMPLATE, GEMINI_PROMPT_TEMPLATE_WITH_IMAGE
 from Backend.image_processing import generate_image, pixelate_image
 import vertexai
 from vertexai.preview.generative_models import GenerativeModel, Image
@@ -44,23 +45,32 @@ def get_gemini_response(template, img, safety_feedback=False):
         return response.text
 
 
-def create_pokemon(template, img, return_prompt=False):
+def create_pokemon(img, create_image=False, return_prompt=False):
     """Create a new pokemon from an image.
 
     Args:
         prompt (str): The prompt to use to create the pokemon.
         img (Image): The image to use to create the pokemon.
+        create_image (bool): Whether to create an image of the pokemon.
+        return_prompt (bool): Whether to return the prompt.
 
     Returns:
         details (dict): The details of the created pokemon.
     """
+
+    if create_image:
+        template = GEMINI_PROMPT_TEMPLATE_WITH_IMAGE
+        cat_names = ["Name", "Pokedex", "Stats", "Image Prompt"]
+    else:
+        template = GEMINI_PROMPT_TEMPLATE
+        cat_names = ["Name", "Pokedex", "Stats"]
 
     response = get_gemini_response(template, img)
 
     sections = [
         re.search(
             rf"\[Start Output {key}\](.*)\[End Output {key}\]", response, re.DOTALL
-        ).group(1).strip() for key in ["Name", "Pokedex", "Stats", "Image Prompt"]
+        ).group(1).strip() for key in cat_names
     ]
 
     # Extract the name
@@ -79,13 +89,17 @@ def create_pokemon(template, img, return_prompt=False):
         else:
             stats[key.lower()] = int(value)
 
-    # Extract the image prompt
-    image_prompt = sections[3]
+    if create_image:
+        # Extract the image prompt
+        image_prompt = sections[3]
 
-    # Generate the image
-    img = generate_image(image_prompt)
+        # Generate the image
+        img = generate_image(image_prompt)
 
-    if return_prompt:
-        return name, pokedex, stats, img, image_prompt
+        if return_prompt:
+            return name, pokedex, stats, img, image_prompt
+        else:
+            return name, pokedex, stats, img
+
     else:
-        return name, pokedex, stats, img
+        return name, pokedex, stats
