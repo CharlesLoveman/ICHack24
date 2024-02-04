@@ -3,6 +3,7 @@ import axios from 'axios';
 import NavBar from '../NavBar';
 import { MdUpload } from "react-icons/md";
 import Input from '@mui/material/Input';
+import Button from '@mui/material/Button';
 
 
 export default function PokemonCaptureScreen() {
@@ -32,57 +33,6 @@ export default function PokemonCaptureScreen() {
 
                 axios.post("api/uploadfile", formData);
             }
-
-
-        }
-
-
-
-        // Details of the uploaded file
-        //console.log(state.selectedFile);
-
-        // Request made to the backend api
-        // Send formData object
-
-    };
-
-    // File content to be displayed after
-    // file upload is complete
-    function fileData() {
-        if (state) {
-            if (state.selectedFile) {
-                return (
-                    <div>
-                        <h2>File Details:</h2>
-                        <p>
-                            File Name:{" "}
-                            {state.selectedFile.name}
-                        </p>
-
-                        <p>
-                            File Type:{" "}
-                            {state.selectedFile.type}
-                        </p>
-
-                        <p>
-                            Last Modified:{" "}
-                            {state.selectedFile.lastModifiedDate.toDateString()}
-                        </p>
-                    </div>
-                );
-
-
-            } else {
-                return (
-                    <div>
-                        <br />
-                        <h4>
-                            Choose before Pressing the Upload
-                            button
-                        </h4>
-                    </div>
-                );
-            }
         }
     };
 
@@ -92,9 +42,13 @@ export default function PokemonCaptureScreen() {
             <div>Put a Camera here</div>
             <div>Put an upload button here</div>
 
-            <MdUpload ></MdUpload><Input
+            <Button><label htmlFor='imageUpload'><MdUpload size="32px"></MdUpload></label></Button>
+
+            <Input
+                id="imageUpload"
                 type="file"
                 onChange={onFileChange}
+                style={{ display: "none" }}
             />
 
             <MdUpload onClick={onFileUpload}></MdUpload>
