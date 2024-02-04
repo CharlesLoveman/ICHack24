@@ -93,7 +93,7 @@ export default function PokemonCaptureScreen() {
             <div>Put a Camera here</div>
             <div>Put an upload button here</div>
 
-            <Button><label htmlFor='imageUpload'><MdUpload size="32px1"></MdUpload></label></Button>
+            <Button><label htmlFor='imageUpload'><MdUpload size="32px"></MdUpload></label></Button>
 
             <Input
                 id="imageUpload"
