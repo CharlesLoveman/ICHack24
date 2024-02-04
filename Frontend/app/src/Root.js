@@ -27,31 +27,43 @@ export default function Root() {
     //function onCreatePokemonCardEvent(pokemon) {
     //  setPokemonCards([...pokemonCards, pokemon]);
     //}
-    
+
     function onJoinWaitingRoom(data) {
       console.log(data)
       navigate(`/WaitingRoomScreen/${data.game_id}`)
+    }
+
+    function onJoinBattle(data) {
+      console.log(data)
+      navigate('/PokemonBattleScreen', {
+        //state: {
+        //  self_player: data.self_player, target_player: data.target_player
+        //}
+        state: data
+      })
     }
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
     //socket.on('createPokemonCard', onCreatePokemonCardEvent);
     socket.on('joinWaitingRoom', onJoinWaitingRoom);
+    socket.on('joinBattle', onJoinBattle);
 
     return () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
       //socket.off('createPokemonCard', onCreatePokemonCardEvent);
       socket.off('joinWaitingRoom', onJoinWaitingRoom);
+      socket.off('joinBattle', onJoinBattle);
     };
   }, []);
 
-    //<div className="App">
-    //    <ConnectionState isConnected={ isConnected } />
-    //    {state.screen(state.data, setState, sendMessage)}
-    //    <ConnectionManager />
-    //    <MyForm />
-    //  </div>
+  //<div className="App">
+  //    <ConnectionState isConnected={ isConnected } />
+  //    {state.screen(state.data, setState, sendMessage)}
+  //    <ConnectionManager />
+  //    <MyForm />
+  //  </div>
 
   return (
     <>

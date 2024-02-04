@@ -17,6 +17,7 @@ import {
   Navigate
 } from "react-router-dom";
 import WaitingRoomScreen from './screens/WaitingRoomScreen';
+import PokemonBattleScreen from './components/screens/PokemonBattleScreen';
 
 const theme = createTheme({
 });
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: "WaitingRoomScreen/:game_id/",
         element: <WaitingRoomScreen />
+      },
+      {
+        path: "PokemonBattleScreen/",
+        element: <PokemonBattleScreen />
       }
     ]
   }

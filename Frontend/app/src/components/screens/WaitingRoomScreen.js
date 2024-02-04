@@ -1,10 +1,18 @@
-import React from 'react';
+import * as React from 'react';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
 
-export default function WaitingRoomScreen({ data, setState, sendMessage }) {
-    return (
-        <><div>Put a QR Code here</div>
-            <div>Put some numbers/ a 6-digit code here</div></>
-
-    );
-
+export default function WaitingRoomScreen() {
+  return (
+    <Card sx={{ minWidth: 275 }}>
+      <CardContent>
+        <Typography>
+          Put a QR Code here \\
+          Put some numbers/ a 6-digit code here \\
+          Waiting Foreveeeer
+        </Typography>
+      </CardContent>
+    </Card>
+  );
 }
