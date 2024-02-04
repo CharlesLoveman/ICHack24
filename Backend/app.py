@@ -4,6 +4,10 @@ from flask import Flask, request
 from flask_cors import CORS
 from flask_socketio import SocketIO, send, emit
 from random import randrange
+#from pymongo import MongoClient
+
+#mongodb_client = MongoClient("localhost", 27017)
+#database = mongodb_client["ICHack"]
 
 app = Flask(__name__)
 CORS(app, resources={r"/app": {"origins": '*'}})
