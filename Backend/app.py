@@ -8,7 +8,7 @@ from random import randrange
 from .pokemon import Battle, Pokemon
 from .manage_db import Database, DatabaseWrapper
 
-pokemon_db = Database("pokemon_db.pkl")
+pokemon_db = Database("pokemon_db.pkl") # Change these back for online
 attacks_db = Database("attacks_db.pkl")
 db = DatabaseWrapper(pokemon=pokemon_db, attacks=attacks_db)
 
