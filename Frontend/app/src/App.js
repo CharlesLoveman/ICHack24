@@ -8,7 +8,7 @@ import { Events } from "./components/Events";
 import { MyForm } from './components/MyForm';
 import PokemonCard from './components/PokemonCard';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import MainScreen from './screens/MainScreen';
+import MainScreen from './components/screens/MainScreen';
 import Root from './Root';
 
 import {
@@ -16,8 +16,10 @@ import {
   RouterProvider,
   Navigate
 } from "react-router-dom";
-import WaitingRoomScreen from './screens/WaitingRoomScreen';
+import WaitingRoomScreen from './components/screens/WaitingRoomScreen';
 import PokemonBattleScreen from './components/screens/PokemonBattleScreen';
+import PokemonListScreen from './components/screens/PokemonListScreen';
+import PokemonCaptureScreen from './components/screens/PokemonCaptureScreen';
 
 const theme = createTheme({
 });
@@ -42,6 +44,14 @@ const router = createBrowserRouter([
       {
         path: "PokemonBattleScreen/",
         element: <PokemonBattleScreen />
+      },
+      {
+        path: "PokemonListScreen/",
+        element: <PokemonListScreen />
+      },
+      {
+        path: "PokemonCaptureScreen/",
+        element: <PokemonCaptureScreen />
       }
     ]
   }

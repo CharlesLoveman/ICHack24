@@ -7,8 +7,6 @@ import { ConnectionManager } from './components/ConnectionManager';
 import { Events } from "./components/Events";
 import { MyForm } from './components/MyForm';
 import PokemonCard from './components/PokemonCard';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import MainScreen from './screens/MainScreen';
 import { useNavigate, Outlet } from "react-router-dom";
 
 export default function Root() {
@@ -28,9 +26,16 @@ export default function Root() {
     //  setPokemonCards([...pokemonCards, pokemon]);
     //}
 
+
     function onJoinWaitingRoom(data) {
       console.log(data)
       navigate(`/WaitingRoomScreen/${data.game_id}`)
+    }
+
+    function onJoinBattleFromRoom(data) {
+      navigate('/PokemonBattleScreen', {
+        state: data
+      })
     }
 
     function onJoinBattle(data) {
@@ -48,6 +53,7 @@ export default function Root() {
     //socket.on('createPokemonCard', onCreatePokemonCardEvent);
     socket.on('joinWaitingRoom', onJoinWaitingRoom);
     socket.on('joinBattle', onJoinBattle);
+    socket.on('joinBattleFromRoom', onJoinBattleFromRoom);
 
     return () => {
       socket.off('connect', onConnect);
@@ -55,6 +61,7 @@ export default function Root() {
       //socket.off('createPokemonCard', onCreatePokemonCardEvent);
       socket.off('joinWaitingRoom', onJoinWaitingRoom);
       socket.off('joinBattle', onJoinBattle);
+      socket.off('joinBattleFromRoom', onJoinBattleFromRoom);
     };
   }, []);
 
