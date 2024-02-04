@@ -73,7 +73,7 @@ class Pokemon:
         """Return a string representation of the Pokemon."""
         return f"Pokemon({repr(self.name)}, {repr(self.description)}, {repr(self.element)}, {repr(self.stats)}, {repr(self.attacks)}, {repr(self.image_id)})"
 
-    def attack(self, attack, target, critical_hit : bool = False):
+    def attack(self, attack, target):
         """Hit the target Pokemon with an attack."""
         if not isinstance(attack, Attack):
             raise TypeError(f"Attack must be an Attack, but {attack} is a {type(attack).__name__}")
@@ -81,8 +81,6 @@ class Pokemon:
             raise ValueError(f"Chosen attack must be one of the Pokemon's attacks, but {attack} is not")
         if not isinstance(target, Pokemon):
             raise TypeError(f"Target must be a Pokemon, but {target} is a {type(target).__name__}")
-        if not isinstance(critical_hit, bool):
-            raise TypeError(f"Critical hit must be a boolean, but {critical_hit} is a {type(critical_hit).__name__}")
 
         if attack.power:
             # calculate elemental multipliers
@@ -100,6 +98,9 @@ class Pokemon:
                 atk = self.stats["special_attack"]
                 dfs = target.stats["special_defense"]
             damage = int(2/5 * attack.power * (atk / dfs) * attack_element_boost * target_element_boost * np.random.uniform(217, 256)/255)
+            crit = np.random.uniform(0, 1)
+            if crit < 0.05:
+                damage *= 1.5
 
             # apply damage
             target.stats["hp"] -= damage
