@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
+import { socket } from '../socket';
+import Button from '@mui/material/Button';
+import Input from '@mui/material/Input';
 
-export function JoinRoomInputBox() {
+export default function JoinRoomInputBox(pokemon) {
 
-    function changePage(new_page) {
+    const [code, setCode] = useState();
 
-    }
+    function joinBattle(pokemon, code) {
+        if (pokemon) {
+            var game_id = code;
 
-    function onSubmit(event) {
+            socket.emit('joinBattle', { player_id: document.cookie["player_id"], pokemon_id: pokemon.id, game_id: game_id })
+        }
+
     }
 
     return (
-        <form onSubmit={onSubmit}>
-            <input onChange={e => changePage(e.target.value)} />
+        <><Input onChange={e => setCode(e.target.value)} />
+            <Button type="submit" onClick={() => joinBattle(pokemon, code)}>Join Battle</Button></>
 
-            {/*<button type="submit" disabled={isLoading}>Join Room!</button>*/}
-        </form>
+
     );
 }

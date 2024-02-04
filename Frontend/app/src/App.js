@@ -18,6 +18,8 @@ import {
 } from "react-router-dom";
 import WaitingRoomScreen from './components/screens/WaitingRoomScreen';
 import PokemonBattleScreen from './components/screens/PokemonBattleScreen';
+import PokemonListScreen from './components/screens/PokemonListScreen';
+import PokemonCaptureScreen from './components/screens/PokemonCaptureScreen';
 
 const theme = createTheme({
 });
@@ -42,6 +44,14 @@ const router = createBrowserRouter([
       {
         path: "PokemonBattleScreen/",
         element: <PokemonBattleScreen />
+      },
+      {
+        path: "PokemonListScreen/",
+        element: <PokemonListScreen />
+      },
+      {
+        path: "PokemonCaptureScreen/",
+        element: <PokemonCaptureScreen />
       }
     ]
   }
