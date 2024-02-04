@@ -82,6 +82,8 @@ Category:
 
 Type:
 
+Description:
+
 [End Attack 1]
 
 [Start Attack 2]
@@ -91,6 +93,8 @@ Name:
 Category:
 
 Type:
+
+Description:
 
 [End Attack 2]
 
@@ -102,6 +106,8 @@ Category:
 
 Type:
 
+Description:
+
 [End Attack 3]
 
 [Start Attack 4]
@@ -111,6 +117,8 @@ Name:
 Category:
 
 Type:
+
+Description:
 
 [End Attack 4]
 """
