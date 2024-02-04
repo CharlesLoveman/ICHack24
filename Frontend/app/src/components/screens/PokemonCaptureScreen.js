@@ -26,12 +26,12 @@ export default function PokemonCaptureScreen() {
         if (state) {
             if (state.selectedFile) {
                 formData.append(
-                    "myFile",
+                    "img",
                     state.selectedFile,
                     state.selectedFile.name
                 );
 
-                axios.post("api/uploadfile", formData);
+                axios.post("http://127.0.0.1:5000/CreatePokemon", formData);
             }
         }
     };

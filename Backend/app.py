@@ -5,7 +5,7 @@ from flask_cors import CORS
 from flask_socketio import SocketIO, send, emit
 from random import randrange
 
-from pokemon import Battle
+from pokemon import Battle, Pokemon
 from pymongo import MongoClient
 
 mongodb_client = MongoClient("localhost", 27017)
@@ -13,7 +13,7 @@ database = mongodb_client["ICHack"]
 users = {}
 
 app = Flask(__name__)
-CORS(app, resources={r"/app": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": "*"}})
 app.config["SECRET_KEY"] = "secret!"
 socketio = SocketIO(app, cors_credentials=True, cors_allowed_origins="*")
 
@@ -66,22 +66,21 @@ def handle_attack(json):
     battles[json["game_id"]].handle_event("attack", json, request.sid, database)
 
 
+@app.route("/ListPokemon/<player>", methods=["GET"])
+def ListPokemon(player):
+    #player = database.player.find_one({"id": player})
+    #return [Pokemon.load(database, id) for id in player.pokemon]
+    return [{
+            "name": "Squirtle",
+            "element": "a bit wet",
+            "description": "best boy 1997",
+            "stats": {"attack": 0},
+        }]
 
-
-
-# @app.route("/", methods=["GET"])
-# def hello_world():
-#    members = request.args.getlist("members[]")
-#    results = []
-#    results.append(
-#        {
-#            "id": 1,
-#            "title": 1,
-#            "rating": 1,
-#            "image_url": 1,
-#        }
-#    )
-#
-#    print("Done!")
-#
-#    return results
+@app.route("/CreatePokemon/<player_id>", methods=["POST"])
+def CreatePokemon(player_id):
+    player = database.players.find_one({"id": player_id})
+    pokemon = imgToPokemon(request.form["img"])
+    player.pokemon = player.pokemon.append(pokemon)
+    database.players.update_one({"id": player_id}, player)
+    return {}
