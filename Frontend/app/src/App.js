@@ -54,7 +54,7 @@ const router = createBrowserRouter([
         },
       },
       {
-        path: "PokemonCaptureScreen/",
+        path: "PokemonCaptureScreen/:id/",
         element: <PokemonCaptureScreen />
       }
     ]

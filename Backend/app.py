@@ -8,6 +8,8 @@ from random import randrange
 from pokemon import Battle, Pokemon
 from pymongo import MongoClient
 
+from api import build_pokemon, load_image_from_file
+
 mongodb_client = MongoClient("localhost", 27017)
 database = mongodb_client["ICHack"]
 users = {}
@@ -59,7 +61,8 @@ def handle_createBattle(json):
 def handle_joinBattle(json):
     print(request.sid)
     battles[json["game_id"]].add_player(request.sid, json["pokemon_id"])
-    emit("joinBattle", {})
+    emit("joinBattle", {"self_pokemon": battles[json["game_id"]].p2, "target_pokemon": battles[json["game_id"]].p1}, to=request.sid)
+    emit("joinBattleFromRoom", {"self_pokemon": battles[json["game_id"]].p1, "target_pokemon": battles[json["game_id"]].p2}, to=battles[json["game_id"]].player1)
 
 @socketio.on("attack")
 def handle_attack(json):
@@ -68,19 +71,19 @@ def handle_attack(json):
 
 @app.route("/ListPokemon/<player>", methods=["GET"])
 def ListPokemon(player):
-    #player = database.player.find_one({"id": player})
-    #return [Pokemon.load(database, id) for id in player.pokemon]
-    return [{
-            "name": "Squirtle",
-            "element": "a bit wet",
-            "description": "best boy 1997",
-            "stats": {"attack": 0},
-        }]
+    player = database.player.find_one({"id": player})
+    return [Pokemon.load(database, id) for id in player.pokemon]
+    
 
 @app.route("/CreatePokemon/<player_id>", methods=["POST"])
 def CreatePokemon(player_id):
     player = database.players.find_one({"id": player_id})
-    pokemon = imgToPokemon(request.form["img"])
+    img = request.files["img"]
+    file = open("imgFile", 'wb')
+    img.save(file)
+    file.close()
+    img_input = load_image_from_file("imgFile")
+    pokemon = build_pokemon(img_input, create_image=True)
     player.pokemon = player.pokemon.append(pokemon)
     database.players.update_one({"id": player_id}, player)
     return {}
