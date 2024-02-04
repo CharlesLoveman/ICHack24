@@ -7,4 +7,4 @@ COPY ./Frontend/app .
 
 RUN npm ci
 
-CMD ["npm", "start"]
+CMD ["echo", "helloworld"]
