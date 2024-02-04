@@ -1,5 +1,6 @@
 """"Pokemon game logic."""
 
+from flask_socketio import emit
 import numpy as np
 from bson.objectid import ObjectId
 
@@ -225,44 +226,51 @@ class Battle:
         self.player2 = player2
         self.p2 = db.pokemon.find_one({"_id": pokemon2})
 
-    def handle_event(self, event: str, json: dict, socket_id: str, db) {
+    def handle_event(self, event: str, json: dict, socket_id: str, db, users) {
         return self.state.handle_event(self, event, json, socket_id, db)
     }
     
-    def execute(self) {
+    def execute(self, users):
         if self.p1.stats["speed"] <= self.p2.stats["speed"]:
             self.p1.attack(self.attack1, self.p2)
             if self.p2.stats["hp"] <= 0:
-                #p1 wins
+                emit("win", {}, to=users[self.player1])
+                emit("lose", {}, to=users[self.player2])
             elif self.p1.stats["hp"] <= 0:
-                #p2 wins
+                emit("lose", {}, to=users[self.player1])
+                emit("win", {}, to=users[self.player2])
             self.p2.attack(self.attack2, self.p1)
             if self.p1.stats["hp"] <= 0:
-                #p2 wins
+                emit("lose", {}, to=users[self.player1])
+                emit("win", {}, to=users[self.player2])
             elif self.p2.stats["hp"] <= 0:
-                #p1 wins
+                emit("win", {}, to=users[self.player1])
+                emit("lose", {}, to=users[self.player2])
         else:
             self.p2.attack(self.attack2, self.p1)
             if self.p1.stats["hp"] <= 0:
-                #p2 wins
+                emit("lose", {}, to=users[self.player1])
+                emit("win", {}, to=users[self.player2])
             elif self.p2.stats["hp"] <= 0:
-                #p1 wins
+                emit("win", {}, to=users[self.player1])
+                emit("lose", {}, to=users[self.player2])
             self.p1.attack(self.attack1, self.p2)
             if self.p2.stats["hp"] <= 0:
-                #p1 wins
+                emit("win", {}, to=users[self.player1])
+                emit("lose", {}, to=users[self.player2])
             elif self.p1.stats["hp"] <= 0:
-                #p2 wins
-    }
+                emit("lose", {}, to=users[self.player1])
+                emit("win", {}, to=users[self.player2])
 
 class BattleState:
-    def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db):
+    def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db, users):
         pass
 
 class WaitingForAttacks(BattleState):
     def __init__(self):
         super()
 
-    def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db):
+    def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db, users):
         if event == "attack": 
             if socket_id == battle.player1:
                 battle.attack1 = db.attacks.find_one({"_id": json["attack_id"]})
@@ -275,18 +283,18 @@ class WaitingForPlayer1Attack(BattleState):
     def __init__(self):
         super()
 
-    def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db):
+    def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db, users):
         if event == "attack":
             if socket_id == battle.player2:
                 battle.attack2 = db.attacks.find_one({"_id": json["attack_id"]})
-                battle.execute()
+                battle.execute(users)
 
 class WaitingForPlayer2Attack(BattleState):
     def __init__(self):
         super()
 
-    def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db):
+    def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db, users):
         if event == "attack":
             if socket_id == battle.player1:
                 battle.attack1 = db.attacks.find_one({"_id": json["attack_id"]})
-                battle.execute()
+                battle.execute(users)
