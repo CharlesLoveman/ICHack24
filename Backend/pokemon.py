@@ -1,6 +1,7 @@
 """"Pokemon game logic."""
 
 import numpy as np
+from bson.objectid import ObjectId
 
 element_options = ["Normal", "Fighting", "Flying", "Poison", "Ground", "Rock", "Bug", "Ghost", "Steel", "Fire", "Water", "Grass", "Electric", "Psychic", "Ice", "Dragon", "Dark", "Fairy"]
 stats_keys = ["hp", "attack", "defense", "special_attack", "special_defense", "speed"]
@@ -111,6 +112,27 @@ class Pokemon:
         if not len(attack.target_status) == 0:
             for key in attack.target_status.keys():
                 target.stats[key] = max(1, target.stats[key] + attack.target_status[key])
+    
+    def save(self, db):
+        attack_ids = [attack.save(db) for attack in self.attacks]
+        stats_id = db.stats.insert_one(self.stats).inserted_id
+        return db.pokemon.insert_one(
+            {
+                "name": self.name,
+                "description": self.description,
+                "element": self.element,
+                "stats": stats_id,
+                "attacks": attack_ids,
+                "image_id": self.image_id
+            }).inserted_id
+
+    @classmethod
+    def load(cls, db, id):
+        pokemon = db.pokemon.find_one({"_id": ObjectId(id)})
+        stats = db.stats.find_one({"_id": ObjectId(pokemon["stats"])})
+        stats.pop("_id")
+        attacks = [Attack.load(db, attack_id) for attack_id in pokemon["attacks"]]
+        return Pokemon(pokemon["name"], pokemon["description"], pokemon["element"], stats, attacks, pokemon["image_id"])
 
 
 class Attack:
@@ -164,6 +186,26 @@ class Attack:
     def __repr__(self):
         """Return a string representation of the Attack."""
         return f"Attack({repr(self.name)}, {repr(self.element)}, {repr(self.power)}, {repr(self.special)}, {repr(self.self_status)}, {repr(self.target_status)})"
+
+    def save(self, db):
+        stat_ids = db.stats.insert_many([self.self_status, self.target_status]).inserted_ids
+        return db.attacks.insert_one({
+            "name": self.name,
+            "element": self.element,
+            "power": self.power,
+            "special": self.special,
+            "self_status": stat_ids[0],
+            "target_status": stat_ids[1],
+        }).inserted_id
+    
+    @classmethod
+    def load(cls, db, id):
+        attack = db.attacks.find_one({"_id": ObjectId(id)})
+        self_status = db.stats.find_one({"_id": ObjectId(attack["self_status"])})
+        self_status.pop("_id")
+        target_status = db.stats.find_one({"_id": ObjectId(attack["target_status"])})
+        target_status.pop("_id")
+        return Attack(attack["name"], attack["element"], attack["power"], attack["special"], self_status, target_status)
 
 
 class Battle:
