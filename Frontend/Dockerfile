@@ -1,10 +1,10 @@
 FROM node:18
 
 WORKDIR /home/node/app
-EXPOSE 8080
+EXPOSE 80
 
 COPY ./Frontend/app .
 
 RUN npm ci
 
-CMD ["npm", "run"]
+CMD ["npm", "start"]
