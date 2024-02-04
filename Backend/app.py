@@ -6,35 +6,46 @@ from flask_socketio import SocketIO, send, emit
 from random import randrange
 
 app = Flask(__name__)
-CORS(app, resources={r"/app": {"origins": '*'}})
-app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app, cors_credentials=True, cors_allowed_origins='*')
+CORS(app, resources={r"/app": {"origins": "*"}})
+app.config["SECRET_KEY"] = "secret!"
+socketio = SocketIO(app, cors_credentials=True, cors_allowed_origins="*")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     socketio.run(app)
 
-@socketio.on('message')
+
+@socketio.on("message")
 def handle_message(message):
     send(message)
 
-@socketio.on('json')
+
+@socketio.on("json")
 def handle_json(json):
     send(json, json=True)
 
-@socketio.on('createPokemon')
+
+@socketio.on("createPokemon")
 def handle_my_custom_event(json):
-    emit('createPokemonCard', {"name": "Squirtle", "element": "a bit wet", "description": "best boy 1997", "stats": {"attack": 0}})
+    emit(
+        "createPokemonCard",
+        {
+            "name": "Squirtle",
+            "element": "a bit wet",
+            "description": "best boy 1997",
+            "stats": {"attack": 0},
+        },
+    )
 
-@socketio.on('createBattle')
+
+@socketio.on("createBattle")
 def handle_createBattle(json):
-    #game_id = createGame(json.id)
+    # game_id = createGame(json.id)
     game_id = randrange(0, 1000000)
-    emit('joinWaitingRoom', {"game_id": game_id})
+    emit("joinWaitingRoom", {"game_id": game_id})
 
 
-
-#@app.route("/", methods=["GET"])
-#def hello_world():
+# @app.route("/", methods=["GET"])
+# def hello_world():
 #    members = request.args.getlist("members[]")
 #    results = []
 #    results.append(
