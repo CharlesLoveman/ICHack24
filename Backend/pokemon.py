@@ -2,9 +2,11 @@
 
 import numpy as np
 from bson.objectid import ObjectId
+from PIL import Image
+import io
 
 element_options = ["Normal", "Fighting", "Flying", "Poison", "Ground", "Rock", "Bug", "Ghost", "Steel", "Fire", "Water", "Grass", "Electric", "Psychic", "Ice", "Dragon", "Dark", "Fairy"]
-stats_keys = ["hp", "attack", "defense", "special_attack", "special_defense", "speed"]
+stats_keys = ["hp", "attack", "defence", "special attack", "special defence", "speed"]
 element_chart = np.array([[1, 1, 1, 1, 1, 0.5, 1, 0, 0.5, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                           [2, 1, 0.5, 0.5, 1, 2, 0.5, 0, 2, 1, 1, 1, 1, 0.5, 2, 1, 2, 0.5],
                           [1, 2, 1, 1, 1, 0.5, 2, 1, 0.5, 1, 1, 2, 0.5, 1, 1, 1, 1, 1],
@@ -27,13 +29,13 @@ element_chart = np.array([[1, 1, 1, 1, 1, 0.5, 1, 0, 0.5, 1, 1, 1, 1, 1, 1, 1, 1
 class Pokemon:
     """Create a Pokemon, with description, battle statistics and an image id."""
 
-    def __init__(self, name : str, description : str, element : str, stats : dict, attacks : list, image_id : str, id=""):
+    def __init__(self, name : str, description : str, element : str, stats : dict, attacks : list, image : Image, id=""):
         self.name = name
         self.description = description
         self.element = element
         self.stats = stats
         self.attacks = attacks
-        self.image_id = image_id
+        self.image = image
         self.id = id
 
         if not isinstance(self.name, str):
@@ -65,10 +67,7 @@ class Pokemon:
             raise ValueError(f"Pokemon must have 4 attacks, but {len(self.attacks)} were given: {self.attacks}")
         for attack in self.attacks:
             if not isinstance(attack, Attack):
-                raise TypeError(f"Moves must be a list of Move objects, but {attack} is a {type(attack).__name__}")
-
-        if not isinstance(self.image_id, str):
-            raise TypeError(f"Image ID must be a string, but {self.image_id} is a {type(self.image_id).__name__}")      
+                raise TypeError(f"Moves must be a list of Move objects, but {attack} is a {type(attack).__name__}") 
 
     def __repr__(self):
         """Return a string representation of the Pokemon."""
@@ -94,10 +93,10 @@ class Pokemon:
 
             # calculate hp damage
             atk = self.stats["attack"]
-            dfs = target.stats["defense"]
+            dfs = target.stats["defence"]
             if attack.special:
-                atk = self.stats["special_attack"]
-                dfs = target.stats["special_defense"]
+                atk = self.stats["special attack"]
+                dfs = target.stats["special defence"]
             damage = int(2/5 * attack.power * (atk / dfs) * attack_element_boost * target_element_boost * np.random.uniform(217, 256)/255)
             crit = np.random.uniform(0, 1)
             if crit < 0.05:
@@ -113,10 +112,11 @@ class Pokemon:
         if not len(attack.target_status) == 0:
             for key in attack.target_status.keys():
                 target.stats[key] = max(1, target.stats[key] + attack.target_status[key])
-    
+
     def save(self, db):
         attack_ids = [attack.save(db) for attack in self.attacks]
         stats_id = db.stats.insert_one(self.stats).inserted_id
+        img_raw = io.BytesIO(self.image.tobytes())
         return db.pokemon.insert_one(
             {
                 "name": self.name,
@@ -124,7 +124,7 @@ class Pokemon:
                 "element": self.element,
                 "stats": stats_id,
                 "attacks": attack_ids,
-                "image_id": self.image_id,
+                "image": img_raw,
             }).inserted_id
 
     @classmethod
@@ -133,7 +133,9 @@ class Pokemon:
         stats = db.stats.find_one({"_id": ObjectId(pokemon["stats"])})
         stats.pop("_id")
         attacks = [Attack.load(db, attack_id) for attack_id in pokemon["attacks"]]
-        return Pokemon(pokemon["name"], pokemon["description"], pokemon["element"], stats, attacks, pokemon["image_id"], id)
+        img_raw = pokemon["image_id"]
+        img = Image.open(io.BytesIO(img_raw))
+        return Pokemon(pokemon["name"], pokemon["description"], pokemon["element"], stats, attacks, img_raw, id)
 
 
 class Attack:
@@ -199,7 +201,7 @@ class Attack:
             "self_status": stat_ids[0],
             "target_status": stat_ids[1],
         }).inserted_id
-    
+
     @classmethod
     def load(cls, db, id):
         attack = db.attacks.find_one({"_id": ObjectId(id)})

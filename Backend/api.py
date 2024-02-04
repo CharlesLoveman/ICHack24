@@ -8,7 +8,8 @@ from vertexai.preview.generative_models import GenerativeModel, Image
 import re
 
 vertexai.init(project="crucial-bucksaw-413121")
-model = GenerativeModel("gemini-pro-vision")
+model = GenerativeModel("gemini-pro")
+vision_model = GenerativeModel("gemini-pro-vision")
 
 STATS_KEYS = [
     "Type", "HP", "Attack", "Defence", "Special Attack", "Special Defence", "Speed"
@@ -27,7 +28,7 @@ def load_image_from_file(file_path):
     return Image.from_bytes(open(file_path, "rb").read())
 
 
-def get_gemini_response(template, img=False, safety_feedback=False):
+def get_gemini_response(template, img=None, safety_feedback=False):
     """Get a response from the Gemini model.
 
     Args:
@@ -38,10 +39,10 @@ def get_gemini_response(template, img=False, safety_feedback=False):
     Returns:
         response (str): The response from the Gemini model.
     """
-    if img:
-        response = model.generate_content([img, template])
-    else:
+    if img is None:
         response = model.generate_content([template])
+    else:
+        response = vision_model.generate_content([img, template])
 
     if safety_feedback:
         return response.text, response.prompt_feedback
@@ -127,15 +128,15 @@ def create_attacks(name, pokedex, element):
     # Extract the attack names, categories and types
     attack_responses = [
         re.search(
-            rf"\[Start Attack {key}\](.*)\[End Output {key}\]", response, re.DOTALL
+            rf"\[Start Attack {key}\](.*)\[End Attack {key}\]", response, re.DOTALL
         ).group(1).strip() for key in range(1, 5)
     ]
 
     attacks = []
     for attack in attack_responses:
         name = re.search(r"Name:(.*)", attack).group(1).strip()
-        category = re.search(r"Category:(.*)", attack).group(1).strip()
-        element = re.search(r"Type:(.*)", attack).group(1).strip()
+        category = re.search(r"Category:(.*)", attack).group(1).strip().lower()
+        element = re.search(r"Type:(.*)", attack).group(1).strip().capitalize()
         element = element.split("/")[0]
 
         attacks.append(generate_attack(name, element, category))
@@ -163,6 +164,6 @@ def build_pokemon(img, create_image=False):
 
     attacks = create_attacks(name, pokedex, element)
 
-    element = element.split("/")[0]
+    element = element.split("/")[0].capitalize()
 
     return Pokemon(name, pokedex, element, stats, attacks, img)
