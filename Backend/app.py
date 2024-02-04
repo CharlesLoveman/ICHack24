@@ -6,11 +6,11 @@ from flask_socketio import SocketIO, send, emit
 from random import randrange
 
 from pokemon import Battle, Pokemon
+from .pokemon import Battle, Pokemon
 from pymongo import MongoClient
-from api import build_pokemon
 
-mongodb_client = MongoClient("localhost", 27017)
-database = mongodb_client["ICHack"]
+#mongodb_client = MongoClient("localhost", 27017)
+#database = mongodb_client["ICHack"]
 users = {}
 
 app = Flask(__name__)
@@ -56,11 +56,28 @@ def handle_createBattle(json):
     users[request.sid] = request.sid
     emit("joinWaitingRoom", {"game_id": game_id})
 
+
 @socketio.on("joinBattle")
 def handle_joinBattle(json):
     print(request.sid)
     battles[json["game_id"]].add_player(request.sid, json["pokemon_id"])
-    emit("joinBattle", {}) # Is it problematic that this is the same message? Does this contact _both_ players
+    emit(
+        "joinBattle",
+        {
+            "self_pokemon": battles[json["game_id"]].p2,
+            "target_pokemon": battles[json["game_id"]].p1,
+        },
+        to=request.sid,
+    )
+    emit(
+        "joinBattleFromRoom",
+        {
+            "self_pokemon": battles[json["game_id"]].p1,
+            "target_pokemon": battles[json["game_id"]].p2,
+        },
+        to=battles[json["game_id"]].player1,
+    )
+
 
 @socketio.on("attack")
 def handle_attack(json):
