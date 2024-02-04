@@ -13,23 +13,21 @@ import './styles.css';
 
 import { socket } from '../../socket';
 
- const player_id = String(Math.floor(Math.random() * 1000000))
+const player_id = String(Math.floor(Math.random() * 1000000))
 
 export default function MainScreen() {
 
   var pokemon
 
-  function fetchPokemon()
-  {
+  function fetchPokemon() {
     var pokemons = axios.get(`http://127.0.0.1:5000/ListPokemon/${player_id}`);
-    if (pokemons)
-    {
+    if (pokemons) {
       pokemon = pokemons[0];
     }
   }
 
-  fetchPokemon()
-      
+  // fetchPokemon()
+
   function createBattle(pokemon) {
 
     if (pokemon) {
