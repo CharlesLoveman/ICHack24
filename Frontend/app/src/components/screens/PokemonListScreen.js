@@ -9,7 +9,7 @@ export default function PokemonListScreen() {
 
     const data = useLoaderData()
     console.log(data)
-    
+
     return (
         <>
             {NavBar()}
