@@ -1,7 +1,7 @@
 FROM node:18
 
 WORKDIR /home/node/app
-EXPOSE 8080
+EXPOSE 80
 
 COPY ./Frontend/app .
 
