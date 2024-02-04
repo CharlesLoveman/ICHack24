@@ -317,9 +317,8 @@ class Battle:
         self.player2 = player2
         self.p2 = db.pokemon.find_one({"_id": pokemon2})
 
-    def handle_event(self, event: str, json: dict, socket_id: str, db, users) {
+    def handle_event(self, event: str, json: dict, socket_id: str, db, users):
         return self.state.handle_event(self, event, json, socket_id, db)
-    }
     
     def execute(self, users):
         if self.p1.stats["speed"] <= self.p2.stats["speed"]:

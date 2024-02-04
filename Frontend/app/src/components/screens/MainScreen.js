@@ -34,7 +34,7 @@ export default function MainScreen() {
         <br />
         {JoinRoomInputBox(pokemon)}
         <br />
-        <Button><Link style={{ textDecoration: 'none' }} to="../PokemonListScreen/">View Pokemon</Link></Button>
+        <Button><Link style={{ textDecoration: 'none' }} to="../PokemonListScreen/id">View Pokemon</Link></Button>
         <br />
         <Button><Link style={{ textDecoration: 'none' }} to="../PokemonCaptureScreen/">Capture Pokemon!</Link></Button>
 
