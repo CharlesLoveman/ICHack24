@@ -1,5 +1,6 @@
 """API for interfacing with the vision pipeline."""
 
+from Backend.image_processing import generate_image, pixelate_image
 import vertexai
 from vertexai.preview.generative_models import GenerativeModel, Image
 import re
@@ -43,7 +44,7 @@ def get_gemini_response(template, img, safety_feedback=False):
         return response.text
 
 
-def create_pokemon(template, img):
+def create_pokemon(template, img, return_prompt=False):
     """Create a new pokemon from an image.
 
     Args:
@@ -59,7 +60,7 @@ def create_pokemon(template, img):
     sections = [
         re.search(
             rf"\[Start Output {key}\](.*)\[End Output {key}\]", response, re.DOTALL
-        ).group(1).strip() for key in ["Name", "Pokedex", "Stats"]
+        ).group(1).strip() for key in ["Name", "Pokedex", "Stats", "Image Prompt"]
     ]
 
     # Extract the name
@@ -78,4 +79,13 @@ def create_pokemon(template, img):
         else:
             stats[key.lower()] = int(value)
 
-    return name, pokedex, stats
+    # Extract the image prompt
+    image_prompt = sections[3]
+
+    # Generate the image
+    img = generate_image(image_prompt)
+
+    if return_prompt:
+        return name, pokedex, stats, img, image_prompt
+    else:
+        return name, pokedex, stats, img
