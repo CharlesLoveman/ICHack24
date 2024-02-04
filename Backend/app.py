@@ -7,6 +7,7 @@ from random import randrange
 
 from pokemon import Battle, Pokemon
 from pymongo import MongoClient
+from api import build_pokemon
 
 mongodb_client = MongoClient("localhost", 27017)
 database = mongodb_client["ICHack"]
@@ -59,7 +60,7 @@ def handle_createBattle(json):
 def handle_joinBattle(json):
     print(request.sid)
     battles[json["game_id"]].add_player(request.sid, json["pokemon_id"])
-    emit("joinBattle", {})
+    emit("joinBattle", {}) # Is it problematic that this is the same message? Does this contact _both_ players
 
 @socketio.on("attack")
 def handle_attack(json):
@@ -74,7 +75,7 @@ def ListPokemon(player):
 @app.route("/CreatePokemon/<player_id>", methods=["POST"])
 def CreatePokemon(player_id):
     player = database.players.find_one({"id": player_id})
-    pokemon = imgToPokemon(request.form["img"])
+    pokemon = build_pokemon(request.form["img"])
     player.pokemon = player.pokemon.append(pokemon)
     database.players.update_one({"id": player_id}, player)
     return {}
