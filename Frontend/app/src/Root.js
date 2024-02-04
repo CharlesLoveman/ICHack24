@@ -7,8 +7,6 @@ import { ConnectionManager } from './components/ConnectionManager';
 import { Events } from "./components/Events";
 import { MyForm } from './components/MyForm';
 import PokemonCard from './components/PokemonCard';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import MainScreen from './screens/MainScreen';
 import { useNavigate, Outlet } from "react-router-dom";
 
 export default function Root() {
