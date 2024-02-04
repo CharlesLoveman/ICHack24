@@ -27,13 +27,14 @@ element_chart = np.array([[1, 1, 1, 1, 1, 0.5, 1, 0, 0.5, 1, 1, 1, 1, 1, 1, 1, 1
 class Pokemon:
     """Create a Pokemon, with description, battle statistics and an image id."""
 
-    def __init__(self, name : str, description : str, element : str, stats : dict, attacks : list, image_id : str):
+    def __init__(self, name : str, description : str, element : str, stats : dict, attacks : list, image_id : str, id=""):
         self.name = name
         self.description = description
         self.element = element
         self.stats = stats
         self.attacks = attacks
         self.image_id = image_id
+        self.id = id
 
         if not isinstance(self.name, str):
             raise TypeError(f"Name must be a string, but {self.name} is a {type(self.name).__name__}")
@@ -123,7 +124,7 @@ class Pokemon:
                 "element": self.element,
                 "stats": stats_id,
                 "attacks": attack_ids,
-                "image_id": self.image_id
+                "image_id": self.image_id,
             }).inserted_id
 
     @classmethod
@@ -132,13 +133,13 @@ class Pokemon:
         stats = db.stats.find_one({"_id": ObjectId(pokemon["stats"])})
         stats.pop("_id")
         attacks = [Attack.load(db, attack_id) for attack_id in pokemon["attacks"]]
-        return Pokemon(pokemon["name"], pokemon["description"], pokemon["element"], stats, attacks, pokemon["image_id"])
+        return Pokemon(pokemon["name"], pokemon["description"], pokemon["element"], stats, attacks, pokemon["image_id"], id)
 
 
 class Attack:
     """Create an attack, to be called when a Pokemon attacks."""
 
-    def __init__(self, name : str, element : str, power : int = 0, special : bool = False, self_status : dict = {}, target_status : dict = {}):
+    def __init__(self, name : str, element : str, power : int = 0, special : bool = False, self_status : dict = {}, target_status : dict = {}, id : str = ""):
         """Create an attack with a name, element and optional power and status effects."""
         self.name = name
         self.element = element
@@ -146,6 +147,7 @@ class Attack:
         self.special = special
         self.self_status = self_status
         self.target_status = target_status
+        self.id = id
 
         if not isinstance(self.name, str):
             raise TypeError(f"Name must be a string, but {self.name} is a {type(self.name).__name__}")
@@ -205,17 +207,19 @@ class Attack:
         self_status.pop("_id")
         target_status = db.stats.find_one({"_id": ObjectId(attack["target_status"])})
         target_status.pop("_id")
-        return Attack(attack["name"], attack["element"], attack["power"], attack["special"], self_status, target_status)
+        return Attack(attack["name"], attack["element"], attack["power"], attack["special"], self_status, target_status, id)
 
 
 class Battle:
     """Create a battle between 2 Pokemon."""
 
-    def __init__(self, p1 : Pokemon, p2 : Pokemon):
-        self.p1 = p1
-        self.p2 = p2
+    def __init__(self, player1, pokemon1, db):
+        self.player1 = player1
+        self.p1 = db.pokemon.find_one({"_id": pokemon1})
 
         if not isinstance(self.p1, Pokemon):
             raise TypeError(f"Pokemon 1 must be a Pokemon, but {self.p1} is a {type(self.p1).__name__}")
-        if not isinstance(self.p2, Pokemon):
-            raise TypeError(f"Pokemon 2 must be a Pokemon, but {self.p2} is a {type(self.p2).__name__}")
+
+    def add_player(self, player2, pokemon2, db):
+        self.player2 = player2
+        self.p2 = db.pokemon.find_one({"_id": pokemon2})

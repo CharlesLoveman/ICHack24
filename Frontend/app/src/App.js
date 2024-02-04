@@ -9,6 +9,7 @@ import { MyForm } from './components/MyForm';
 import PokemonCard from './components/PokemonCard';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import MainScreen from './components/screens/MainScreen';
+import MainScreen from './components/screens/MainScreen';
 import Root from './Root';
 
 import {
