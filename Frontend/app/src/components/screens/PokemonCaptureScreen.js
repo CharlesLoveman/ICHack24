@@ -68,7 +68,7 @@ export default function PokemonCaptureScreen() {
 
     return (
         <>{NavBar()}
-            <div style>Capture a new Pokemon!</div >
+            <div>Capture a new Pokemon!</div >
             <Button><label htmlFor='imageUpload'><FaCameraRetro size='9rem'></FaCameraRetro></label ></Button >
             <div>Take a picture an animal, object or anything else you would like to Pokefy and upload it here. If you're happy with the result, click the tick to adopt the Pokemon. Happy capturing!</div>
 
