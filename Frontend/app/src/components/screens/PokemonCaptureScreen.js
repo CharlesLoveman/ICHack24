@@ -52,7 +52,6 @@ export default function PokemonCaptureScreen() {
             />
 
             <MdUpload onClick={onFileUpload}></MdUpload>
-            {fileData()}
         </>
     );
 
