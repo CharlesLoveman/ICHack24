@@ -4,7 +4,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import JoinRoomInputBox from '../JoinRoomInputBox.js'
-import Link from '@mui/material/Link';
+import { BrowserRouter as Router, Link } from "react-router-dom";
 
 import { socket } from '../../socket';
 
@@ -25,8 +25,8 @@ export default function MainScreen() {
       <CardContent>
         <Button onClick={() => createBattle(pokemon)}>Create Battle</Button>
         {JoinRoomInputBox(pokemon)}
-        <Link to="PokemonListScreen/">View Pokemon</Link>
-        <Link to="PokemonCaptureScreen/">Capture Pokemon!</Link>
+        <Link to="../PokemonListScreen/">View Pokemon</Link>
+        <Link to="../PokemonCaptureScreen/">Capture Pokemon!</Link>
 
       </CardContent>
     </Card>
