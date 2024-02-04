@@ -9,13 +9,15 @@ import axios from 'axios';
 
 import { socket } from '../../socket';
 
- const player_id = str(randrange(0, 1000000))
+ const player_id = String(Math.floor(Math.random() * 1000000))
 
 export default function MainScreen() {
 
+  var pokemon
+
   function fetchPokemon()
   {
-    pokemons = axios.get(`http://127.0.0.1:5000/ListPokemon/${player_id}`);
+    var pokemons = axios.get(`http://127.0.0.1:5000/ListPokemon/${player_id}`);
     if (pokemons)
     {
       pokemon = pokemons[0];
@@ -23,12 +25,6 @@ export default function MainScreen() {
   }
 
   fetchPokemon()
-
-  function createBattle(pokemon) {
-    if (pokemon) {
-      socket.emit('createBattle', { player_id: document.cookie["player_id"], pokemon_id: pokemon.id });
-    }
-  }
       
   function createBattle(pokemon) {
 
