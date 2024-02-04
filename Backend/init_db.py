@@ -9,11 +9,11 @@ pokemon = Pokemon(
     "Togepi",
     "Based pokemon",
     "Normal",
-    {"hp": 100, "attack": 101, "defense": 102, "special_attack": 103, "special_defense": 104, "speed": 105},
-    [Attack("HyperBeam1", "Dragon", 100, True, {"hp": 100, "attack": 101, "defense": 102, "special_attack": 103, "special_defense": 104, "speed": 105}, {"hp": -100, "attack": -101, "defense": -102, "special_attack": -103, "special_defense": -104, "speed": -105}),
-     Attack("HyperBeam2", "Dragon", 100, True, {"hp": 100, "attack": 101, "defense": 102, "special_attack": 103, "special_defense": 104, "speed": 105}, {"hp": -100, "attack": -101, "defense": -102, "special_attack": -103, "special_defense": -104, "speed": -105}),
-     Attack("HyperBeam3", "Dragon", 100, True, {"hp": 100, "attack": 101, "defense": 102, "special_attack": 103, "special_defense": 104, "speed": 105}, {"hp": -100, "attack": -101, "defense": -102, "special_attack": -103, "special_defense": -104, "speed": -105}),
-     Attack("HyperBeam4", "Dragon", 100, True, {"hp": 100, "attack": 101, "defense": 102, "special_attack": 103, "special_defense": 104, "speed": 105}, {"hp": -100, "attack": -101, "defense": -102, "special_attack": -103, "special_defense": -104, "speed": -105})],
+    {"hp": 100, "attack": 101, "defence": 102, "special attack": 103, "special defence": 104, "speed": 105},
+    [Attack("HyperBeam1", "Dragon", 100, True, {"hp": 100, "attack": 101, "defence": 102, "special attack": 103, "special defence": 104, "speed": 105}, {"hp": -100, "attack": -101, "defense": -102, "special attack": -103, "special defense": -104, "speed": -105}),
+     Attack("HyperBeam2", "Dragon", 100, True, {"hp": 100, "attack": 101, "defence": 102, "special attack": 103, "special defence": 104, "speed": 105}, {"hp": -100, "attack": -101, "defense": -102, "special attack": -103, "special defense": -104, "speed": -105}),
+     Attack("HyperBeam3", "Dragon", 100, True, {"hp": 100, "attack": 101, "defence": 102, "special attack": 103, "special defence": 104, "speed": 105}, {"hp": -100, "attack": -101, "defense": -102, "special attack": -103, "special defense": -104, "speed": -105}),
+     Attack("HyperBeam4", "Dragon", 100, True, {"hp": 100, "attack": 101, "defence": 102, "special attack": 103, "special defence": 104, "speed": 105}, {"hp": -100, "attack": -101, "defense": -102, "special attack": -103, "special defense": -104, "speed": -105})],
     "img"
     )
 
