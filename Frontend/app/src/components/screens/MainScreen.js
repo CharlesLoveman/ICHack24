@@ -27,8 +27,6 @@ export default function MainScreen() {
 
   }
 
-  const [pokemon, setPokemon] = useState();
-
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
