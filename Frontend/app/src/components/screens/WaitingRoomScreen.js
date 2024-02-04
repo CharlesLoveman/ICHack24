@@ -8,6 +8,8 @@ export default function WaitingRoomScreen() {
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
         <Typography>
+          Put a QR Code here \\
+          Put some numbers/ a 6-digit code here \\
           Waiting Foreveeeer
         </Typography>
       </CardContent>

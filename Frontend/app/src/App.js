@@ -17,6 +17,7 @@ import {
   Navigate
 } from "react-router-dom";
 import WaitingRoomScreen from './screens/WaitingRoomScreen';
+import PokemonBattleScreen from './components/screens/PokemonBattleScreen';
 
 const theme = createTheme({
 });
@@ -24,11 +25,11 @@ const theme = createTheme({
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root/>,
+    element: <Root />,
     children: [
       {
         path: "",
-        element: <Navigate to="MainScreen" replace/>
+        element: <Navigate to="MainScreen" replace />
       },
       {
         path: "MainScreen/",
@@ -36,7 +37,11 @@ const router = createBrowserRouter([
       },
       {
         path: "WaitingRoomScreen/:game_id/",
-        element: <WaitingRoomScreen/>
+        element: <WaitingRoomScreen />
+      },
+      {
+        path: "PokemonBattleScreen/",
+        element: <PokemonBattleScreen />
       }
     ]
   }
@@ -45,7 +50,7 @@ const router = createBrowserRouter([
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
-      <RouterProvider router={router}/>
+      <RouterProvider router={router} />
     </ThemeProvider>
   );
 }
