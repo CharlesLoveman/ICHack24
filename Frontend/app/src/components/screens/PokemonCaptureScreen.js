@@ -4,6 +4,7 @@ import NavBar from '../NavBar';
 import { MdUpload } from "react-icons/md";
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
+import { FaCameraRetro } from "react-icons/fa";
 
 
 export default function PokemonCaptureScreen() {
@@ -90,10 +91,10 @@ export default function PokemonCaptureScreen() {
 
     return (
         <>{NavBar()}
-            <div>Put a Camera here</div>
-            <div>Put an upload button here</div>
+            <div>Capture a new Pokemon!</div>
+            <div>Take a picture an animal, object or anything else you would like to Pokefy and upload it here. Happy capturing!</div>
 
-            <Button><label htmlFor='imageUpload'><MdUpload size="32px"></MdUpload></label></Button>
+            <Button><label htmlFor='imageUpload'><FaCameraRetro size="32px"></FaCameraRetro></label></Button>
 
             <Input
                 id="imageUpload"
@@ -102,7 +103,6 @@ export default function PokemonCaptureScreen() {
                 style={{ display: "none" }}
             />
 
-            <MdUpload onClick={onFileUpload}></MdUpload>
             {fileData()}
         </>
     );
