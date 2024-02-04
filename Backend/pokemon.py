@@ -210,12 +210,13 @@ class Attack:
         return Attack(attack["name"], attack["element"], attack["power"], attack["special"], self_status, target_status, id)
 
 
+
 class Battle:
     """Create a battle between 2 Pokemon."""
-
     def __init__(self, player1, pokemon1, db):
         self.player1 = player1
         self.p1 = db.pokemon.find_one({"_id": pokemon1})
+        self.state = None 
 
         if not isinstance(self.p1, Pokemon):
             raise TypeError(f"Pokemon 1 must be a Pokemon, but {self.p1} is a {type(self.p1).__name__}")
@@ -223,3 +224,69 @@ class Battle:
     def add_player(self, player2, pokemon2, db):
         self.player2 = player2
         self.p2 = db.pokemon.find_one({"_id": pokemon2})
+
+    def handle_event(self, event: str, json: dict, socket_id: str, db) {
+        return self.state.handle_event(self, event, json, socket_id, db)
+    }
+    
+    def execute(self) {
+        if self.p1.stats["speed"] <= self.p2.stats["speed"]:
+            self.p1.attack(self.attack1, self.p2)
+            if self.p2.stats["hp"] <= 0:
+                #p1 wins
+            elif self.p1.stats["hp"] <= 0:
+                #p2 wins
+            self.p2.attack(self.attack2, self.p1)
+            if self.p1.stats["hp"] <= 0:
+                #p2 wins
+            elif self.p2.stats["hp"] <= 0:
+                #p1 wins
+        else:
+            self.p2.attack(self.attack2, self.p1)
+            if self.p1.stats["hp"] <= 0:
+                #p2 wins
+            elif self.p2.stats["hp"] <= 0:
+                #p1 wins
+            self.p1.attack(self.attack1, self.p2)
+            if self.p2.stats["hp"] <= 0:
+                #p1 wins
+            elif self.p1.stats["hp"] <= 0:
+                #p2 wins
+    }
+
+class BattleState:
+    def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db):
+        pass
+
+class WaitingForAttacks(BattleState):
+    def __init__(self):
+        super()
+
+    def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db):
+        if event == "attack": 
+            if socket_id == battle.player1:
+                battle.attack1 = db.attacks.find_one({"_id": json["attack_id"]})
+                battle.state = WaitingForPlayer2Attack()
+            elif socket_id == battle.player2:
+                battle.attack2 = db.attacks.find_one({"_id": json["attack_id"]})
+                battle.state = WaitingForPlayer1Attack()
+    
+class WaitingForPlayer1Attack(BattleState):
+    def __init__(self):
+        super()
+
+    def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db):
+        if event == "attack":
+            if socket_id == battle.player2:
+                battle.attack2 = db.attacks.find_one({"_id": json["attack_id"]})
+                battle.execute()
+
+class WaitingForPlayer2Attack(BattleState):
+    def __init__(self):
+        super()
+
+    def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db):
+        if event == "attack":
+            if socket_id == battle.player1:
+                battle.attack1 = db.attacks.find_one({"_id": json["attack_id"]})
+                battle.execute()
