@@ -5,12 +5,13 @@ from flask_cors import CORS
 from flask_socketio import SocketIO, send, emit
 from random import randrange
 
-from pokemon import Battle, Pokemon
 from .pokemon import Battle, Pokemon
-from pymongo import MongoClient
+from .manage_db import Database, DatabaseWrapper
 
-#mongodb_client = MongoClient("localhost", 27017)
-#database = mongodb_client["ICHack"]
+pokemon_db = Database("pokemon_db.pkl")
+attacks_db = Database("attacks_db.pkl")
+db = DatabaseWrapper(pokemon=pokemon_db, attacks=attacks_db)
+
 users = {}
 
 app = Flask(__name__)
