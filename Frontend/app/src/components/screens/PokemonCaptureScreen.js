@@ -4,12 +4,15 @@ import NavBar from '../NavBar';
 import { MdUpload } from "react-icons/md";
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
+import { FaCameraRetro } from "react-icons/fa";
+import { IoIosCheckmarkCircle } from "react-icons/io";
 import { useParams } from 'react-router-dom';
 
 
 export default function PokemonCaptureScreen() {
 
     const [state, setState] = useState(null);
+    const [url, setURL] = useState(null);
 
     const params = useParams()
 
@@ -18,6 +21,8 @@ export default function PokemonCaptureScreen() {
         setState({
             selectedFile: event.target.files[0],
         });
+
+        setURL(getImage(event.target.files[0]))
     };
 
     // On file upload (click the upload button)
@@ -36,21 +41,36 @@ export default function PokemonCaptureScreen() {
                 //formData.append("image", imagefile.files[0]);
                 axios.post(`http://127.0.0.1:5000/CreatePokemon/${params.id}`, formData, {
                     headers: {
-                    'Content-Type': 'multipart/form-data'
-                    }});
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
 
-                //axios.post(`http://127.0.0.1:5000/CreatePokemon/${params.id}`, formData);
+                axios.post("api/uploadfile", formData);
             }
+
+
         }
+
+
+
+        // Details of the uploaded file
+        //console.log(state.selectedFile);
+
+        // Request made to the backend api
+        // Send formData object
+
     };
+
+    function getImage(image) {
+        return URL.createObjectURL(image)
+    }
 
 
     return (
         <>{NavBar()}
-            <div>Put a Camera here</div>
-            <div>Put an upload button here</div>
-
-            <Button><label htmlFor='imageUpload'><MdUpload size="32px"></MdUpload></label></Button>
+            <div style>Capture a new Pokemon!</div >
+            <Button><label htmlFor='imageUpload'><FaCameraRetro size='9rem'></FaCameraRetro></label ></Button >
+            <div>Take a picture an animal, object or anything else you would like to Pokefy and upload it here. If you're happy with the result, click the tick to adopt the Pokemon. Happy capturing!</div>
 
             <Input
                 id="imageUpload"
@@ -59,7 +79,9 @@ export default function PokemonCaptureScreen() {
                 style={{ display: "none" }}
             />
 
-            <MdUpload onClick={onFileUpload}></MdUpload>
+            <Button>  <IoIosCheckmarkCircle size='2rem' onClick={onFileUpload} /></Button>
+
+            {<img src={url}></img>}
         </>
     );
 

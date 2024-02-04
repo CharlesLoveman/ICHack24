@@ -39,13 +39,13 @@ export default function MainScreen() {
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent >
-        <Button onClick={() => createBattle(pokemon)} variant='contained' size='large' startIcon={<GiBattleGear />} color='secondary'>Create Battle</Button>
+        <Button fullWidth='true' onClick={() => createBattle(pokemon)} variant='contained' startIcon={<GiBattleGear size="1rem" />} color='error'>Create Battle</Button>
         <br /><br />
-        {JoinRoomInputBox(pokemon)}
+        <div>{JoinRoomInputBox(pokemon)}</div>
         <br /><br />
-        <Button variant='contained' size='large' startIcon={< GiHouse />}><Link style={{ textDecoration: 'none' }} to="../PokemonListScreen/id" >View Pokemon</Link></Button>
+        <Button fullWidth='true' variant='contained' size='large' startIcon={< GiHouse size="1rem" />}><Link style={{ textDecoration: 'none' }} to="../PokemonListScreen/" >View Pokemon</Link></Button>
         <br /><br />
-        <Button variant='contained' size='large' startIcon={<MdCatchingPokemon />}><Link style={{ textDecoration: 'none' }} to="../PokemonCaptureScreen/id">Capture Pokemon!</Link></Button>
+        <Button fullWidth='true' variant='contained' size='large' startIcon={<MdCatchingPokemon size="1rem" />}><Link style={{ textDecoration: 'none' }} to="../PokemonCaptureScreen/id">Capture Pokemon!</Link></Button>
       </CardContent >
     </Card >
   );

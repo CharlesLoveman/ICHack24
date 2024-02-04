@@ -10,7 +10,8 @@ from pymongo import MongoClient
 
 from .api import build_pokemon, load_image_from_file
 
-mongodb_client = MongoClient("localhost", 27017)
+mongodb_client = MongoClient("10.154.0.13", 27017)
+
 database = mongodb_client["ICHack"]
 users = {}
 
@@ -57,33 +58,47 @@ def handle_createBattle(json):
     users[request.sid] = request.sid
     emit("joinWaitingRoom", {"game_id": game_id})
 
+
 @socketio.on("joinBattle")
 def handle_joinBattle(json):
     print(request.sid)
     battles[json["game_id"]].add_player(request.sid, json["pokemon_id"])
-    emit("joinBattle", {"self_pokemon": battles[json["game_id"]].p2, "target_pokemon": battles[json["game_id"]].p1}, to=request.sid)
-    emit("joinBattleFromRoom", {"self_pokemon": battles[json["game_id"]].p1, "target_pokemon": battles[json["game_id"]].p2}, to=battles[json["game_id"]].player1)
+    emit(
+        "joinBattle",
+        {
+            "self_pokemon": battles[json["game_id"]].p2,
+            "target_pokemon": battles[json["game_id"]].p1,
+        },
+        to=request.sid,
+    )
+    emit(
+        "joinBattleFromRoom",
+        {
+            "self_pokemon": battles[json["game_id"]].p1,
+            "target_pokemon": battles[json["game_id"]].p2,
+        },
+        to=battles[json["game_id"]].player1,
+    )
+
 
 @socketio.on("attack")
 def handle_attack(json):
     battles[json["game_id"]].handle_event("attack", json, request.sid, database)
 
 
-@app.route("/ListPokemon/<player>", methods=["GET"])
-def ListPokemon(player):
-    player = database.player.find_one({"id": player})
-    return [Pokemon.load(database, id) for id in player.pokemon]
-    
-
-@app.route("/CreatePokemon/<player_id>", methods=["POST"])
-def CreatePokemon(player_id):
-    player = database.players.find_one({"id": player_id})
-    img = request.files["img"]
-    file = open("imgFile", 'wb')
-    img.save(file)
-    file.close()
-    img_input = load_image_from_file("imgFile")
-    pokemon = build_pokemon(img_input, create_image=True)
-    player.pokemon = player.pokemon.append(pokemon)
-    database.players.update_one({"id": player_id}, player)
-    return {}
+# @app.route("/", methods=["GET"])
+# def hello_world():
+#    members = request.args.getlist("members[]")
+#    results = []
+#    results.append(
+#        {
+#            "id": 1,
+#            "title": 1,
+#            "rating": 1,
+#            "image_url": 1,
+#        }
+#    )
+#
+#    print("Done!")
+#
+#    return results
