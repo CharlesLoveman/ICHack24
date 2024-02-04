@@ -31,11 +31,14 @@ export default function MainScreen() {
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
         <Button onClick={() => createBattle(pokemon)}>Create Battle</Button>
+        <br />
         {JoinRoomInputBox(pokemon)}
-        <Link to="../PokemonListScreen/">View Pokemon</Link>
-        <Link to="../PokemonCaptureScreen/">Capture Pokemon!</Link>
+        <br />
+        <Button><Link style={{ textDecoration: 'none' }} to="../PokemonListScreen/">View Pokemon</Link></Button>
+        <br />
+        <Button><Link style={{ textDecoration: 'none' }} to="../PokemonCaptureScreen/">Capture Pokemon!</Link></Button>
 
-      </CardContent>
-    </Card>
+      </CardContent >
+    </Card >
   );
 }

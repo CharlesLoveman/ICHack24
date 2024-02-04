@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { socket } from '../socket';
 import Button from '@mui/material/Button';
+import Input from '@mui/material/Input';
 
 export default function JoinRoomInputBox(pokemon) {
 
@@ -16,8 +17,9 @@ export default function JoinRoomInputBox(pokemon) {
     }
 
     return (
-        <><input onChange={e => setCode(e.target.value)} />
+        <><Input onChange={e => setCode(e.target.value)} />
             <Button type="submit" onClick={() => joinBattle(pokemon, code)}>Join Battle</Button></>
+
 
     );
 }

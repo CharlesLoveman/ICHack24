@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import NavBar from '../NavBar';
 
 
 export default function PokemonCaptureScreen() {
@@ -85,7 +86,8 @@ export default function PokemonCaptureScreen() {
 
 
     return (
-        <><div>Put a Camera here</div>
+        <>{NavBar()}
+            <div>Put a Camera here</div>
             <div>Put an upload button here</div>
             <input
                 type="file"
