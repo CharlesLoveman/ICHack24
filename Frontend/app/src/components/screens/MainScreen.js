@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import React, { useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
@@ -10,6 +11,15 @@ import { socket } from '../../socket';
 
 export default function MainScreen() {
 
+  function createBattle(pokemon) {
+
+    if (pokemon) {
+      socket.emit('createBattle', { player_id: document.cookie["player_id"], pokemon_id: pokemon.id })
+    }
+
+  }
+
+  const [pokemon, setPokemon] = useState();
   function createBattle(pokemon) {
 
     if (pokemon) {
