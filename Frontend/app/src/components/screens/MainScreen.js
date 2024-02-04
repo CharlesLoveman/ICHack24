@@ -12,6 +12,7 @@ import { GiHouse } from "react-icons/gi";
 import './styles.css';
 
 import { socket } from '../../socket';
+import { fontFamily } from '@mui/system';
 
 const player_id = String(Math.floor(Math.random() * 1000000))
 
