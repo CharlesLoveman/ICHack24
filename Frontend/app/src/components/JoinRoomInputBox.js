@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 
-export function JoinRoomInputBox() {
+export function JoinRoomInputBox(pokemon) {
 
-    function changePage(new_page) {
+    const [code, setCode] = setState();
 
-    }
+    function joinBattle(pokemon, code) {
+        game_id = code;
 
-    function onSubmit(event) {
+        socket.emit('joinBattle', { player_id: document.cookie["player_id"], pokemon_id: pokemon.id, game_id: game_id })
     }
 
     return (
         <form onSubmit={onSubmit}>
-            <input onChange={e => changePage(e.target.value)} />
-
-            <button type="submit" disabled={isLoading}>Join Room!</button>
+            <input onChange={e => setCode(e.target.value)} />
+            <Button type="submit" onClick={() => joinBattle(pokemon, code)}>Create Battle</Button>
         </form>
     );
 }
