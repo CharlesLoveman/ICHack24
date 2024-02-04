@@ -5,7 +5,7 @@ from flask_cors import CORS
 from flask_socketio import SocketIO, send, emit
 from random import randrange
 
-from .pokemon import Battle
+from .pokemon import Battle, Pokemon
 from .manage_db import Database, DatabaseWrapper
 
 pokemon_db = Database("pokemon_db.pkl")
@@ -15,7 +15,7 @@ db = DatabaseWrapper(pokemon=pokemon_db, attacks=attacks_db)
 users = {}
 
 app = Flask(__name__)
-CORS(app, resources={r"/app": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": "*"}})
 app.config["SECRET_KEY"] = "secret!"
 socketio = SocketIO(app, cors_credentials=True, cors_allowed_origins="*")
 
@@ -62,29 +62,44 @@ def handle_createBattle(json):
 def handle_joinBattle(json):
     print(request.sid)
     battles[json["game_id"]].add_player(request.sid, json["pokemon_id"])
-    emit("joinBattle", {})
+    emit(
+        "joinBattle",
+        {
+            "self_pokemon": battles[json["game_id"]].p2,
+            "target_pokemon": battles[json["game_id"]].p1,
+        },
+        to=request.sid,
+    )
+    emit(
+        "joinBattleFromRoom",
+        {
+            "self_pokemon": battles[json["game_id"]].p1,
+            "target_pokemon": battles[json["game_id"]].p2,
+        },
+        to=battles[json["game_id"]].player1,
+    )
+
 
 @socketio.on("attack")
 def handle_attack(json):
     battles[json["game_id"]].handle_event("attack", json, request.sid, database)
 
 
+@app.route("/ListPokemon/<player>", methods=["GET"])
+def ListPokemon(player):
+    #player = database.player.find_one({"id": player})
+    #return [Pokemon.load(database, id) for id in player.pokemon]
+    return [{
+            "name": "Squirtle",
+            "element": "a bit wet",
+            "description": "best boy 1997",
+            "stats": {"attack": 0},
+        }]
 
-
-
-# @app.route("/", methods=["GET"])
-# def hello_world():
-#    members = request.args.getlist("members[]")
-#    results = []
-#    results.append(
-#        {
-#            "id": 1,
-#            "title": 1,
-#            "rating": 1,
-#            "image_url": 1,
-#        }
-#    )
-#
-#    print("Done!")
-#
-#    return results
+@app.route("/CreatePokemon/<player_id>", methods=["POST"])
+def CreatePokemon(player_id):
+    player = database.players.find_one({"id": player_id})
+    pokemon = build_pokemon(request.form["img"])
+    player.pokemon = player.pokemon.append(pokemon)
+    database.players.update_one({"id": player_id}, player)
+    return {}

@@ -10,6 +10,7 @@ import PokemonCard from './components/PokemonCard';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import MainScreen from './components/screens/MainScreen';
 import Root from './Root';
+import axios from 'axios';
 
 import {
   createBrowserRouter,
@@ -46,11 +47,14 @@ const router = createBrowserRouter([
         element: <PokemonBattleScreen />
       },
       {
-        path: "PokemonListScreen/",
-        element: <PokemonListScreen />
+        path: "PokemonListScreen/:id/",
+        element: <PokemonListScreen />,
+        loader: async ({ params }) => {
+          return (await axios.get(`http://127.0.0.1:5000/ListPokemon/${params.id}`)).data;
+        },
       },
       {
-        path: "PokemonCaptureScreen/",
+        path: "PokemonCaptureScreen/:id/",
         element: <PokemonCaptureScreen />
       }
     ]
