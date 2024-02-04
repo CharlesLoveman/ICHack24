@@ -65,3 +65,52 @@ Speed:
 
 [End Output Image Prompt]
 """
+
+GEMINI_PROMPT_TEMPLATE_ATTACKS = """Generate 4 attacks for a Pokemon. You are required to generate names and types, and whether is the attack is Status, Physical or Special. The attacks should be entertaining and take into account the attributes of the Pokemon which may influence its stats.
+
+Name: {}
+
+Type: {}
+
+{}
+
+[Start Attack 1]
+
+Name:
+
+Category:
+
+Type:
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name:
+
+Category:
+
+Type:
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name:
+
+Category:
+
+Type:
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name:
+
+Category:
+
+Type:
+
+[End Attack 4]
+"""

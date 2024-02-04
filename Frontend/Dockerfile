@@ -1,7 +1,7 @@
 FROM node:18
 
 WORKDIR /home/node/app
-EXPOSE 8080
+EXPOSE 80
 
 
 
@@ -11,4 +11,4 @@ RUN npm ci
 
 ENV NODE_ENV="production"
 
-CMD ["echo", "helloworld"]
+CMD ["npm", "start"]
