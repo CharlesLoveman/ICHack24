@@ -38,9 +38,9 @@ export default function MainScreen() {
         <br /><br />
         {JoinRoomInputBox(pokemon)}
         <br /><br />
-        <Button variant='contained' size='large' startIcon={< GiHouse />}><Link style={{ textDecoration: 'none' }} to="../PokemonListScreen/" >View Pokemon</Link></Button>
+        <Button variant='contained' size='large' startIcon={< GiHouse />}><Link style={{ textDecoration: 'none' }} to="../PokemonListScreen/id" >View Pokemon</Link></Button>
         <br /><br />
-        <Button variant='contained' size='large' startIcon={<MdCatchingPokemon />}><Link style={{ textDecoration: 'none' }} to="../PokemonCaptureScreen/">Capture Pokemon!</Link></Button>
+        <Button variant='contained' size='large' startIcon={<MdCatchingPokemon />}><Link style={{ textDecoration: 'none' }} to="../PokemonCaptureScreen/id">Capture Pokemon!</Link></Button>
       </CardContent >
     </Card >
   );

@@ -4,11 +4,14 @@ import NavBar from '../NavBar';
 import { MdUpload } from "react-icons/md";
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
+import { useParams } from 'react-router-dom';
 
 
 export default function PokemonCaptureScreen() {
 
     const [state, setState] = useState(null);
+
+    const params = useParams()
 
     // On file select (from the pop up)
     const onFileChange = (event) => {
@@ -28,10 +31,15 @@ export default function PokemonCaptureScreen() {
                 formData.append(
                     "img",
                     state.selectedFile,
-                    state.selectedFile.name
                 );
+                console.log(state.selectedFile)
+                //formData.append("image", imagefile.files[0]);
+                axios.post(`http://127.0.0.1:5000/CreatePokemon/${params.id}`, formData, {
+                    headers: {
+                    'Content-Type': 'multipart/form-data'
+                    }});
 
-                axios.post("http://127.0.0.1:5000/CreatePokemon", formData);
+                //axios.post(`http://127.0.0.1:5000/CreatePokemon/${params.id}`, formData);
             }
         }
     };
@@ -52,7 +60,6 @@ export default function PokemonCaptureScreen() {
             />
 
             <MdUpload onClick={onFileUpload}></MdUpload>
-            {fileData()}
         </>
     );
 

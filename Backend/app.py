@@ -8,6 +8,8 @@ from random import randrange
 from pokemon import Battle, Pokemon
 from pymongo import MongoClient
 
+from api import build_pokemon, load_image_from_file
+
 mongodb_client = MongoClient("localhost", 27017)
 database = mongodb_client["ICHack"]
 users = {}
@@ -80,7 +82,12 @@ def ListPokemon(player):
 @app.route("/CreatePokemon/<player_id>", methods=["POST"])
 def CreatePokemon(player_id):
     player = database.players.find_one({"id": player_id})
-    pokemon = imgToPokemon(request.form["img"])
+    img = request.files["img"]
+    file = open("imgFile", 'wb')
+    img.save(file)
+    file.close()
+    img_input = load_image_from_file("imgFile")
+    pokemon = build_pokemon(img_input, create_image=True)
     player.pokemon = player.pokemon.append(pokemon)
     database.players.update_one({"id": player_id}, player)
     return {}
