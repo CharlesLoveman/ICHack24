@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { socket } from '../socket';
 import Button from '@mui/material/Button';
 import Input from '@mui/material/Input';
+import { GiBattleAxe } from "react-icons/gi";
 
 export default function JoinRoomInputBox(pokemon) {
 
@@ -16,9 +17,10 @@ export default function JoinRoomInputBox(pokemon) {
 
     }
 
-    return (
-        <><Input onChange={e => setCode(e.target.value)} />
-            <Button type="submit" onClick={() => joinBattle(pokemon, code)}>Join Battle</Button></>
+    return (<>
+        <Button startIcon={<GiBattleAxe />} variant='contained' size='large' type="submit" onClick={() => joinBattle(pokemon, code)}>Join Battle</Button><br />
+        <Input onChange={e => setCode(e.target.value)} />
+    </>
 
 
     );
