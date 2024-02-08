@@ -47,7 +47,7 @@ class Pokemon:
 
         if not isinstance(self.element, str):
             raise TypeError(f"Element must be a string, but {self.element} is a {type(self.element).__name__}")
-        if not self.element in element_options:
+        if self.element not in element_options:
             raise ValueError(f"Element must be a valid element, but {self.element} is not")
 
         if not isinstance(self.stats, dict):
@@ -55,7 +55,7 @@ class Pokemon:
         if not len(self.stats) == 6:
             raise ValueError(f"Stats must have 6 values, but {len(self.stats)} were given: {self.stats}")
         for key in self.stats.keys():
-            if not key in stats_keys:
+            if key not in stats_keys:
                 raise ValueError(f"Stats must have valid keys, but {key} is not")
             if not isinstance(self.stats[key], int):
                 raise TypeError(f"Stats must have integer values, but the {key} stat is {self.stats[key]} is a {type(self.stats[key]).__name__}")
@@ -78,7 +78,7 @@ class Pokemon:
         """Hit the target Pokemon with an attack."""
         if not isinstance(attack, Attack):
             raise TypeError(f"Attack must be an Attack, but {attack} is a {type(attack).__name__}")
-        if not attack in self.attacks:
+        if attack not in self.attacks:
             raise ValueError(f"Chosen attack must be one of the Pokemon's attacks, but {attack} is not")
         if not isinstance(target, Pokemon):
             raise TypeError(f"Target must be a Pokemon, but {target} is a {type(target).__name__}")
@@ -157,7 +157,7 @@ class Attack:
 
         if not isinstance(self.element, str):
             raise TypeError(f"Element must be a string, but {self.element} is a {type(self.element).__name__}")
-        if not self.element in element_options:
+        if self.element not in element_options:
             raise ValueError(f"Element must be a valid element, but {self.element} is not")
 
         if not isinstance(self.power, int):
@@ -171,7 +171,7 @@ class Attack:
         if not isinstance(self.self_status, dict):
             raise TypeError(f"Status must be a dictionary, but {self.self_status} is a {type(self.self_status).__name__}")
         for key in self.self_status.keys():
-            if not key in stats_keys:
+            if key not in stats_keys:
                 raise ValueError(f"Status must have valid keys, but {key} is not")
             if not isinstance(self.self_status[key], int):
                 raise TypeError(f"Status effect value must be an integer, but the {key} status {self.self_status[key]} is a {type(self.self_status[key]).__name__}")
@@ -181,7 +181,7 @@ class Attack:
         if not isinstance(self.target_status, dict):
             raise TypeError(f"Status must be a dictionary, but {self.target_status} is a {type(self.target_status).__name__}")
         for key in self.target_status.keys():
-            if not key in stats_keys:
+            if key not in stats_keys:
                 raise ValueError(f"Status must have valid keys, but {key} is not")
             if not isinstance(self.target_status[key], int):
                 raise TypeError(f"Status effect value must be an integer, but the {key} status {self.target_status[key]} is a {type(self.target_status[key]).__name__}")
@@ -218,9 +218,9 @@ def generate_attack(name : str, element : str, category : str):
 
     if not isinstance(name, str):
         raise TypeError(f"Name must be a string, but {name} is a {type(name).__name__}")
-    if not element in element_options:
+    if element not in element_options:
         raise ValueError(f"Element must be a valid element, but {element} is not")
-    if not category in ["physical", "special", "status"]:
+    if category not in ["physical", "special", "status"]:
         raise ValueError(f"Category must be either 'physical', 'special' or 'status', but {category} is not")
 
     power = 0
@@ -321,7 +321,7 @@ class Battle:
 
     def handle_event(self, event: str, json: dict, socket_id: str, db, users):
         return self.state.handle_event(self, event, json, socket_id, db)
-    
+
     def execute(self, users):
         if self.p1.stats["speed"] <= self.p2.stats["speed"]:
             self.p1.attack(self.attack1, self.p2)
@@ -354,23 +354,26 @@ class Battle:
                 emit("lose", {}, to=users[self.player1])
                 emit("win", {}, to=users[self.player2])
 
+
 class BattleState:
     def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db, users):
         pass
+
 
 class WaitingForAttacks(BattleState):
     def __init__(self):
         super()
 
     def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db, users):
-        if event == "attack": 
+        if event == "attack":
             if socket_id == battle.player1:
                 battle.attack1 = db.attacks.find_one({"_id": json["attack_id"]})
                 battle.state = WaitingForPlayer2Attack()
             elif socket_id == battle.player2:
                 battle.attack2 = db.attacks.find_one({"_id": json["attack_id"]})
                 battle.state = WaitingForPlayer1Attack()
-    
+
+
 class WaitingForPlayer1Attack(BattleState):
     def __init__(self):
         super()
@@ -380,6 +383,7 @@ class WaitingForPlayer1Attack(BattleState):
             if socket_id == battle.player2:
                 battle.attack2 = db.attacks.find_one({"_id": json["attack_id"]})
                 battle.execute(users)
+
 
 class WaitingForPlayer2Attack(BattleState):
     def __init__(self):
