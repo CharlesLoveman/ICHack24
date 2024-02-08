@@ -10,10 +10,6 @@ from .api import build_pokemon
 from pymongo import MongoClient
 import os
 
-import test_mongo
-
-raise Exception("This is a test exception")
-
 MONGO_KEY = os.environ.get("MONGO_KEY")
 
 mongodb_client = MongoClient(f"mongodb://ic-hack-admin:{MONGO_KEY}@10.154.0.13:27017")
