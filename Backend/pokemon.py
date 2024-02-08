@@ -2,9 +2,7 @@
 
 from flask_socketio import emit
 import numpy as np
-from bson.objectid import ObjectId
 from PIL import Image
-import io
 
 element_options = ["Normal", "Fighting", "Flying", "Poison", "Ground", "Rock", "Bug", "Ghost", "Steel", "Fire", "Water", "Grass", "Electric", "Psychic", "Ice", "Dragon", "Dark", "Fairy"]
 stats_keys = ["hp", "attack", "defence", "special attack", "special defence", "speed"]
@@ -28,16 +26,16 @@ element_chart = np.array([[1, 1, 1, 1, 1, 0.5, 1, 0, 0.5, 1, 1, 1, 1, 1, 1, 1, 1
                           [1, 2, 1, 0.5, 1, 1, 1, 1, 0.5, 0.5, 1, 1, 1, 1, 1, 2, 2, 1]])
 
 class Pokemon:
-    """Create a Pokemon, with description, battle statistics and an image id."""
+    """Create a Pokemon, with description, battle statistics and an image."""
 
-    def __init__(self, name : str, description : str, element : str, stats : dict, attacks : list, image : Image, id=""):
+    def __init__(self, name: str, description: str, element: str, stats: dict, attacks: list, image: Image):
         self.name = name
         self.description = description
         self.element = element
         self.stats = stats
         self.attacks = attacks
         self.image = image
-        self.id = id
+        self.id = self.generate_id()
 
         if not isinstance(self.name, str):
             raise TypeError(f"Name must be a string, but {self.name} is a {type(self.name).__name__}")
@@ -115,34 +113,21 @@ class Pokemon:
                 target.stats[key] = max(1, target.stats[key] + attack.target_status[key])
 
     def save(self, db):
-        attack_ids = [attack.save(db) for attack in self.attacks]
-        stats_id = db.stats.insert_one(self.stats).inserted_id
-        img_raw = io.BytesIO(self.image.tobytes())
-        return db.pokemon.insert_one(
-            {
-                "name": self.name,
-                "description": self.description,
-                "element": self.element,
-                "stats": stats_id,
-                "attacks": attack_ids,
-                "image": img_raw,
-            }).inserted_id
+        db.pokemon[self.id] = self
+        return self.id
 
     @classmethod
     def load(cls, db, id):
-        pokemon = db.pokemon.find_one({"_id": ObjectId(id)})
-        stats = db.stats.find_one({"_id": ObjectId(pokemon["stats"])})
-        stats.pop("_id")
-        attacks = [Attack.load(db, attack_id) for attack_id in pokemon["attacks"]]
-        img_raw = pokemon["image_id"]
-        img = Image.open(io.BytesIO(img_raw))
-        return Pokemon(pokemon["name"], pokemon["description"], pokemon["element"], stats, attacks, img_raw, id)
+        return db.pokemon[id]
+
+    def generate_id(self):
+        return hash(f"{self.name}_{self.element}_{self.stats}")
 
 
 class Attack:
     """Create an attack, to be called when a Pokemon attacks."""
 
-    def __init__(self, name : str, element : str, power : int = 0, special : bool = False, self_status : dict = {}, target_status : dict = {}, id : str = ""):
+    def __init__(self, name: str, element: str, power: int = 0, special: bool = False, self_status: dict = {}, target_status: dict = {}, id: str = ""):
         """Create an attack with a name, element and optional power and status effects."""
         self.name = name
         self.element = element
@@ -150,7 +135,7 @@ class Attack:
         self.special = special
         self.self_status = self_status
         self.target_status = target_status
-        self.id = id
+        self.id = self.generate_id()
 
         if not isinstance(self.name, str):
             raise TypeError(f"Name must be a string, but {self.name} is a {type(self.name).__name__}")
@@ -193,27 +178,18 @@ class Attack:
         return f"Attack({repr(self.name)}, {repr(self.element)}, {repr(self.power)}, {repr(self.special)}, {repr(self.self_status)}, {repr(self.target_status)})"
 
     def save(self, db):
-        stat_ids = db.stats.insert_many([self.self_status, self.target_status]).inserted_ids
-        return db.attacks.insert_one({
-            "name": self.name,
-            "element": self.element,
-            "power": self.power,
-            "special": self.special,
-            "self_status": stat_ids[0],
-            "target_status": stat_ids[1],
-        }).inserted_id
+        db.attacks[self.id] = self
+        return self.id
 
     @classmethod
     def load(cls, db, id):
-        attack = db.attacks.find_one({"_id": ObjectId(id)})
-        self_status = db.stats.find_one({"_id": ObjectId(attack["self_status"])})
-        self_status.pop("_id")
-        target_status = db.stats.find_one({"_id": ObjectId(attack["target_status"])})
-        target_status.pop("_id")
-        return Attack(attack["name"], attack["element"], attack["power"], attack["special"], self_status, target_status, id)
+        return db.attacks[id]
+
+    def generate_id(self):
+        return hash(f"{self.name}_{self.element}_{self.power}_{self.special}_{self.self_status}_{self.target_status}")
 
 
-def generate_attack(name : str, element : str, category : str):
+def generate_attack(name: str, element: str, category: str):
     """Generate a random attack with the given name, element and category."""
 
     if not isinstance(name, str):
@@ -309,15 +285,15 @@ class Battle:
     """Create a battle between 2 Pokemon."""
     def __init__(self, player1, pokemon1, db):
         self.player1 = player1
-        self.p1 = db.pokemon.find_one({"_id": pokemon1})
-        self.state = None 
+        self.p1 = db.pokemon[pokemon1]
+        self.state = None
 
         if not isinstance(self.p1, Pokemon):
             raise TypeError(f"Pokemon 1 must be a Pokemon, but {self.p1} is a {type(self.p1).__name__}")
 
     def add_player(self, player2, pokemon2, db):
         self.player2 = player2
-        self.p2 = db.pokemon.find_one({"_id": pokemon2})
+        self.p2 = db.pokemon[pokemon2]
 
     def handle_event(self, event: str, json: dict, socket_id: str, db, users):
         return self.state.handle_event(self, event, json, socket_id, db)
@@ -367,10 +343,10 @@ class WaitingForAttacks(BattleState):
     def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db, users):
         if event == "attack":
             if socket_id == battle.player1:
-                battle.attack1 = db.attacks.find_one({"_id": json["attack_id"]})
+                battle.attack1 = db.attacks[json["attack_id"]]
                 battle.state = WaitingForPlayer2Attack()
             elif socket_id == battle.player2:
-                battle.attack2 = db.attacks.find_one({"_id": json["attack_id"]})
+                battle.attack2 = db.attacks[json["attack_id"]]
                 battle.state = WaitingForPlayer1Attack()
 
 
@@ -381,7 +357,7 @@ class WaitingForPlayer1Attack(BattleState):
     def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db, users):
         if event == "attack":
             if socket_id == battle.player2:
-                battle.attack2 = db.attacks.find_one({"_id": json["attack_id"]})
+                battle.attack2 = db.attacks[json["attack_id"]]
                 battle.execute(users)
 
 

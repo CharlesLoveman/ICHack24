@@ -6,6 +6,7 @@ from flask_socketio import SocketIO, send, emit
 from random import randrange
 
 from .pokemon import Battle, Pokemon
+from .api import build_pokemon
 from pymongo import MongoClient
 
 mongodb_client = MongoClient("localhost", 27017)
@@ -93,6 +94,7 @@ def ListPokemon(player):
             "description": "best boy 1997",
             "stats": {"attack": 0},
         }]
+
 
 @app.route("/CreatePokemon/<player_id>", methods=["POST"])
 def CreatePokemon(player_id):
