@@ -9,6 +9,7 @@ from .pokemon import Battle, Pokemon
 from .api import build_pokemon
 from pymongo import MongoClient
 
+
 mongodb_client = MongoClient("localhost", 27017)
 database = mongodb_client["ic-hack"]
 users = {}
