@@ -368,5 +368,5 @@ class WaitingForPlayer2Attack(BattleState):
     def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db, users):
         if event == "attack":
             if socket_id == battle.player1:
-                battle.attack1 = db.attacks[json["attack_id"]]
+                battle.attack1 = db.attacks.find_one({"_id": json["attack_id"]})
                 battle.execute(users)

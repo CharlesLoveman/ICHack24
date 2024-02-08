@@ -6,12 +6,12 @@ from flask_socketio import SocketIO, send, emit
 from random import randrange
 
 from .pokemon import Battle, Pokemon
-from .manage_db import Database, DatabaseWrapper
+from .api import build_pokemon
+from pymongo import MongoClient
 
-pokemon_db = Database("pokemon_db.pkl") # Change these back for online
-attacks_db = Database("attacks_db.pkl")
-db = DatabaseWrapper(pokemon=pokemon_db, attacks=attacks_db)
 
+mongodb_client = MongoClient("localhost", 27017)
+database = mongodb_client["ic-hack"]
 users = {}
 
 app = Flask(__name__)
@@ -95,6 +95,7 @@ def ListPokemon(player):
             "description": "best boy 1997",
             "stats": {"attack": 0},
         }]
+
 
 @app.route("/CreatePokemon/<player_id>", methods=["POST"])
 def CreatePokemon(player_id):
