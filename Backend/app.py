@@ -8,15 +8,18 @@ from random import randrange
 from .pokemon import Battle, Pokemon
 from .api import build_pokemon
 from pymongo import MongoClient
+from dotenv import dotenv_values
+import os
 
+config = dotenv_values(".prod" if os.get_env("FLASK_ENV") == "prod" else ".dev")
 
-mongodb_client = MongoClient("localhost", 27017)
+mongodb_client = MongoClient(f"mongodb://ic-hack-admin:{config.MONGO_KEY}@{config.MONGO_IP}:27017")
 database = mongodb_client["ic-hack"]
 users = {}
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
-app.config["SECRET_KEY"] = "secret!"
+app.config["SECRET_KEY"] = config.APP_SECRET
 socketio = SocketIO(app, cors_credentials=True, cors_allowed_origins="*")
 
 battles = {}
