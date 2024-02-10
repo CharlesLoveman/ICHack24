@@ -1,9 +1,12 @@
 from PIL import Image as PILImage
 import requests
 import io
+import os
+
+HF_KEY = os.environ.get("HF_KEY")
 
 API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
-headers = {"Authorization": "Bearer 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"}
+headers = {"Authorization": f"Bearer {HF_KEY}"}
 
 
 def generate_image(image_prompt):

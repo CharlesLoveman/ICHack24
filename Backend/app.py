@@ -8,9 +8,12 @@ from random import randrange
 from .pokemon import Battle, Pokemon
 from .api import build_pokemon
 from pymongo import MongoClient
+import os
 
+MONGO_KEY = os.environ.get("MONGO_KEY")
+MONGO_IP = os.environ.get("MONGO_IP")  # 10.154.0.13
 
-mongodb_client = MongoClient("localhost", 27017)
+mongodb_client = MongoClient(f"mongodb://ic-hack-admin:{MONGO_KEY}@{MONGO_IP}:27017")
 database = mongodb_client["ic-hack"]
 users = {}
 
