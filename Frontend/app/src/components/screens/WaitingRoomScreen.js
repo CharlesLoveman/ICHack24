@@ -16,6 +16,7 @@ export default function WaitingRoomScreen() {
           Put some numbers/ a 6-digit code here \\
           Waiting Foreveeeer
           {params.game_id}
+          <FaMagnifyingGlass />
         </Typography>
       </CardContent>
     </Card>
