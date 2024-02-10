@@ -5,6 +5,9 @@ import os
 MONGO_KEY = os.environ.get("MONGO_KEY")
 MONGO_IP = os.environ.get("MONGO_IP")
 
+print(MONGO_KEY)
+print(MONGO_IP)
+
 mongodb_client = MongoClient(f"mongodb://ic-hack-admin:{MONGO_KEY}@{MONGO_IP}:27017")
 
 database = mongodb_client["test"]
