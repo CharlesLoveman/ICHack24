@@ -3,6 +3,9 @@ name: Docker Image CI
 on:
   push:
     branches: [ "main" ]
+env:
+  GCLOUD_KEY: ${{ secrets.GCLOUD_KEY }}
+  FLASK_ENV: "prod"
 jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
