@@ -1,5 +1,7 @@
+cd ..
 cd Frontend
 cd app
-npm run
+npm run regstart
 cd ..
 cd ..
+cd Scripts
