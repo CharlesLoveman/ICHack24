@@ -1,6 +1,6 @@
 """Flask app for the backend."""
 
-from flask import Flask, request, jsonify
+from flask import Flask, make_response, request, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO, send, emit
 from random import randrange
@@ -11,15 +11,16 @@ from pymongo import MongoClient
 from dotenv import dotenv_values
 import os
 
-config = dotenv_values(".prod" if os.get_env("FLASK_ENV") == "prod" else ".dev")
+config = dotenv_values(".prod" if os.getenv("FLASK_ENV") == "prod" else ".dev")
 
-mongodb_client = MongoClient(f"mongodb://ic-hack-admin:{config.MONGO_KEY}@{config.MONGO_IP}:27017")
+print(config["MONGO_KEY"])
+mongodb_client = MongoClient(f"mongodb://ic-hack-admin:{config['MONGO_KEY']}@{config['MONGO_IP']}:27017")
 database = mongodb_client["ic-hack"]
 users = {}
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
-app.config["SECRET_KEY"] = config.APP_SECRET
+app.config["SECRET_KEY"] = config["APP_SECRET"]
 socketio = SocketIO(app, cors_credentials=True, cors_allowed_origins="*")
 
 battles = {}
@@ -90,13 +91,16 @@ def handle_attack(json):
 
 @app.route("/InitialiseUser/<player>", methods=["POST"])
 def InitialiseUser(player):
-    init_pokemon_dict = {}
-    init_pokemon_dict["id"] = player
-    init_pokemon_dict["pokemon"] = {}
+    init_pokemon_dict = {
+        "pokemon": [],
+        "username": player
+    }
     # init_pokemon_json = jsonify(init_pokemon_dict)
     # print(init_pokemon_json)
-    database.player.insert_one(init_pokemon_dict)
+    id = database.player.insert_one(init_pokemon_dict).inserted_id
     resp = jsonify(success=True)
+    resp = make_response(resp)
+    resp.set_cookie('pid', id)
     return resp
 
 
