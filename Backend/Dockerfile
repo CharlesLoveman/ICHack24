@@ -20,4 +20,6 @@ ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
 COPY Backend .
 
-CMD [ "python", "-m", "flask", "--app", "app", "run" ]
+RUN chmod +x gcloud_test/run_test.sh
+
+CMD [ ".", "./gcloud_test/run_test.sh" ]
