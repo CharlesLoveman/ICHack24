@@ -1,6 +1,6 @@
 """Flask app for the backend."""
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO, send, emit
 from random import randrange
@@ -85,16 +85,30 @@ def handle_attack(json):
     battles[json["game_id"]].handle_event("attack", json, request.sid, database)
 
 
+@app.route("/InitialiseUser/<player>", methods=["POST"])
+def InitialiseUser(player):
+    init_pokemon_dict = {}
+    init_pokemon_dict["id"] = player
+    init_pokemon_dict["pokemon"] = {}
+    # init_pokemon_json = jsonify(init_pokemon_dict)
+    # print(init_pokemon_json)
+    database.player.insert_one(init_pokemon_dict)
+    resp = jsonify(success=True)
+    return resp
+
+
 @app.route("/ListPokemon/<player>", methods=["GET"])
 def ListPokemon(player):
-    #player = database.player.find_one({"id": player})
-    #return [Pokemon.load(database, id) for id in player.pokemon]
-    return [{
+    player = database.player.find_one({"id": player})
+    return [Pokemon.load(database, id) for id in player.pokemon]
+    return [
+        {
             "name": "Squirtle",
             "element": "a bit wet",
             "description": "best boy 1997",
             "stats": {"attack": 0},
-        }]
+        }
+    ]
 
 
 @app.route("/CreatePokemon/<player_id>", methods=["POST"])
@@ -103,4 +117,5 @@ def CreatePokemon(player_id):
     pokemon = build_pokemon(request.form["img"])
     player.pokemon = player.pokemon.append(pokemon)
     database.players.update_one({"id": player_id}, player)
-    return {}
+    resp = jsonify(success=True)
+    return resp

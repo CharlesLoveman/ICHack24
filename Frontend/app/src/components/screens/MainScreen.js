@@ -20,6 +20,12 @@ export default function MainScreen() {
 
   var pokemon
 
+  function initialiseUser() {
+    axios.post(`http://127.0.0.1:5000/InitialiseUser/${player_id}`)
+  }
+
+  // initialiseUser()
+
   function fetchPokemon() {
     var pokemons = axios.get(`http://127.0.0.1:5000/ListPokemon/${player_id}`);
     if (pokemons) {
@@ -40,15 +46,16 @@ export default function MainScreen() {
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent >
-        <div style={{ textAlign: 'center' }}>Hello Pokemon Trainer, what would you like to do?</div>
+        <div style={{ textAlign: 'center' }}>Hello Pokemon Trainer {player_id}, what would you like to do?</div>
+        <Button onClick={() => initialiseUser()}>hi</Button>
         <br />
         <Button fullWidth='true' onClick={() => createBattle(pokemon)} variant='contained' startIcon={<GiBattleGear size="1rem" />} endIcon={<GiBattleGear size="1rem" />} color='error'>Create Battle</Button>
         <br /><br />
         <div style={{ textAlign: 'center' }}>{JoinRoomInputBox(pokemon)}</div>
         <br /><br />
-        <Button fullWidth='true' variant='contained' size='large' startIcon={< GiHouse size="1rem" />} endIcon={< GiHouse size="1rem" />}><Link style={{ textDecoration: 'none' }} to="../PokemonListScreen/" >View Pokemon</Link></Button>
+        <Button fullWidth='true' variant='contained' size='large' startIcon={< GiHouse size="1rem" />} endIcon={< GiHouse size="1rem" />}><Link style={{ textDecoration: 'none' }} to={`../PokemonListScreen/${player_id}`} >View Pokemon</Link></Button>
         <br /><br />
-        <Button fullWidth='true' variant='contained' size='large' startIcon={<MdCatchingPokemon size="1rem" />} endIcon={<MdCatchingPokemon size="1rem" />}><Link style={{ textDecoration: 'none' }} to="../PokemonCaptureScreen/id">Capture Pokemon!</Link></Button>
+        <Button fullWidth='true' variant='contained' size='large' startIcon={<MdCatchingPokemon size="1rem" />} endIcon={<MdCatchingPokemon size="1rem" />}><Link style={{ textDecoration: 'none' }} to={`../PokemonCaptureScreen/${player_id}`}>Capture Pokemon!</Link></Button>
       </CardContent >
     </Card >
   );

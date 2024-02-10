@@ -1,6 +1,10 @@
 """API for interfacing with the vision pipeline."""
 
-from .prompt_templates import GEMINI_PROMPT_TEMPLATE, GEMINI_PROMPT_TEMPLATE_WITH_IMAGE, GEMINI_PROMPT_TEMPLATE_ATTACKS
+from .prompt_templates import (
+    GEMINI_PROMPT_TEMPLATE,
+    GEMINI_PROMPT_TEMPLATE_WITH_IMAGE,
+    GEMINI_PROMPT_TEMPLATE_ATTACKS,
+)
 from .image_processing import generate_image, pixelate_image
 from .pokemon import Pokemon, generate_attack
 import vertexai
@@ -12,7 +16,13 @@ model = GenerativeModel("gemini-pro")
 vision_model = GenerativeModel("gemini-pro-vision")
 
 STATS_KEYS = [
-    "Type", "HP", "Attack", "Defence", "Special Attack", "Special Defence", "Speed"
+    "Type",
+    "HP",
+    "Attack",
+    "Defence",
+    "Special Attack",
+    "Special Defence",
+    "Speed",
 ]
 
 
@@ -75,7 +85,10 @@ def create_pokemon(img, create_image=False, return_prompt=False):
     sections = [
         re.search(
             rf"\[Start Output {key}\](.*)\[End Output {key}\]", response, re.DOTALL
-        ).group(1).strip() for key in cat_names
+        )
+        .group(1)
+        .strip()
+        for key in cat_names
     ]
 
     # Extract the name
@@ -129,7 +142,10 @@ def create_attacks(name, pokedex, element):
     attack_responses = [
         re.search(
             rf"\[Start Attack {key}\](.*)\[End Attack {key}\]", response, re.DOTALL
-        ).group(1).strip() for key in range(1, 5)
+        )
+        .group(1)
+        .strip()
+        for key in range(1, 5)
     ]
 
     attacks = []

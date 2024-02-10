@@ -1,6 +1,10 @@
 from pymongo import MongoClient
 
-mongodb_client = MongoClient("34.89.65.167", 27017)
+ip = "34.89.65.167"
+ip = "127.0.0.1"
+
+
+mongodb_client = MongoClient(ip, 27017)
 database = mongodb_client["ic-hack"]
-print(database.user.find_one() + "hello")
+print(database.test.find_one() + "hello")
 print("connected")

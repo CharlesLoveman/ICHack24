@@ -15,7 +15,7 @@ export default function PokemonListScreen() {
             {NavBar()}
             {TempAcquireBar()}
 
-            {PokemonList(data)}</>
+            //{PokemonList(data)}</>
     );
 
 }
