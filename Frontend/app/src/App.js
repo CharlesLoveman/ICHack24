@@ -1,6 +1,6 @@
 import './App.css';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { socket } from './socket';
 import { ConnectionState } from './components/ConnectionState';
 import { ConnectionManager } from './components/ConnectionManager';
@@ -24,6 +24,7 @@ import PokemonCaptureScreen from './components/screens/PokemonCaptureScreen';
 
 const theme = createTheme({
 });
+
 
 const router = createBrowserRouter([
   {
@@ -62,6 +63,9 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
+
+
+
   return (
     <ThemeProvider theme={theme}>
       <RouterProvider router={router} />

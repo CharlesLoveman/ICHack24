@@ -13,7 +13,9 @@ import os
 
 config = dotenv_values(".prod" if os.get_env("FLASK_ENV") == "prod" else ".dev")
 
-mongodb_client = MongoClient(f"mongodb://ic-hack-admin:{config.MONGO_KEY}@{config.MONGO_IP}:27017")
+mongodb_client = MongoClient(
+    f"mongodb://ic-hack-admin:{config.MONGO_KEY}@{config.MONGO_IP}:27017"
+)
 database = mongodb_client["ic-hack"]
 users = {}
 
@@ -95,9 +97,10 @@ def InitialiseUser(player):
     init_pokemon_dict["pokemon"] = {}
     # init_pokemon_json = jsonify(init_pokemon_dict)
     # print(init_pokemon_json)
-    database.player.insert_one(init_pokemon_dict)
-    resp = jsonify(success=True)
-    return resp
+
+    db_result = database.player.insert_one(init_pokemon_dict)
+    _id = db_result.inserted_id
+    return _id
 
 
 @app.route("/ListPokemon/<player>", methods=["GET"])
