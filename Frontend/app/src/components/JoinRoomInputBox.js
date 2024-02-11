@@ -4,6 +4,8 @@ import Button from '@mui/material/Button';
 import Input from '@mui/material/Input';
 import { GiBattleAxe } from "react-icons/gi";
 
+
+
 export default function JoinRoomInputBox(pokemon, sx) {
 
     const [code, setCode] = useState();

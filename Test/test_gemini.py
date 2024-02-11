@@ -21,7 +21,7 @@ def test_create_pokemon(name):
     assert isinstance(stats, dict)
 
 
-@ pytest.mark.parametrize("name", ("banana", "bicycle", "flowers"))
+@pytest.mark.parametrize("name", ("banana", "bicycle", "flowers"))
 def test_build_pokemon(name):
     img = load_image_from_file(f"TestImages/{name}.jpg")
     pokemon = build_pokemon(img, create_image=True)

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
@@ -14,36 +14,54 @@ import Paper from '@mui/material/Paper';
 
 import { socket } from '../../socket';
 import { fontFamily } from '@mui/system';
-import getWindowStyle from '../../Global.js';
-import useWindowStyle from '../../Global.js';
 
 import { useLayoutEffect } from 'react';
+import LoginInputBox from '../LoginInputBox.js';
+import { GlobalData } from '../../App.js';
+import { TbPokeball } from "react-icons/tb";
 
-const player_id = String(Math.floor(Math.random() * 1000000))
 
 export default function MainScreen() {
 
-  var pokemon
+  const { username, setUsername, pokemon, setPokemon } = useContext(GlobalData);
+  const [display, setDisplay] = useState("notReady")
 
-  function initialiseUser() {
-    axios.post(`http://127.0.0.1:5000/InitialiseUser/${player_id}`)
+
+  function initialiseUser(username) {
+    axios.post(`http://127.0.0.1:5000/InitialiseUser/${username}`)
+  }
+
+  function updateAndInitialiseUser(new_username) {
+    setUsername(new_username)
+    setPokemon("")
+    initialiseUser(new_username)
   }
 
   // initialiseUser()
 
   function fetchPokemon() {
-    var pokemons = axios.get(`http://127.0.0.1:5000/ListPokemon/${player_id}`);
+    var pokemons = axios.get(`http://127.0.0.1:5000/ListPokemon/${username}`);
     if (pokemons) {
       pokemon = pokemons[0];
     }
   }
+
+  useEffect(() => {
+    if (pokemon != "") {
+      setDisplay("ready")
+    }
+    else {
+      setDisplay("notReady")
+    }
+
+  })
 
   // fetchPokemon()
 
   function createBattle(pokemon) {
 
     if (pokemon) {
-      socket.emit('createBattle', { player_id: document.cookie["player_id"], pokemon_id: pokemon.id })
+      socket.emit('createBattle', { username: username, pokemon_id: pokemon.id })
     }
 
   }
@@ -66,23 +84,43 @@ export default function MainScreen() {
   //var sx = { "font-size": width / 15 };
   var sx = { "font-size": height / 30 };
 
+  function displayReady() {
+    return (<div><TbPokeball /> {pokemon.name} is ready to go! </div>)
+  }
+
+  function displayNotReady() {
+    return (<div>No Pokemon has been selected. </div>)
+  }
+
+  function Display(props) {
+    if (props.display == "ready") {
+      return displayReady()
+    }
+    else {
+      return displayNotReady()
+    }
+  }
+
+
 
 
   return (
     <>
-      <Button sx={{ "font-size": width / 30 }}>Register</Button>
       <Card sx={sx} maxWidth="60%">
         <CardContent >
-          <div style={{ textAlign: 'center' }}>Hello Pokemon Trainer {player_id}, what would you like to do?</div>
-          <Button sx={sx} onClick={() => initialiseUser()}>hi</Button>
+          <div style={{ textAlign: 'center' }}>Hello Pokemon Trainer {username}, what would you like to do?</div>
+
+          <div style={{ textAlign: 'center' }}>{LoginInputBox(updateAndInitialiseUser, sx)}</div>
           <br />
+          <div style={{ textAlign: 'center' }}><Display display={display} /></div>
           <Button sx={sx} fullWidth='true' onClick={() => createBattle(pokemon)} variant='contained' startIcon={<GiBattleGear size="1rem" />} endIcon={<GiBattleGear size="1rem" />} color='error'>Create Battle</Button>
           <br /><br />
           <div style={{ textAlign: 'center' }}>{JoinRoomInputBox(pokemon, sx)}</div>
           <br /><br />
-          <Button sx={sx} fullWidth='true' variant='contained' size='large' startIcon={< GiHouse size="1rem" />} endIcon={< GiHouse size="1rem" />}><Link style={{ textDecoration: 'none' }} to={`../PokemonListScreen/${player_id}`} >View Pokemon</Link></Button>
+          <Button sx={sx} fullWidth='true' variant='contained' size='large' startIcon={< GiHouse size="1rem" />} endIcon={< GiHouse size="1rem" />}><Link style={{ textDecoration: 'none' }} to={`../PokemonListScreen/${username}`} >View Pokemon</Link></Button>
           <br /><br />
-          <Button sx={sx} fullWidth='true' variant='contained' size='large' startIcon={<MdCatchingPokemon size="1rem" />} endIcon={<MdCatchingPokemon size="1rem" />}><Link style={{ textDecoration: 'none' }} to={`../PokemonCaptureScreen/${player_id}`}>Capture Pokemon!</Link></Button>
+          <Button sx={sx} fullWidth='true' variant='contained' size='large' startIcon={<MdCatchingPokemon size="1rem" />} endIcon={<MdCatchingPokemon size="1rem" />}><Link style={{ textDecoration: 'none' }} to={`../PokemonCaptureScreen/${username}`}>Capture Pokemon!</Link></Button>
+
         </CardContent>
       </Card >
     </>
