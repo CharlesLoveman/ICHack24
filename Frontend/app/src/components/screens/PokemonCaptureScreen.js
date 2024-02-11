@@ -17,6 +17,7 @@ export default function PokemonCaptureScreen() {
 
     const [state, setState] = useState(null);
     const [url, setURL] = useState(null);
+    const [hidden, setHidden] = useState("")
 
     const params = useParams()
 
@@ -27,6 +28,8 @@ export default function PokemonCaptureScreen() {
         });
 
         setURL(getImage(event.target.files[0]))
+
+        setHidden("none")
     };
 
     // On file upload (click the upload button)
@@ -71,7 +74,8 @@ export default function PokemonCaptureScreen() {
     return (
         <>{NavBar()}
             <div style={{ textAlign: 'center' }}><GiForest />Capture a new Pokemon!<GiForest /></div >
-            <Button fullWidth='true'><label htmlFor='imageUpload'><FaCameraRetro size='9rem'></FaCameraRetro></label ></Button >
+            <Button fullWidth='true'><label htmlFor='imageUpload'><FaCameraRetro display={hidden} size='9rem'></FaCameraRetro></label ></Button >
+            <div style={{ textAlign: 'center' }}><img src={url} width="200rem"></img></div >
             <div style={{ textAlign: 'center' }}>Take a picture an animal <FaDog />, object <FaBottleWater /> or anything else <GiSpikyExplosion /> you would like to Pokefy and upload it here. If you're happy with the result, click the tick to adopt the Pokemon. Happy capturing!</div>
 
             <Input
@@ -83,7 +87,7 @@ export default function PokemonCaptureScreen() {
 
             <Button fullWidth='true'>  <IoIosCheckmarkCircle size='2rem' onClick={onFileUpload} /></Button>
 
-            {<img src={url}></img>}
+
         </>
     );
 

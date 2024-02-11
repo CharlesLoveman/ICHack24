@@ -1,6 +1,6 @@
 """Flask app for the backend."""
 
-from flask import Flask, request
+from flask import Flask, make_response, request, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO, send, emit
 from random import randrange
@@ -8,24 +8,54 @@ from random import randrange
 from .pokemon import Battle, Pokemon
 from .api import build_pokemon
 from pymongo import MongoClient
+from dotenv import dotenv_values
 import os
+from bson.objectid import ObjectId
+from api import load_image_from_file
+import jsonpickle
 
-MONGO_KEY = os.environ.get("MONGO_KEY")
-MONGO_IP = os.environ.get("MONGO_IP")  # 10.154.0.13
+config = dotenv_values(".prod" if os.getenv("FLASK_ENV") == "prod" else ".dev")
 
-mongodb_client = MongoClient(f"mongodb://ic-hack-admin:{MONGO_KEY}@{MONGO_IP}:27017")
+print(config["MONGO_KEY"])
+ip = "127.0.0.1"
+# Change this back
+mongodb_client = MongoClient(ip, 27017)
 database = mongodb_client["ic-hack"]
 users = {}
 
+py_cors_or = "*"
+sock_cors_or = "*"
+
+# ip = "http://localhost:3000"
+# py_cors_or = f"{ip}"
+# sock_cors_or = py_cors_or
+
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
-app.config["SECRET_KEY"] = "secret!"
-socketio = SocketIO(app, cors_credentials=True, cors_allowed_origins="*")
+CORS(app, resources={r"/*": {"origins": py_cors_or}})
+app.config["SECRET_KEY"] = config["APP_SECRET"]
+socketio = SocketIO(app, cors_credentials=True, cors_allowed_origins=py_cors_or)
 
 battles = {}
 
 if __name__ == "__main__":
     socketio.run(app)
+
+
+def get_player_by_cookie():
+    pid = request.cookies.get("pid")
+    _id = ObjectId(pid)
+    player = database.player.find_one({"_id": _id})
+    return player
+
+
+def get_player_by_username(username):
+    player = database.player.find_one({"username": username})
+    return player
+
+
+def get_pokemon_from_player(player):
+    pokemon_list = jsonpickle.decode(player["pokemon"])
+    return pokemon_list
 
 
 @socketio.on("message")
@@ -88,22 +118,63 @@ def handle_attack(json):
     battles[json["game_id"]].handle_event("attack", json, request.sid, database)
 
 
+@app.route("/InitialiseUser/<username>", methods=["POST"])
+def InitialiseUser(username):
+    id = username  # Change this
+    # init_pokemon_json = jsonify(init_pokemon_dict)
+    # print(init_pokemon_json)
+    player = get_player_by_username(username)
+    if player is None:
+        init_pokemon_dict = {"pokemon": jsonpickle.encode([]), "username": username}
+        id = str(database.player.insert_one(init_pokemon_dict).inserted_id)
+    resp = jsonify(success=True)
+    resp = make_response(resp)
+    resp.set_cookie("pid", id)
+    return resp
+
+
 @app.route("/ListPokemon/<player>", methods=["GET"])
 def ListPokemon(player):
-    #player = database.player.find_one({"id": player})
-    #return [Pokemon.load(database, id) for id in player.pokemon]
-    return [{
+    player = get_player_by_username(player)
+    pokemon_list = get_pokemon_from_player(player)
+
+    return jsonpickle.encode(pokemon_list)
+    # Change this later so you load from the pokemon table/ collection
+    return [
+        {
             "name": "Squirtle",
             "element": "a bit wet",
             "description": "best boy 1997",
             "stats": {"attack": 0},
-        }]
+        }
+    ]
 
 
 @app.route("/CreatePokemon/<player_id>", methods=["POST"])
 def CreatePokemon(player_id):
-    player = database.players.find_one({"id": player_id})
-    pokemon = build_pokemon(request.form["img"])
-    player.pokemon = player.pokemon.append(pokemon)
-    database.players.update_one({"id": player_id}, player)
-    return {}
+    print("abcd")
+    print(player_id)
+    player = get_player_by_username(player_id)  # Because cookies don't work for now.
+    # print("Player: " + str(player))
+    print("abcd")
+    img_raw = request.files["img"].read()
+    print("abcd")
+    img_name = hash(img_raw)
+    print("abcd")
+    img_path = f"{img_name}.jpg"
+    with open(img_path, "wb") as file:
+        file.write(img_raw)
+    print("abcd")
+    img = load_image_from_file(img_path)
+    print("abcd")
+    pokemon = build_pokemon(img)
+    print("abcd")
+    pokemon_list = jsonpickle.decode(player["pokemon"])
+    pokemon_list.append(pokemon)
+    database.player.update_one(
+        {"username": player_id}, {"$set": {"pokemon": jsonpickle.encode(pokemon_list)}}
+    )
+    print("abcd")
+    print(pokemon)
+    resp = jsonify(success=True)
+    return resp

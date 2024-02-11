@@ -5,33 +5,67 @@ import numpy as np
 from bson.objectid import ObjectId
 from PIL import Image
 import io
+import random
 
-element_options = ["Normal", "Fighting", "Flying", "Poison", "Ground", "Rock", "Bug", "Ghost", "Steel", "Fire", "Water", "Grass", "Electric", "Psychic", "Ice", "Dragon", "Dark", "Fairy"]
+element_options = [
+    "Normal",
+    "Fighting",
+    "Flying",
+    "Poison",
+    "Ground",
+    "Rock",
+    "Bug",
+    "Ghost",
+    "Steel",
+    "Fire",
+    "Water",
+    "Grass",
+    "Electric",
+    "Psychic",
+    "Ice",
+    "Dragon",
+    "Dark",
+    "Fairy",
+]
 stats_keys = ["hp", "attack", "defence", "special attack", "special defence", "speed"]
-element_chart = np.array([[1, 1, 1, 1, 1, 0.5, 1, 0, 0.5, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                          [2, 1, 0.5, 0.5, 1, 2, 0.5, 0, 2, 1, 1, 1, 1, 0.5, 2, 1, 2, 0.5],
-                          [1, 2, 1, 1, 1, 0.5, 2, 1, 0.5, 1, 1, 2, 0.5, 1, 1, 1, 1, 1],
-                          [1, 1, 1, 0.5, 0.5, 0.5, 1, 0.5, 0, 1, 1, 2, 1, 1, 1, 1, 1, 2],
-                          [1, 1, 0, 2, 1, 2, 0.5, 1, 2, 2, 1, 0.5, 2, 1, 1, 1, 1, 1],
-                          [1, 0.5, 2, 1, 0.5, 1, 2, 1, 0.5, 2, 1, 1, 1, 1, 2, 1, 1, 1],
-                          [1, 0.5, 0.5, 0.5, 1, 1, 1, 0.5, 0.5, 0.5, 1, 2, 1, 2, 1, 1, 2, 0.5],
-                          [0, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 0.5, 1],
-                          [1, 1, 1, 1, 1, 2, 1, 1, 0.5, 0.5, 0.5, 1, 0.5, 1, 2, 1, 1, 2],
-                          [1, 1, 1, 1, 1, 0.5, 2, 1, 2, 0.5, 0.5, 2, 1, 1, 2, 0.5, 1, 1],
-                          [1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 0.5, 0.5, 1, 1, 1, 0.5, 1, 1],
-                          [1, 1, 0.5, 0.5, 2, 2, 0.5, 1, 0.5, 0.5, 2, 0.5, 1, 1, 1, 0.5, 1, 1],
-                          [1, 1, 2, 1, 0, 1, 1, 1, 1, 1, 2, 0.5, 0.5, 1, 1, 0.5, 1, 1],
-                          [1, 2, 1, 2, 1, 1, 1, 1, 0.5, 1, 1, 1, 1, 0.5, 1, 1, 0, 1],
-                          [1, 1, 2, 1, 2, 1, 1, 1, 0.5, 0.5, 0.5, 2, 1, 1, 0.5, 2, 1, 1],
-                          [1, 1, 1, 1, 1, 1, 1, 1, 0.5, 1, 1, 1, 1, 1, 1, 2, 1, 0],
-                          [1, 0.5, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 0.5, 0.5],
-                          [1, 2, 1, 0.5, 1, 1, 1, 1, 0.5, 0.5, 1, 1, 1, 1, 1, 2, 2, 1]])
+element_chart = np.array(
+    [
+        [1, 1, 1, 1, 1, 0.5, 1, 0, 0.5, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [2, 1, 0.5, 0.5, 1, 2, 0.5, 0, 2, 1, 1, 1, 1, 0.5, 2, 1, 2, 0.5],
+        [1, 2, 1, 1, 1, 0.5, 2, 1, 0.5, 1, 1, 2, 0.5, 1, 1, 1, 1, 1],
+        [1, 1, 1, 0.5, 0.5, 0.5, 1, 0.5, 0, 1, 1, 2, 1, 1, 1, 1, 1, 2],
+        [1, 1, 0, 2, 1, 2, 0.5, 1, 2, 2, 1, 0.5, 2, 1, 1, 1, 1, 1],
+        [1, 0.5, 2, 1, 0.5, 1, 2, 1, 0.5, 2, 1, 1, 1, 1, 2, 1, 1, 1],
+        [1, 0.5, 0.5, 0.5, 1, 1, 1, 0.5, 0.5, 0.5, 1, 2, 1, 2, 1, 1, 2, 0.5],
+        [0, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 0.5, 1],
+        [1, 1, 1, 1, 1, 2, 1, 1, 0.5, 0.5, 0.5, 1, 0.5, 1, 2, 1, 1, 2],
+        [1, 1, 1, 1, 1, 0.5, 2, 1, 2, 0.5, 0.5, 2, 1, 1, 2, 0.5, 1, 1],
+        [1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 0.5, 0.5, 1, 1, 1, 0.5, 1, 1],
+        [1, 1, 0.5, 0.5, 2, 2, 0.5, 1, 0.5, 0.5, 2, 0.5, 1, 1, 1, 0.5, 1, 1],
+        [1, 1, 2, 1, 0, 1, 1, 1, 1, 1, 2, 0.5, 0.5, 1, 1, 0.5, 1, 1],
+        [1, 2, 1, 2, 1, 1, 1, 1, 0.5, 1, 1, 1, 1, 0.5, 1, 1, 0, 1],
+        [1, 1, 2, 1, 2, 1, 1, 1, 0.5, 0.5, 0.5, 2, 1, 1, 0.5, 2, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 0.5, 1, 1, 1, 1, 1, 1, 2, 1, 0],
+        [1, 0.5, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 0.5, 0.5],
+        [1, 2, 1, 0.5, 1, 1, 1, 1, 0.5, 0.5, 1, 1, 1, 1, 1, 2, 2, 1],
+    ]
+)
+
 
 
 class Pokemon:
     """Create a Pokemon, with description, battle statistics and an image id."""
 
-    def __init__(self, name: str, description: str, element: str, stats: dict, attacks: list, image: Image, id=""):
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        element: str,
+        stats: dict,
+        attacks: list,
+        image: Image,
+        id: str = "",
+    ):
         self.name = name
         self.description = description
         self.element = element
@@ -41,35 +75,58 @@ class Pokemon:
         self.id = id
 
         if not isinstance(self.name, str):
-            raise TypeError(f"Name must be a string, but {self.name} is a {type(self.name).__name__}")
+            raise TypeError(
+                f"Name must be a string, but {self.name} is a {type(self.name).__name__}"
+            )
 
         if not isinstance(self.description, str):
-            raise TypeError(f"Description must be a string, but {self.description} is a {type(self.description).__name__}")
+            raise TypeError(
+                f"Description must be a string, but {self.description} is a {type(self.description).__name__}"
+            )
 
         if not isinstance(self.element, str):
-            raise TypeError(f"Element must be a string, but {self.element} is a {type(self.element).__name__}")
+            raise TypeError(
+                f"Element must be a string, but {self.element} is a {type(self.element).__name__}"
+            )
         if self.element not in element_options:
-            raise ValueError(f"Element must be a valid element, but {self.element} is not")
+            self.element = random.choice(element_options)
+            """raise ValueError(
+                f"Element must be a valid element, but {self.element} is not"
+            )"""
 
         if not isinstance(self.stats, dict):
-            raise TypeError(f"Stats must be a dictionary, but {self.stats} is a {type(self.stats).__name__}")
+            raise TypeError(
+                f"Stats must be a dictionary, but {self.stats} is a {type(self.stats).__name__}"
+            )
         if not len(self.stats) == 6:
-            raise ValueError(f"Stats must have 6 values, but {len(self.stats)} were given: {self.stats}")
+            raise ValueError(
+                f"Stats must have 6 values, but {len(self.stats)} were given: {self.stats}"
+            )
         for key in self.stats.keys():
             if key not in stats_keys:
                 raise ValueError(f"Stats must have valid keys, but {key} is not")
             if not isinstance(self.stats[key], int):
-                raise TypeError(f"Stats must have integer values, but the {key} stat is {self.stats[key]} is a {type(self.stats[key]).__name__}")
+                raise TypeError(
+                    f"Stats must have integer values, but the {key} stat is {self.stats[key]} is a {type(self.stats[key]).__name__}"
+                )
             if (not 256 > self.stats[key]) or (not self.stats[key] > 0):
-                raise ValueError(f"Stats must have positive values less than 256, but the {key} stat is {self.stats[key]}")
+                raise ValueError(
+                    f"Stats must have positive values less than 256, but the {key} stat is {self.stats[key]}"
+                )
 
         if not isinstance(self.attacks, list):
-            raise TypeError(f"Moves must be a list, but {self.attacks} is a {type(self.attacks).__name__}")
+            raise TypeError(
+                f"Moves must be a list, but {self.attacks} is a {type(self.attacks).__name__}"
+            )
         if not len(self.attacks) == 4:
-            raise ValueError(f"Pokemon must have 4 attacks, but {len(self.attacks)} were given: {self.attacks}")
+            raise ValueError(
+                f"Pokemon must have 4 attacks, but {len(self.attacks)} were given: {self.attacks}"
+            )
         for attack in self.attacks:
             if not isinstance(attack, Attack):
-                raise TypeError(f"Moves must be a list of Move objects, but {attack} is a {type(attack).__name__}")
+                raise TypeError(
+                    f"Moves must be a list of Move objects, but {attack} is a {type(attack).__name__}"
+                )
 
         if not isinstance(self.image, Image):
             raise TypeError(f"image should be of type PIL.Image, not {type(self.image)}")
@@ -81,11 +138,17 @@ class Pokemon:
     def attack(self, attack, target):
         """Hit the target Pokemon with an attack."""
         if not isinstance(attack, Attack):
-            raise TypeError(f"Attack must be an Attack, but {attack} is a {type(attack).__name__}")
+            raise TypeError(
+                f"Attack must be an Attack, but {attack} is a {type(attack).__name__}"
+            )
         if attack not in self.attacks:
-            raise ValueError(f"Chosen attack must be one of the Pokemon's attacks, but {attack} is not")
+            raise ValueError(
+                f"Chosen attack must be one of the Pokemon's attacks, but {attack} is not"
+            )
         if not isinstance(target, Pokemon):
-            raise TypeError(f"Target must be a Pokemon, but {target} is a {type(target).__name__}")
+            raise TypeError(
+                f"Target must be a Pokemon, but {target} is a {type(target).__name__}"
+            )
 
         if attack.power:
             # calculate elemental multipliers
@@ -102,7 +165,16 @@ class Pokemon:
             if attack.special:
                 atk = self.stats["special attack"]
                 dfs = target.stats["special defence"]
-            damage = int(2/5 * attack.power * (atk / dfs) * attack_element_boost * target_element_boost * np.random.uniform(217, 256)/255)
+            damage = int(
+                2
+                / 5
+                * attack.power
+                * (atk / dfs)
+                * attack_element_boost
+                * target_element_boost
+                * np.random.uniform(217, 256)
+                / 255
+            )
             crit = np.random.uniform(0, 1)
             if crit < 0.05:
                 damage *= 1.5
@@ -116,7 +188,9 @@ class Pokemon:
 
         if not len(attack.target_status) == 0:
             for key in attack.target_status.keys():
-                target.stats[key] = max(1, target.stats[key] + attack.target_status[key])
+                target.stats[key] = max(
+                    1, target.stats[key] + attack.target_status[key]
+                )
 
     def save(self, db):
         """Save a Pokemon object to the database.
@@ -163,7 +237,16 @@ class Pokemon:
 class Attack:
     """Create an attack, to be called when a Pokemon attacks."""
 
-    def __init__(self, name: str, element: str, power: int = 0, special: bool = False, self_status: dict = {}, target_status: dict = {}, id: str = ""):
+    def __init__(
+        self,
+        name: str,
+        element: str,
+        power: int = 0,
+        special: bool = False,
+        self_status: dict = {},
+        target_status: dict = {},
+        id: str = "",
+    ):
         """Create an attack with a name, element and optional power and status effects."""
         self.name = name
         self.element = element
@@ -174,40 +257,66 @@ class Attack:
         self.id = id
 
         if not isinstance(self.name, str):
-            raise TypeError(f"Name must be a string, but {self.name} is a {type(self.name).__name__}")
+            raise TypeError(
+                f"Name must be a string, but {self.name} is a {type(self.name).__name__}"
+            )
 
         if not isinstance(self.element, str):
-            raise TypeError(f"Element must be a string, but {self.element} is a {type(self.element).__name__}")
+            raise TypeError(
+                f"Element must be a string, but {self.element} is a {type(self.element).__name__}"
+            )
         if self.element not in element_options:
-            raise ValueError(f"Element must be a valid element, but {self.element} is not")
+            raise ValueError(
+                f"Element must be a valid element, but {self.element} is not"
+            )
 
         if not isinstance(self.power, int):
-            raise TypeError(f"Power must be an integer, but {self.power} is a {type(self.power).__name__}")
+            raise TypeError(
+                f"Power must be an integer, but {self.power} is a {type(self.power).__name__}"
+            )
         if (not 385 > self.power) or (not self.power >= 0):
-            raise ValueError(f"Power must be a non-negative value less than 385, but {self.power} is not")
+            raise ValueError(
+                f"Power must be a non-negative value less than 385, but {self.power} is not"
+            )
 
         if not isinstance(self.special, bool):
-            raise TypeError(f"Special must be a boolean, but {self.special} is a {type(self.special).__name__}")
+            raise TypeError(
+                f"Special must be a boolean, but {self.special} is a {type(self.special).__name__}"
+            )
 
         if not isinstance(self.self_status, dict):
-            raise TypeError(f"Status must be a dictionary, but {self.self_status} is a {type(self.self_status).__name__}")
+            raise TypeError(
+                f"Status must be a dictionary, but {self.self_status} is a {type(self.self_status).__name__}"
+            )
         for key in self.self_status.keys():
             if key not in stats_keys:
                 raise ValueError(f"Status must have valid keys, but {key} is not")
             if not isinstance(self.self_status[key], int):
-                raise TypeError(f"Status effect value must be an integer, but the {key} status {self.self_status[key]} is a {type(self.self_status[key]).__name__}")
+                raise TypeError(
+                    f"Status effect value must be an integer, but the {key} status {self.self_status[key]} is a {type(self.self_status[key]).__name__}"
+                )
             if (not 128 > self.self_status[key]) or (not self.self_status[key] > -128):
-                raise ValueError(f"Status effect values must be positive and less than 128, but the {key} status is {self.self_status[key]}")
+                raise ValueError(
+                    f"Status effect values must be positive and less than 128, but the {key} status is {self.self_status[key]}"
+                )
 
         if not isinstance(self.target_status, dict):
-            raise TypeError(f"Status must be a dictionary, but {self.target_status} is a {type(self.target_status).__name__}")
+            raise TypeError(
+                f"Status must be a dictionary, but {self.target_status} is a {type(self.target_status).__name__}"
+            )
         for key in self.target_status.keys():
             if key not in stats_keys:
                 raise ValueError(f"Status must have valid keys, but {key} is not")
             if not isinstance(self.target_status[key], int):
-                raise TypeError(f"Status effect value must be an integer, but the {key} status {self.target_status[key]} is a {type(self.target_status[key]).__name__}")
-            if (not -128 < self.target_status[key]) or (not self.target_status[key] < 128):
-                raise ValueError(f"Status effect values must be positive and less than 128, but the {key} status is {self.target_status[key]}")
+                raise TypeError(
+                    f"Status effect value must be an integer, but the {key} status {self.target_status[key]} is a {type(self.target_status[key]).__name__}"
+                )
+            if (not -128 < self.target_status[key]) or (
+                not self.target_status[key] < 128
+            ):
+                raise ValueError(
+                    f"Status effect values must be positive and less than 128, but the {key} status is {self.target_status[key]}"
+                )
 
     def __repr__(self):
         """Return a string representation of the Attack."""
@@ -259,16 +368,18 @@ def generate_attack(name: str, element: str, category: str):
     if element not in element_options:
         raise ValueError(f"Element must be a valid element, but {element} is not")
     if category not in ["physical", "special", "status"]:
-        raise ValueError(f"Category must be either 'physical', 'special' or 'status', but {category} is not")
+        raise ValueError(
+            f"Category must be either 'physical', 'special' or 'status', but {category} is not"
+        )
 
     power = 0
     special = False
     self_status = {}
     target_status = {}
 
-    if category == 'physical':
+    if category == "physical":
         power = np.random.randint(1, 256)
-    elif category == 'special':
+    elif category == "special":
         power = np.random.randint(1, 256)
         special = True
         stat_ind = np.random.rand()
@@ -345,13 +456,16 @@ def generate_attack(name: str, element: str, category: str):
 
 class Battle:
     """Create a battle between 2 Pokemon."""
+
     def __init__(self, player1, pokemon1, db):
         self.player1 = player1
         self.p1 = db.pokemon.find_one({"_id": pokemon1})
         self.state = None
 
         if not isinstance(self.p1, Pokemon):
-            raise TypeError(f"Pokemon 1 must be a Pokemon, but {self.p1} is a {type(self.p1).__name__}")
+            raise TypeError(
+                f"Pokemon 1 must be a Pokemon, but {self.p1} is a {type(self.p1).__name__}"
+            )
 
     def add_player(self, player2, pokemon2, db):
         self.player2 = player2
@@ -394,7 +508,9 @@ class Battle:
 
 
 class BattleState:
-    def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db, users):
+    def handle_event(
+        self, battle: Battle, event: str, json: dict, socket_id: str, db, users
+    ):
         pass
 
 
@@ -402,7 +518,9 @@ class WaitingForAttacks(BattleState):
     def __init__(self):
         super()
 
-    def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db, users):
+    def handle_event(
+        self, battle: Battle, event: str, json: dict, socket_id: str, db, users
+    ):
         if event == "attack":
             if socket_id == battle.player1:
                 battle.attack1 = db.attacks.find_one({"_id": json["attack_id"]})
@@ -416,7 +534,9 @@ class WaitingForPlayer1Attack(BattleState):
     def __init__(self):
         super()
 
-    def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db, users):
+    def handle_event(
+        self, battle: Battle, event: str, json: dict, socket_id: str, db, users
+    ):
         if event == "attack":
             if socket_id == battle.player2:
                 battle.attack2 = db.attacks.find_one({"_id": json["attack_id"]})
@@ -427,7 +547,9 @@ class WaitingForPlayer2Attack(BattleState):
     def __init__(self):
         super()
 
-    def handle_event(self, battle: Battle, event: str, json: dict, socket_id: str, db, users):
+    def handle_event(
+        self, battle: Battle, event: str, json: dict, socket_id: str, db, users
+    ):
         if event == "attack":
             if socket_id == battle.player1:
                 battle.attack1 = db.attacks.find_one({"_id": json["attack_id"]})

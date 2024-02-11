@@ -1,8 +1,12 @@
 """API for interfacing with the vision pipeline."""
 
-from .prompt_templates import GEMINI_PROMPT_TEMPLATE, GEMINI_PROMPT_TEMPLATE_WITH_IMAGE, GEMINI_PROMPT_TEMPLATE_ATTACKS
-from .image_processing import generate_image, pixelate_image
-from .pokemon import Pokemon, generate_attack
+from prompt_templates import (
+    GEMINI_PROMPT_TEMPLATE,
+    GEMINI_PROMPT_TEMPLATE_WITH_IMAGE,
+    GEMINI_PROMPT_TEMPLATE_ATTACKS,
+)
+from image_processing import generate_image, pixelate_image
+from pokemon import Pokemon, generate_attack
 import vertexai
 from vertexai.preview.generative_models import GenerativeModel, Image
 import re
@@ -12,7 +16,13 @@ model = GenerativeModel("gemini-pro")
 vision_model = GenerativeModel("gemini-pro-vision")
 
 STATS_KEYS = [
-    "Type", "HP", "Attack", "Defence", "Special Attack", "Special Defence", "Speed"
+    "Type",
+    "HP",
+    "Attack",
+    "Defence",
+    "Special Attack",
+    "Special Defence",
+    "Speed",
 ]
 
 
@@ -75,7 +85,10 @@ def create_pokemon(img, create_image=False, return_prompt=False):
     sections = [
         re.search(
             rf"\[Start Output {key}\](.*)\[End Output {key}\]", response, re.DOTALL
-        ).group(1).strip() for key in cat_names
+        )
+        .group(1)
+        .strip()
+        for key in cat_names
     ]
 
     # Extract the name
@@ -124,13 +137,18 @@ def create_attacks(name, pokedex, element):
 
     prompt = GEMINI_PROMPT_TEMPLATE_ATTACKS.format(name, pokedex, element)
     response = get_gemini_response(prompt)
-
+    print(response)
     # Extract the attack names, categories and types
     attack_responses = [
         re.search(
             rf"\[Start Attack {key}\](.*)\[End Attack {key}\]", response, re.DOTALL
-        ).group(1).strip() for key in range(1, 5)
+        )
+        .group(1)
+        .strip()
+        for key in range(1, 5)
     ]
+
+    # TODO: handle cases where it displays attacks as: **Attack 1** etc.
 
     attacks = []
     for attack in attack_responses:
@@ -144,7 +162,7 @@ def create_attacks(name, pokedex, element):
     return attacks
 
 
-def build_pokemon(img, create_image=False):
+def build_pokemon(img, create_image=False, include_output_image=False):
     """Build a pokemon from its details.
 
     Args:
@@ -155,15 +173,57 @@ def build_pokemon(img, create_image=False):
         pokemon (Pokemon): The pokemon built from its details.
     """
 
+    print("x")
     if create_image:
+        print("x")
         name, pokedex, stats, img = create_pokemon(img, create_image)
+        print("x")
     else:
+        print("y")
         name, pokedex, stats = create_pokemon(img, create_image)
+        print("y")
 
     element = stats.pop("type")
+    print("x")
+    try:
+        attacks = create_attacks(name, pokedex, element)
+        print("x")
+        element = element.split("/")[0].capitalize()
 
-    attacks = create_attacks(name, pokedex, element)
+        if not include_output_image:
+            img = "unknown"
 
-    element = element.split("/")[0].capitalize()
+        try:
+            return Pokemon(name, pokedex, element, stats, attacks, img)
+        except ValueError:
+            # Incorrect element type
+            return value_error_handler()
+    except AttributeError:
+        # AttributeError: 'NoneType' object has no attribute 'group'
+        return attribute_error_handler()
 
-    return Pokemon(name, pokedex, element, stats, attacks, img)
+
+def get_errormon():
+    """
+    Return an arbitrary preset pokemon when the API runs into trouble.
+    """
+    from pokemon import Pokemon, Attack
+
+    json_stats = """{"hp": 65, "attack": 65, "defence": 90, "special attack": 135, "special defence":  6, "speed":100}"""
+    from json import loads
+
+    stats = loads(json_stats)
+    a = Attack("a", "Grass")
+    attacks = [a, a, a, a]
+    image = "unknown"
+
+    p = Pokemon("Errormon!", "The Banana Pokemon", "Grass", stats, attacks, image)
+    return p
+
+
+def value_error_handler():
+    return get_errormon()
+
+
+def attribute_error_handler():
+    return get_errormon()

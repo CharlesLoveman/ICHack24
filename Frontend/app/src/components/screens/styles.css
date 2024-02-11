@@ -4,5 +4,6 @@
 }
 
 html {
-    font-size: 43px;
+    /*font-size: 20px;*/
+    font: 'Franklin Gothic Medium';
 }

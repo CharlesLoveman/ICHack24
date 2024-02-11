@@ -1,0 +1,4 @@
+MONGO_KEY=password
+MONGO_IP=127.0.0.1
+HF_KEY=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
+APP_SECRET=secret

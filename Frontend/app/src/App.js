@@ -1,6 +1,6 @@
 import './App.css';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { socket } from './socket';
 import { ConnectionState } from './components/ConnectionState';
 import { ConnectionManager } from './components/ConnectionManager';
@@ -21,9 +21,11 @@ import WaitingRoomScreen from './components/screens/WaitingRoomScreen';
 import PokemonBattleScreen from './components/screens/PokemonBattleScreen';
 import PokemonListScreen from './components/screens/PokemonListScreen';
 import PokemonCaptureScreen from './components/screens/PokemonCaptureScreen';
+import { createContext } from 'react';
 
 const theme = createTheme({
 });
+
 
 const router = createBrowserRouter([
   {
@@ -61,10 +63,21 @@ const router = createBrowserRouter([
   }
 ]);
 
+const GlobalData = createContext(null)
+export { GlobalData };
+
 export default function App() {
+
+
+  const [username, setUsername] = useState("")
+  const [pokemon, setPokemon] = useState("")
+
+
   return (
-    <ThemeProvider theme={theme}>
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <GlobalData.Provider value={{ username, setUsername, pokemon, setPokemon }}>
+      <ThemeProvider theme={theme}>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </GlobalData.Provider>
   );
 }
