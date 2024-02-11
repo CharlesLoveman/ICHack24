@@ -4,6 +4,7 @@ import TempAcquireBar from '../TempAcquireBar.js';
 import NavBar from '../NavBar.js';
 import { useLoaderData } from 'react-router-dom';
 
+
 export default function PokemonListScreen() {
 
 
@@ -14,6 +15,8 @@ export default function PokemonListScreen() {
         <>
             {NavBar()}
             {TempAcquireBar()}
+
+
 
             //{PokemonList(data)}</>
     );

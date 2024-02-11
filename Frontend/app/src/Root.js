@@ -1,6 +1,6 @@
-import './App.css';
+import styles from './App.css';
 
-import React, { useState, useEffect } from 'react';
+
 import { socket } from './socket';
 import { ConnectionState } from './components/ConnectionState';
 import { ConnectionManager } from './components/ConnectionManager';
@@ -8,6 +8,8 @@ import { Events } from "./components/Events";
 import { MyForm } from './components/MyForm';
 import PokemonCard from './components/PokemonCard';
 import { useNavigate, Outlet } from "react-router-dom";
+import { useMediaQuery } from "@mui/material";
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 
 export default function Root() {
   const [isConnected, setIsConnected] = useState(socket.connected);
@@ -72,10 +74,15 @@ export default function Root() {
   //    <MyForm />
   //  </div>
 
+
+
   return (
     <>
       <ConnectionManager />
-      <Outlet />
+      <div >
+        <Outlet />
+      </div >
+
     </>
   );
 }

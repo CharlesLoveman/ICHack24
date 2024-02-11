@@ -2,8 +2,11 @@ from PIL import Image as PILImage
 import requests
 import io
 import os
+from dotenv import dotenv_values
 
-HF_KEY = os.environ.get("HF_KEY")
+config = dotenv_values(".prod" if os.getenv("FLASK_ENV") == "prod" else ".dev")
+
+HF_KEY = config["HF_KEY"]
 
 API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
 headers = {"Authorization": f"Bearer {HF_KEY}"}
