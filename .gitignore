@@ -130,11 +130,7 @@ dmypy.json
 
 setup.cfg
 
-Backend/.dev
-Backend/.prod
-
 *.dev
 *.prod
-Backend/.dev
 
 *.jpg

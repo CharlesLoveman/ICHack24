@@ -199,20 +199,21 @@ class Pokemon:
             db (database): MongoDB database
 
         Returns:
-            id: the id where the Pokemon is located in the database
+            id (str): the id where the Pokemon is located in the database
         """
         attack_ids = [attack.save(db) for attack in self.attacks]
-        stats_id = db.stats.insert_one(self.stats).inserted_id
+        stats_id = str(db.stats.insert_one(self.stats).inserted_id)
         img_raw = io.BytesIO(self.image.tobytes())
-        return db.pokemon.insert_one(
+
+        return str(db.pokemon.insert_one(
             {
                 "name": self.name,
                 "description": self.description,
                 "element": self.element,
-                "stats": stats_id,
-                "attacks": attack_ids,
+                "stats_id": stats_id,
+                "attack_ids": attack_ids,
                 "image": img_raw,
-            }).inserted_id
+            }).inserted_id)
 
     @classmethod
     def load(cls, db, id):
@@ -220,18 +221,30 @@ class Pokemon:
 
         Args:
             db (atabase): MongoDB database
-            id: the Pokemon id to load
+            id (str): the Pokemon id to load
 
         Returns:
             pokemon (Pokemon): the resulting Pokemon object
         """
-        pokemon = db.pokemon.find_one({"_id": ObjectId(id)})
-        stats = db.stats.find_one({"_id": ObjectId(pokemon["stats"])})
+        pokemon = db.pokemon.find_one({"_id": id})
+
+        stats = db.stats.find_one({"_id": ObjectId(pokemon["stats_id"])})
         stats.pop("_id")
-        attacks = [Attack.load(db, attack_id) for attack_id in pokemon["attacks"]]
+
+        attacks = [Attack.load(db, attack_id) for attack_id in pokemon["attack_ids"]]
+
         img_raw = pokemon["image_id"]
         img = Image.open(io.BytesIO(img_raw))
-        return Pokemon(pokemon["name"], pokemon["description"], pokemon["element"], stats, attacks, img, id)
+
+        return Pokemon(
+            pokemon["name"],
+            pokemon["description"],
+            pokemon["element"],
+            stats,
+            attacks,
+            img,
+            id,
+        )
 
 
 class Attack:
@@ -329,17 +342,18 @@ class Attack:
             db (database): MongoDB database
 
         Returns:
-            id: the id where the Attack is located in the database
+            id (str): the id where the Attack is located in the database
         """
-        stat_ids = db.stats.insert_many([self.self_status, self.target_status]).inserted_ids
-        return db.attacks.insert_one({
+        stats_ids = str(db.stats.insert_many([self.self_status, self.target_status]).inserted_ids)
+
+        return str(db.attacks.insert_one({
             "name": self.name,
             "element": self.element,
             "power": self.power,
             "special": self.special,
-            "self_status": stat_ids[0],
-            "target_status": stat_ids[1],
-        }).inserted_id
+            "self_status_id": stats_ids[0],
+            "target_status_id": stats_ids[1],
+        }).inserted_id)
 
     @classmethod
     def load(cls, db, id):
@@ -347,17 +361,28 @@ class Attack:
 
         Args:
             db (atabase): MongoDB database
-            id: the Attack id to load
+            id (str): the Attack id to load
 
         Returns:
             attack (Attack): the resulting Attack object
         """
         attack = db.attacks.find_one({"_id": ObjectId(id)})
-        self_status = db.stats.find_one({"_id": ObjectId(attack["self_status"])})
+
+        self_status = db.stats.find_one({"_id": ObjectId(attack["self_status_id"])})
         self_status.pop("_id")
-        target_status = db.stats.find_one({"_id": ObjectId(attack["target_status"])})
+
+        target_status = db.stats.find_one({"_id": ObjectId(attack["target_status_id"])})
         target_status.pop("_id")
-        return Attack(attack["name"], attack["element"], attack["power"], attack["special"], self_status, target_status, id)
+
+        return Attack(
+            attack["name"],
+            attack["element"],
+            attack["power"],
+            attack["special"],
+            self_status,
+            target_status,
+            id,
+        )
 
 
 def generate_attack(name: str, element: str, category: str):
@@ -455,11 +480,21 @@ def generate_attack(name: str, element: str, category: str):
 
 
 class Battle:
-    """Create a battle between 2 Pokemon."""
+    """Create a battle between two Pokemon."""
 
     def __init__(self, player1, pokemon1, db):
+        """Create a battle between two Pokemon.
+
+        Args:
+            player1 (str): player 1 client id
+            pokemon1 (Pokemon): Pokemon for player 1
+            db (database): the MongoDB database
+
+        Returns:
+            self (Battle)
+        """
         self.player1 = player1
-        self.p1 = db.pokemon.find_one({"_id": pokemon1})
+        self.p1 = pokemon1
         self.state = None
 
         if not isinstance(self.p1, Pokemon):
@@ -468,6 +503,13 @@ class Battle:
             )
 
     def add_player(self, player2, pokemon2, db):
+        """Add a second player to the battle.
+
+        Args:
+            player2 (str): player 2 client id
+            pokemon2 (Pokemon): Pokemon for player 2
+            db (database): the MongoDB database
+        """
         self.player2 = player2
         self.p2 = db.pokemon.find_one({"_id": pokemon2})
 
