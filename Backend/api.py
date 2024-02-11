@@ -1,12 +1,12 @@
 """API for interfacing with the vision pipeline."""
 
-from prompt_templates import (
+from .prompt_templates import (
     GEMINI_PROMPT_TEMPLATE,
     GEMINI_PROMPT_TEMPLATE_WITH_IMAGE,
     GEMINI_PROMPT_TEMPLATE_ATTACKS,
 )
-from image_processing import generate_image, pixelate_image
-from pokemon import Pokemon, generate_attack
+from .image_processing import generate_image, pixelate_image
+from .pokemon import Pokemon, generate_attack
 import vertexai
 from vertexai.preview.generative_models import GenerativeModel, Image
 import re
