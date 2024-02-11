@@ -1,9 +1,11 @@
 """Test MongoDB inside Gcloud."""
 from pymongo import MongoClient
-import os
+from dotenv import dotenv_values
 
-MONGO_KEY = os.environ.get("MONGO_KEY")
-MONGO_IP = os.environ.get("MONGO_IP")
+config = dotenv_values(".prod" if os.getenv("FLASK_ENV") == "prod" else ".dev")
+
+MONGO_KEY = config["MONGO_KEY"]
+MONGO_IP = config["MONGO_IP"]
 
 print(MONGO_KEY)
 print(MONGO_IP)
