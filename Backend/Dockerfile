@@ -13,6 +13,4 @@ RUN bash install.sh --disable-prompts
 
 COPY Backend .
 
-RUN chmod +x gcloud_test/run_test.sh
-
-CMD [ "./gcloud_test/run_test.sh" ] 
+CMD [ "python", "-m", "flask", "--app", "app", "run" ]

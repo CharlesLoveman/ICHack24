@@ -63,7 +63,7 @@ class Pokemon:
         element: str,
         stats: dict,
         attacks: list,
-        image: Image,
+        image: Image.Image,
         id: str = "",
     ):
         self.name = name
@@ -128,8 +128,8 @@ class Pokemon:
                     f"Moves must be a list of Move objects, but {attack} is a {type(attack).__name__}"
                 )
 
-        if not isinstance(self.image, Image):
-            raise TypeError(f"image should be of type PIL.Image, not {type(self.image)}")
+        if not isinstance(self.image, Image.Image):
+            raise TypeError(f"image should be of type PIL.Image.Image, not {type(self.image)}")
 
     def __repr__(self):
         """Return a string representation of the Pokemon."""

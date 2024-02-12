@@ -6,13 +6,15 @@ from flask_socketio import SocketIO, send, emit
 from random import randrange
 
 from .pokemon import Battle, Pokemon
-from .api import build_pokemon, load_image_from_file
+from .api import GeminiError, build_pokemon, load_image_from_file
 from pymongo import MongoClient
 from dotenv import dotenv_values
 import os
 from bson.objectid import ObjectId
 
 config = dotenv_values(".prod" if os.getenv("FLASK_ENV") == "prod" else ".dev")
+
+ERRORMON_ID = None  # Run create_errormon.py and set this!
 
 ip = "127.0.0.1"
 # Change this back
@@ -36,6 +38,11 @@ battles = {}
 
 if __name__ == "__main__":
     socketio.run(app)
+
+
+class CreationError(Exception):
+    """Raised when a Pokemon cannot be created."""
+    pass
 
 
 def get_player_by_username(username):
@@ -231,9 +238,21 @@ def CreatePokemon(username):
 
     # Generate Pokemon
     print("Generating Pokemon.")
-    pokemon = build_pokemon(img)
-    pokemon_id = pokemon.save(database)
-    print(f"Pokemon created successfully. id: {pokemon_id}")
+    for i in range(3):
+        try:
+            pokemon = build_pokemon(img)
+            pokemon_id = pokemon.save(database)
+            print(f"Pokemon created successfully. id: {pokemon_id}")
+            break
+        except GeminiError:
+            print(f"Error creating Pokemon for: {username}. Attempt: {i}. Retrying...")
+    else:
+        try:
+            print(f"Failed to create Pokemon for: {username}. Returning Errormon instead.")
+            pokemon = Pokemon.load(database, ERRORMON_ID)
+        except:
+            print(f"Failed to load Erromon for: {username}. No Errormon found.")
+            raise CreationError("Failed to create Pokemon.")
 
     print(f"Saving Pokemon: {pokemon_id} to user: {username}")
     database.player.update_one(
