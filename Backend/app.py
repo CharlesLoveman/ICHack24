@@ -6,17 +6,16 @@ from flask_socketio import SocketIO, send, emit
 from random import randrange
 
 from .pokemon import Battle, Pokemon
-from .api import build_pokemon
+from .api import GeminiError, build_pokemon, load_image_from_file
 from pymongo import MongoClient
 from dotenv import dotenv_values
 import os
 from bson.objectid import ObjectId
-from api import load_image_from_file
-import jsonpickle
 
 config = dotenv_values(".prod" if os.getenv("FLASK_ENV") == "prod" else ".dev")
 
-print(config["MONGO_KEY"])
+ERRORMON_ID = None  # Run create_errormon.py and set this!
+
 ip = "127.0.0.1"
 # Change this back
 mongodb_client = MongoClient(ip, 27017)
@@ -41,21 +40,69 @@ if __name__ == "__main__":
     socketio.run(app)
 
 
-def get_player_by_cookie():
-    pid = request.cookies.get("pid")
-    _id = ObjectId(pid)
-    player = database.player.find_one({"_id": _id})
-    return player
+class CreationError(Exception):
+    """Raised when a Pokemon cannot be created."""
+    pass
 
 
 def get_player_by_username(username):
+    """Return a player object from the database using a username."""
     player = database.player.find_one({"username": username})
+
     return player
 
 
-def get_pokemon_from_player(player):
-    pokemon_list = jsonpickle.decode(player["pokemon"])
-    return pokemon_list
+def get_pokemon_ids_from_player(username):
+    """Return a list of Pokemon ids for the given user."""
+    print(f"Attempting to load Pokemon ids for user: {username}")
+    player = database.player.find_one({"username": username})
+    pokemon_ids = player["pokemon_ids"]
+
+    return pokemon_ids
+
+
+def get_pokemon_from_id(pokemon_id):
+    """Return a Pokemon as a dict."""
+    print(f"Attempting to load data on Pokemon: {pokemon_id}")
+    pokemon = database.pokemon.find_one({"_id": ObjectId(pokemon_id)})
+    pokemon.pop("_id")
+
+    stats_id = pokemon["stats_id"]
+    pokemon["stats"] = get_stats_from_id(stats_id)
+
+    attack_ids = pokemon["attack_ids"]
+    pokemon["attacks"] = [get_attack_from_id(attack_id) for attack_id in attack_ids]
+
+    return pokemon
+
+
+def get_stats_from_id(stats_id, flag="stats"):
+    """Return stats as a dict."""
+    print(f"Attempting to load data on {flag}: {stats_id}")
+    stats = database.stats.find_one({"_id": ObjectId(stats_id)})
+    stats.pop("_id")
+
+    return stats
+
+
+def get_attack_from_id(attack_id):
+    """Return an attack as a dict."""
+    print(f"Attempting to load data on Attack: {attack_id}")
+    attack = database.attacks.find_one({"_id": ObjectId(attack_id)})
+    attack.pop("_id")
+
+    self_status_id = attack["self_status_id"]
+    attack["self_status_id"] = get_status_from_id(self_status_id)
+
+    target_status_id = attack["target_status_id"]
+    attack["target_status_id"] = get_status_from_id(target_status_id)
+
+    return attack
+
+
+def get_status_from_id(status_id):
+    """Return a status as a dict."""
+    return get_stats_from_id(status_id, flag="status")
 
 
 @socketio.on("message")
@@ -68,7 +115,7 @@ def handle_json(json):
     send(json, json=True)
 
 
-@socketio.on("createPokemon")
+@socketio.on("createPokemon")  # TODO: remove this
 def handle_my_custom_event(json):
     emit(
         "createPokemonCard",
@@ -83,33 +130,47 @@ def handle_my_custom_event(json):
 
 @socketio.on("createBattle")
 def handle_createBattle(json):
+    """Create a new battle."""
     # game_id = createGame(json.id)
-    print(request.sid)
     game_id = str(randrange(0, 1000000))
-    battles[game_id] = Battle(request.sid, json["pokemon_id"])
+    pokemon_id = json["pokemon_id"]
+
+    print(f"Creating battle (id: {game_id}) for client id: {request.sid}")
+
+    pokemon = Pokemon.load(database, pokemon_id)
+    battles[game_id] = Battle(request.sid, pokemon)
     users[request.sid] = request.sid
+
     emit("joinWaitingRoom", {"game_id": game_id})
 
 
 @socketio.on("joinBattle")
 def handle_joinBattle(json):
-    print(request.sid)
-    battles[json["game_id"]].add_player(request.sid, json["pokemon_id"])
+    """Join a new player to a battle."""
+    game_id = json["game_id"]
+    pokemon_id = json["pokemon_id"]
+
+    print(f"Client id: {request.sid} joining battle: {game_id}")
+
+    battle = battles[game_id]
+    pokemon = Pokemon.load(database, pokemon_id)
+    battle.add_player(request.sid, pokemon)
+
     emit(
         "joinBattle",
         {
-            "self_pokemon": battles[json["game_id"]].p2,
-            "target_pokemon": battles[json["game_id"]].p1,
+            "self_pokemon": battle.p2,
+            "target_pokemon": battle.p1,
         },
         to=request.sid,
     )
     emit(
         "joinBattleFromRoom",
         {
-            "self_pokemon": battles[json["game_id"]].p1,
-            "target_pokemon": battles[json["game_id"]].p2,
+            "self_pokemon": battle.p1,
+            "target_pokemon": battle.p2,
         },
-        to=battles[json["game_id"]].player1,
+        to=battle.player1,
     )
 
 
@@ -120,61 +181,84 @@ def handle_attack(json):
 
 @app.route("/InitialiseUser/<username>", methods=["POST"])
 def InitialiseUser(username):
-    id = username  # Change this
-    # init_pokemon_json = jsonify(init_pokemon_dict)
-    # print(init_pokemon_json)
+    """Initialise a user using a username."""
+    print(f"Attempting to log in user: {username}")
     player = get_player_by_username(username)
+
     if player is None:
-        init_pokemon_dict = {"pokemon": jsonpickle.encode([]), "username": username}
-        id = str(database.player.insert_one(init_pokemon_dict).inserted_id)
+        # Create a new user id
+        print(f"User: {username} not found. Creating new user.")
+        new_user = {"pokemon_ids": [], "username": username}
+        pid = str(database.player.insert_one(new_user).inserted_id)
+    else:
+        # Return existing user id
+        pid = str(player["_id"])
+
+    print(f"Login successful. pid: {pid}")
+
     resp = jsonify(success=True)
     resp = make_response(resp)
-    resp.set_cookie("pid", id)
+    resp.set_cookie("pid", pid)
+
     return resp
 
 
 @app.route("/ListPokemon/<player>", methods=["GET"])
-def ListPokemon(player):
-    player = get_player_by_username(player)
-    pokemon_list = get_pokemon_from_player(player)
+def ListPokemon(username):
+    """Return a list of Pokemon stats as a JSON object.
 
-    return jsonpickle.encode(pokemon_list)
-    # Change this later so you load from the pokemon table/ collection
-    return [
-        {
-            "name": "Squirtle",
-            "element": "a bit wet",
-            "description": "best boy 1997",
-            "stats": {"attack": 0},
-        }
-    ]
+    Args:
+        username (str): the username
+
+    Returns:
+        pokemon_list (json): a list of Pokemon as a JSON object
+    """
+    print(f"Generating Pokemon list for user: {username}")
+
+    pokemon_ids = get_pokemon_ids_from_player(username)
+    pokemon_list = [get_pokemon_from_id(pokemon_id) for pokemon_id in pokemon_ids]
+
+    raise NotImplementedError
 
 
 @app.route("/CreatePokemon/<player_id>", methods=["POST"])
-def CreatePokemon(player_id):
-    print("abcd")
-    print(player_id)
-    player = get_player_by_username(player_id)  # Because cookies don't work for now.
-    # print("Player: " + str(player))
-    print("abcd")
+def CreatePokemon(username):
+    """Create a new Pokemon."""
+    print(f"Creating new Pokemon for: {username}")
+
+    # Load image
     img_raw = request.files["img"].read()
-    print("abcd")
     img_name = hash(img_raw)
-    print("abcd")
     img_path = f"{img_name}.jpg"
+
     with open(img_path, "wb") as file:
         file.write(img_raw)
-    print("abcd")
+
     img = load_image_from_file(img_path)
-    print("abcd")
-    pokemon = build_pokemon(img)
-    print("abcd")
-    pokemon_list = jsonpickle.decode(player["pokemon"])
-    pokemon_list.append(pokemon)
+
+    # Generate Pokemon
+    print("Generating Pokemon.")
+    for i in range(3):
+        try:
+            pokemon = build_pokemon(img)
+            pokemon_id = pokemon.save(database)
+            print(f"Pokemon created successfully. id: {pokemon_id}")
+            break
+        except GeminiError:
+            print(f"Error creating Pokemon for: {username}. Attempt: {i}. Retrying...")
+    else:
+        try:
+            print(f"Failed to create Pokemon for: {username}. Returning Errormon instead.")
+            pokemon = Pokemon.load(database, ERRORMON_ID)
+        except:
+            print(f"Failed to load Erromon for: {username}. No Errormon found.")
+            raise CreationError("Failed to create Pokemon.")
+
+    print(f"Saving Pokemon: {pokemon_id} to user: {username}")
     database.player.update_one(
-        {"username": player_id}, {"$set": {"pokemon": jsonpickle.encode(pokemon_list)}}
+        {"username": username}, {"$push": {"pokemon_ids": pokemon_id}}
     )
-    print("abcd")
-    print(pokemon)
+
     resp = jsonify(success=True)
+
     return resp

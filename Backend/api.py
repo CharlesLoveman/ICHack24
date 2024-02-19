@@ -1,12 +1,12 @@
 """API for interfacing with the vision pipeline."""
 
-from prompt_templates import (
+from .prompt_templates import (
     GEMINI_PROMPT_TEMPLATE,
     GEMINI_PROMPT_TEMPLATE_WITH_IMAGE,
     GEMINI_PROMPT_TEMPLATE_ATTACKS,
 )
-from image_processing import generate_image, pixelate_image
-from pokemon import Pokemon, generate_attack
+from .image_processing import generate_image, pixelate_image
+from .pokemon import Pokemon, generate_attack
 import vertexai
 from vertexai.preview.generative_models import GenerativeModel, Image
 import re
@@ -25,6 +25,10 @@ STATS_KEYS = [
     "Speed",
 ]
 
+
+class GeminiError(Exception):
+    """Raised when an error occurs with the Gemini API."""
+    pass
 
 def load_image_from_file(file_path):
     """Load an image from a file.
@@ -137,7 +141,7 @@ def create_attacks(name, pokedex, element):
 
     prompt = GEMINI_PROMPT_TEMPLATE_ATTACKS.format(name, pokedex, element)
     response = get_gemini_response(prompt)
-    print(response)
+
     # Extract the attack names, categories and types
     attack_responses = [
         re.search(
@@ -147,8 +151,6 @@ def create_attacks(name, pokedex, element):
         .strip()
         for key in range(1, 5)
     ]
-
-    # TODO: handle cases where it displays attacks as: **Attack 1** etc.
 
     attacks = []
     for attack in attack_responses:
@@ -162,7 +164,7 @@ def create_attacks(name, pokedex, element):
     return attacks
 
 
-def build_pokemon(img, create_image=False, include_output_image=False):
+def build_pokemon(img, create_image=False):
     """Build a pokemon from its details.
 
     Args:
@@ -173,57 +175,17 @@ def build_pokemon(img, create_image=False, include_output_image=False):
         pokemon (Pokemon): The pokemon built from its details.
     """
 
-    print("x")
     if create_image:
-        print("x")
         name, pokedex, stats, img = create_pokemon(img, create_image)
-        print("x")
     else:
-        print("y")
         name, pokedex, stats = create_pokemon(img, create_image)
-        print("y")
 
     element = stats.pop("type")
-    print("x")
+
+    attacks = create_attacks(name, pokedex, element)
     try:
-        attacks = create_attacks(name, pokedex, element)
-        print("x")
         element = element.split("/")[0].capitalize()
+    except:
+        raise GeminiError("Gemini API returned an invalid response.")
 
-        if not include_output_image:
-            img = "unknown"
-
-        try:
-            return Pokemon(name, pokedex, element, stats, attacks, img)
-        except ValueError:
-            # Incorrect element type
-            return value_error_handler()
-    except AttributeError:
-        # AttributeError: 'NoneType' object has no attribute 'group'
-        return attribute_error_handler()
-
-
-def get_errormon():
-    """
-    Return an arbitrary preset pokemon when the API runs into trouble.
-    """
-    from pokemon import Pokemon, Attack
-
-    json_stats = """{"hp": 65, "attack": 65, "defence": 90, "special attack": 135, "special defence":  6, "speed":100}"""
-    from json import loads
-
-    stats = loads(json_stats)
-    a = Attack("a", "Grass")
-    attacks = [a, a, a, a]
-    image = "unknown"
-
-    p = Pokemon("Errormon!", "The Banana Pokemon", "Grass", stats, attacks, image)
-    return p
-
-
-def value_error_handler():
-    return get_errormon()
-
-
-def attribute_error_handler():
-    return get_errormon()
+    return Pokemon(name, pokedex, element, stats, attacks, img)
