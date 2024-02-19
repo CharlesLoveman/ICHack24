@@ -6,6 +6,7 @@ import { GlobalData } from '../App.js';
 import { useContext } from 'react';
 import { TbPokeball } from "react-icons/tb";
 import { Button } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 function StatDisplay(stats) {
   return (<>
@@ -22,19 +23,21 @@ function StatDisplay(stats) {
 
 
 
-export default function PokemonCard(pokemon) {
+export default function PokemonCard(pokemon, isNew) {
 
-  const { username, setUsername, current_pokemon, setPokemon } = useContext(GlobalData);
+  const data = useContext(GlobalData);
+  const setPokemon = data.setPokemon
+
+  const backgroundColor = isNew ? "khaki" : "white"
 
 
   return (
-    <Card sx={{ minWidth: 275 }}>
+    <Card sx={{
+      minWidth: 275, backgroundColor: { backgroundColor }
+    }}>
       <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          Who's that pokemon?
-        </Typography>
         <Typography variant="h5" component="div">
-          Name: {pokemon.name}
+          Name: {pokemon.name} {isNew}
         </Typography>
         <Typography sx={{ mb: 1.5 }} color="text.secondary">
           Type: {pokemon.element}
@@ -45,9 +48,10 @@ export default function PokemonCard(pokemon) {
         <Typography variant="body2">
           {StatDisplay(pokemon.stats)}
         </Typography>
-        <Button onClick={() => setPokemon(pokemon)}> <TbPokeball /> Select this Pokemon</Button>
+        <Button onClick={() => setPokemon(pokemon)}> <TbPokeball /> Select </Button>
+        <Button> <Link to={`../PokemonFullCardScreen/${1}`}>View</Link> </Button>
       </CardContent>
 
-    </Card>
+    </Card >
   );
 }
