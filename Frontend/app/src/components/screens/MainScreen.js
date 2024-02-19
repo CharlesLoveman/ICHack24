@@ -19,16 +19,26 @@ import { useLayoutEffect } from 'react';
 import LoginInputBox from '../LoginInputBox.js';
 import { GlobalData } from '../../App.js';
 import { TbPokeball } from "react-icons/tb";
+import { GiPokecog } from "react-icons/gi";
+import './MainScreen.css';
 
 
 export default function MainScreen() {
 
-  const { username, setUsername, pokemon, setPokemon } = useContext(GlobalData);
+  const data = useContext(GlobalData);
+
+  const backend_address = data.backend_address
+  const username = data.username
+  const setUsername = data.setUsername
+  const pokemon = data.pokemon
+  const setPokemon = data.setPokemon
+  const pokemonReturned = data.pokemonReturned
+
   const [display, setDisplay] = useState("notReady")
 
 
   function initialiseUser(username) {
-    axios.post(`http://127.0.0.1:5000/InitialiseUser/${username}`)
+    axios.post(`${backend_address}/InitialiseUser/${username}`)
   }
 
   function updateAndInitialiseUser(new_username) {
@@ -40,7 +50,7 @@ export default function MainScreen() {
   // initialiseUser()
 
   function fetchPokemon() {
-    var pokemons = axios.get(`http://127.0.0.1:5000/ListPokemon/${username}`);
+    var pokemons = axios.get(`${backend_address}/ListPokemon/${username}`);
     if (pokemons) {
       pokemon = pokemons[0];
     }
@@ -101,6 +111,13 @@ export default function MainScreen() {
     }
   }
 
+  function getPokemonWaitingIcon() {
+    if (data.pokemonReturned == "waiting") {
+      return (<GiPokecog style={{ animation: "rotation 2s infinite linear" }} />)
+
+    }
+  }
+
 
 
 
@@ -113,14 +130,13 @@ export default function MainScreen() {
           <div style={{ textAlign: 'center' }}>{LoginInputBox(updateAndInitialiseUser, sx)}</div>
           <br />
           <div style={{ textAlign: 'center' }}><Display display={display} /></div>
-          <Button sx={sx} fullWidth='true' onClick={() => createBattle(pokemon)} variant='contained' startIcon={<GiBattleGear size="1rem" />} endIcon={<GiBattleGear size="1rem" />} color='error'>Create Battle</Button>
+          <Button sx={sx} fullWidth='true' onClick={() => { createBattle(pokemon) }} variant='contained' startIcon={<GiBattleGear size="1rem" />} endIcon={<GiBattleGear size="1rem" />} color='error'>Create Battle</Button>
           <br /><br />
           <div style={{ textAlign: 'center' }}>{JoinRoomInputBox(pokemon, sx)}</div>
           <br /><br />
-          <Button sx={sx} fullWidth='true' variant='contained' size='large' startIcon={< GiHouse size="1rem" />} endIcon={< GiHouse size="1rem" />}><Link style={{ textDecoration: 'none' }} to={`../PokemonListScreen/${username}`} >View Pokemon</Link></Button>
+          <Button sx={sx} fullWidth='true' variant='contained' size='large'><Link style={{ textDecoration: 'none' }} to={`../PokemonListScreen/${username}`} >View Pokemon ({data.noNewPokemon})  </Link>{getPokemonWaitingIcon()}</Button>
           <br /><br />
           <Button sx={sx} fullWidth='true' variant='contained' size='large' startIcon={<MdCatchingPokemon size="1rem" />} endIcon={<MdCatchingPokemon size="1rem" />}><Link style={{ textDecoration: 'none' }} to={`../PokemonCaptureScreen/${username}`}>Capture Pokemon!</Link></Button>
-
         </CardContent>
       </Card >
     </>

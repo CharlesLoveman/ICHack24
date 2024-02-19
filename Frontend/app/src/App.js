@@ -22,9 +22,16 @@ import PokemonBattleScreen from './components/screens/PokemonBattleScreen';
 import PokemonListScreen from './components/screens/PokemonListScreen';
 import PokemonCaptureScreen from './components/screens/PokemonCaptureScreen';
 import { createContext } from 'react';
+import PokemonFullCardScreen from './components/screens/PokemonFullCardScreen';
 
 const theme = createTheme({
+  typography: {
+    fontFamily: ['Silkscreen']
+  }
 });
+
+//const backend_address = "http://127.0.0.1:5000"
+const backend_address = "http://192.168.0.27:5000"
 
 
 const router = createBrowserRouter([
@@ -52,18 +59,26 @@ const router = createBrowserRouter([
         path: "PokemonListScreen/:id/",
         element: <PokemonListScreen />,
         loader: async ({ params }) => {
-          return (await axios.get(`http://127.0.0.1:5000/ListPokemon/${params.id}`)).data;
+          return (await axios.get(`${backend_address}/ListPokemon/${params.id}`)).data;
         },
       },
       {
         path: "PokemonCaptureScreen/:id/",
         element: <PokemonCaptureScreen />
+      },
+      {
+        path: "PokemonFullCardScreen/:id/",
+        element: <PokemonFullCardScreen />,
+        loader: async ({ params }) => {
+          return (await axios.get(`${backend_address}/ListPokemon/${params.id}`)).data;
+        }
       }
     ]
   }
 ]);
 
 const GlobalData = createContext(null)
+
 export { GlobalData };
 
 export default function App() {
@@ -71,10 +86,12 @@ export default function App() {
 
   const [username, setUsername] = useState("")
   const [pokemon, setPokemon] = useState("")
+  const [pokemonReturned, setPokemonReturned] = useState("")
+  const [noNewPokemon, setNoNewPokemon] = useState(0)
 
 
   return (
-    <GlobalData.Provider value={{ username, setUsername, pokemon, setPokemon }}>
+    <GlobalData.Provider value={{ username, setUsername, pokemon, setPokemon, backend_address, pokemonReturned, setPokemonReturned, noNewPokemon, setNoNewPokemon }}>
       <ThemeProvider theme={theme}>
         <RouterProvider router={router} />
       </ThemeProvider>

@@ -5,20 +5,22 @@ import NavBar from '../NavBar.js';
 import { useLoaderData } from 'react-router-dom';
 
 
+
 export default function PokemonListScreen() {
 
 
-    const data = useLoaderData()
-    console.log(data)
+    const loaderData = useLoaderData()
+    console.log(loaderData)
+
+
 
     return (
         <>
             {NavBar()}
-            {TempAcquireBar()}
 
 
 
-            //{PokemonList(data)}</>
+            {PokemonList(loaderData)}</>
     );
 
 }
