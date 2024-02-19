@@ -28,7 +28,9 @@ STATS_KEYS = [
 
 class GeminiError(Exception):
     """Raised when an error occurs with the Gemini API."""
+
     pass
+
 
 def load_image_from_file(file_path):
     """Load an image from a file.
