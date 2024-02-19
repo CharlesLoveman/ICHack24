@@ -132,3 +132,6 @@ setup.cfg
 
 *.dev
 *.prod
+
+Backend/UploadedImages/
+Scripts/Windows/reinstall_backend.bat
