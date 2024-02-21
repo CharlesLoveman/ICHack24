@@ -56,7 +56,7 @@ def bytes_to_json(bytes):
 
 def get_player_by_username(username):
     """Return a player object from the database using a username."""
-    player = database.player.find_one({"username": username})
+    player = database.players.find_one({"username": username})
 
     return player
 
@@ -64,7 +64,7 @@ def get_player_by_username(username):
 def get_pokemon_ids_from_player(username):
     """Return a list of Pokemon ids for the given user."""
     print(f"Attempting to load Pokemon ids for user: {username}")
-    player = database.player.find_one({"username": username})
+    player = database.players.find_one({"username": username})
     pokemon_ids = player["pokemon_ids"]
 
     return pokemon_ids
@@ -90,7 +90,7 @@ def get_pokemon_from_id(pokemon_id):
 def get_stats_from_id(stats_id, flag="stats"):
     """Return stats as a dict."""
     print(f"Attempting to load data on {flag}: {stats_id}")
-    stats = database.stats.find_one({"_id": ObjectId(stats_id)})
+    stats = database.attack_stats.find_one({"_id": ObjectId(stats_id)})
     stats.pop("_id")
 
     return stats
@@ -200,7 +200,7 @@ def InitialiseUser(username):
         # Create a new user id
         print(f"User: {username} not found. Creating new user.")
         new_user = {"pokemon_ids": [], "username": username}
-        pid = str(database.player.insert_one(new_user).inserted_id)
+        pid = str(database.players.insert_one(new_user).inserted_id)
     else:
         # Return existing user id
         pid = str(player["_id"])
@@ -214,7 +214,7 @@ def InitialiseUser(username):
     return resp
 
 
-@app.route("/ListPokemon/<player>", methods=["GET"])
+@app.route("/ListPokemon/<username>", methods=["GET"])
 def ListPokemon(username):
     """Return a list of Pokemon stats as a JSON object.
 
@@ -229,10 +229,10 @@ def ListPokemon(username):
     pokemon_ids = get_pokemon_ids_from_player(username)
     pokemon_list = [get_pokemon_from_id(pokemon_id) for pokemon_id in pokemon_ids]
 
-    raise NotImplementedError
+    return pokemon_list
 
 
-@app.route("/CreatePokemon/<player_id>", methods=["POST"])
+@app.route("/CreatePokemon/<username>", methods=["POST"])
 def CreatePokemon(username):
     """Create a new Pokemon."""
     print(f"Creating new Pokemon for: {username}")
@@ -240,11 +240,11 @@ def CreatePokemon(username):
     # Load image
     img_raw = request.files["img"].read()
     img_name = hash(img_raw)
-    img_path = f"{img_name}.jpg"
+    img_path = f"UploadedImages/{img_name}.jpg"
 
     with open(img_path, "wb") as file:
         file.write(img_raw)
-
+    # TODO: Add a new try, catch. Send to frontend, and make an error there.
     img = load_image_from_file(img_path)
 
     # Generate Pokemon
@@ -257,6 +257,10 @@ def CreatePokemon(username):
             break
         except GeminiError:
             print(f"Error creating Pokemon for: {username}. Attempt: {i}. Retrying...")
+        except AttributeError:
+            print(
+                f"Error parsing Pokemon for: {username}. Attempt: {i}. Retrying..."
+            )  # Sometimes the regex fails when parsing attacks
     else:
         try:
             print(
@@ -268,7 +272,7 @@ def CreatePokemon(username):
             raise CreationError("Failed to create Pokemon.")
 
     print(f"Saving Pokemon: {pokemon_id} to user: {username}")
-    database.player.update_one(
+    database.players.update_one(
         {"username": username}, {"$push": {"pokemon_ids": pokemon_id}}
     )
 

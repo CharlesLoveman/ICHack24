@@ -52,7 +52,6 @@ element_chart = np.array(
 )
 
 
-
 class Pokemon:
     """Create a Pokemon, with description, battle statistics and an image id."""
 
@@ -129,7 +128,9 @@ class Pokemon:
                 )
 
         if not isinstance(self.image, Image.Image):
-            raise TypeError(f"image should be of type PIL.Image.Image, not {type(self.image)}")
+            raise TypeError(
+                f"image should be of type PIL.Image.Image, not {type(self.image)}"
+            )
 
     def __repr__(self):
         """Return a string representation of the Pokemon."""
@@ -202,18 +203,21 @@ class Pokemon:
             id (str): the id where the Pokemon is located in the database
         """
         attack_ids = [attack.save(db) for attack in self.attacks]
-        stats_id = str(db.stats.insert_one(self.stats).inserted_id)
-        img_raw = io.BytesIO(self.image.tobytes())
+        stats_id = str(db.attack_stats.insert_one(self.stats).inserted_id)
+        img_raw = self.image.tobytes()  # What format should this be?
 
-        return str(db.pokemon.insert_one(
-            {
-                "name": self.name,
-                "description": self.description,
-                "element": self.element,
-                "stats_id": stats_id,
-                "attack_ids": attack_ids,
-                "image": img_raw,
-            }).inserted_id)
+        return str(
+            db.pokemon.insert_one(
+                {
+                    "name": self.name,
+                    "description": self.description,
+                    "element": self.element,
+                    "stats_id": stats_id,
+                    "attack_ids": attack_ids,
+                    "image": img_raw,
+                }
+            ).inserted_id
+        )
 
     @classmethod
     def load(cls, db, id):
@@ -228,7 +232,7 @@ class Pokemon:
         """
         pokemon = db.pokemon.find_one({"_id": id})
 
-        stats = db.stats.find_one({"_id": ObjectId(pokemon["stats_id"])})
+        stats = db.attack_stats.find_one({"_id": ObjectId(pokemon["stats_id"])})
         stats.pop("_id")
 
         attacks = [Attack.load(db, attack_id) for attack_id in pokemon["attack_ids"]]
@@ -344,16 +348,24 @@ class Attack:
         Returns:
             id (str): the id where the Attack is located in the database
         """
-        stats_ids = str(db.stats.insert_many([self.self_status, self.target_status]).inserted_ids)
 
-        return str(db.attacks.insert_one({
-            "name": self.name,
-            "element": self.element,
-            "power": self.power,
-            "special": self.special,
-            "self_status_id": stats_ids[0],
-            "target_status_id": stats_ids[1],
-        }).inserted_id)
+        stats_object_ids = db.attack_stats.insert_many(
+            [self.self_status, self.target_status]
+        ).inserted_ids
+        stats_ids = [str(object_id) for object_id in stats_object_ids]
+
+        return str(
+            db.attacks.insert_one(
+                {
+                    "name": self.name,
+                    "element": self.element,
+                    "power": self.power,
+                    "special": self.special,
+                    "self_status_id": stats_ids[0],
+                    "target_status_id": stats_ids[1],
+                }
+            ).inserted_id
+        )
 
     @classmethod
     def load(cls, db, id):
@@ -368,10 +380,14 @@ class Attack:
         """
         attack = db.attacks.find_one({"_id": ObjectId(id)})
 
-        self_status = db.stats.find_one({"_id": ObjectId(attack["self_status_id"])})
+        self_status = db.attack_stats.find_one(
+            {"_id": ObjectId(attack["self_status_id"])}
+        )
         self_status.pop("_id")
 
-        target_status = db.stats.find_one({"_id": ObjectId(attack["target_status_id"])})
+        target_status = db.attack_stats.find_one(
+            {"_id": ObjectId(attack["target_status_id"])}
+        )
         target_status.pop("_id")
 
         return Attack(

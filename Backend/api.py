@@ -190,4 +190,4 @@ def build_pokemon(img, create_image=False):
     except:
         raise GeminiError("Gemini API returned an invalid response.")
 
-    return Pokemon(name, pokedex, element, stats, attacks, img)
+    return Pokemon(name, pokedex, element, stats, attacks, img._pil_image)
