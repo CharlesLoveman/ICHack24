@@ -68,10 +68,7 @@ const router = createBrowserRouter([
       },
       {
         path: "PokemonFullCardScreen/:id/",
-        element: <PokemonFullCardScreen />,
-        loader: async ({ params }) => {
-          return (await axios.get(`${backend_address}/ListPokemon/${params.id}`)).data;
-        }
+        element: <PokemonFullCardScreen />
       }
     ]
   }
@@ -88,10 +85,11 @@ export default function App() {
   const [pokemon, setPokemon] = useState("")
   const [pokemonReturned, setPokemonReturned] = useState("")
   const [noNewPokemon, setNoNewPokemon] = useState(0)
+  const [viewPokemon, setViewPokemon] = useState({})
 
 
   return (
-    <GlobalData.Provider value={{ username, setUsername, pokemon, setPokemon, backend_address, pokemonReturned, setPokemonReturned, noNewPokemon, setNoNewPokemon }}>
+    <GlobalData.Provider value={{ username, setUsername, pokemon, setPokemon, backend_address, pokemonReturned, setPokemonReturned, noNewPokemon, setNoNewPokemon, viewPokemon, setViewPokemon }}>
       <ThemeProvider theme={theme}>
         <RouterProvider router={router} />
       </ThemeProvider>

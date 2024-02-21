@@ -15,7 +15,6 @@ export default function PokemonList(pokemons) {
         setter(constructPokemonMarkers(noNewPokemon, newPokemonMarkers))
         console.log(noNewPokemon)
         console.log(newPokemonMarkers)
-        console.log("hi")
     }, [])
 
 
