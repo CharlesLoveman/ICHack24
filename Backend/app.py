@@ -11,6 +11,8 @@ from pymongo import MongoClient
 from dotenv import dotenv_values
 import os
 from bson.objectid import ObjectId
+import json
+import base64
 
 config = dotenv_values(".prod" if os.getenv("FLASK_ENV") == "prod" else ".dev")
 
@@ -46,6 +48,12 @@ class CreationError(Exception):
     pass
 
 
+def bytes_to_json(bytes):
+    b64bytes = base64.b64encode(bytes)
+    strbytes = b64bytes.decode("utf-8")
+    return json.dumps(strbytes)
+
+
 def get_player_by_username(username):
     """Return a player object from the database using a username."""
     player = database.player.find_one({"username": username})
@@ -73,6 +81,8 @@ def get_pokemon_from_id(pokemon_id):
 
     attack_ids = pokemon["attack_ids"]
     pokemon["attacks"] = [get_attack_from_id(attack_id) for attack_id in attack_ids]
+
+    pokemon["image"] = bytes_to_json(pokemon["image"])
 
     return pokemon
 
