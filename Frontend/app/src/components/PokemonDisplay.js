@@ -1,9 +1,14 @@
 import React from 'react';
+import { Card, Paper } from '@mui/material';
 
-export default function PokemonDisplay(pokemon) {
+export default function PokemonDisplay(pokemon, hp) {
     return (
         <>
-            <div>Show a Pokemon on grass</div>
+            <Card>{"Health: " + hp + "/" + pokemon.stats.hp}</Card>
+            <br />
+            <br />
+            <br />
+            <img src={process.env.PUBLIC_URL + '/' + pokemon.image_id} width="100"></img>
         </>
     );
 }
