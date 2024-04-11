@@ -8,6 +8,8 @@ import { GlobalData } from '../../App';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { Link } from "react-router-dom";
+import Card from '@mui/material/Card';
+
 
 export default function PokemonBattleScreen() {
 
@@ -48,11 +50,12 @@ export default function PokemonBattleScreen() {
     }
 
     return (
-        <>{PokemonBattleDisplay(state.self_pokemon, state.target_pokemon, data.battleHP.self_hp, data.battleHP.target_hp)}
+        <><Card>{PokemonBattleDisplay(state.self_pokemon, state.target_pokemon, data.battleHP.self_hp, data.battleHP.target_hp)}
             {data.battleResult == "" && PokemonAttacksDisplay(state.self_pokemon, onAttack)}
             {battleData.otherPlayerWaiting && <Typography>The other player is now waiting for you to make a move.</Typography>}
             {battleData.thisPlayerWaiting && <Typography>The other player has not selected a move yet. You are ready to use {chosenAttack}!</Typography>}
             {showResult()}
+        </Card>
         </>
     );
 

@@ -9,30 +9,56 @@ export default function PokemonBattleDisplay(self_pokemon, target_pokemon, hp1, 
     var p2x = "650px";
     var p2y = "200px";
 
-    var sx1 = {
+    p1x = "1em";
+    p1y = "10em"
+
+    p2x = "1em";
+    p2y = "5em";
+
+    var barsx1 = {
         "position": "absolute",
         "top": p1y,
         "left": p1x,
+    };
+
+    var barsx2 = {
+        "position": "absolute",
+        "top": p2y,
+        "right": p2x,
+    };
+
+    var sxback = {
+        "margin-left": "-12em",
+        "boxShadow": "none",
+    }
+
+    var sxbackouter = {
+        "boxShadow": "none",
+    }
+
+    var sx1 = {
+        "position": "absolute",
+        "top": "15em",
+        "left": "2em",
         "boxShadow": "none",
         "background": "none"
     };
 
     var sx2 = {
         "position": "absolute",
-        "top": p2y,
-        "left": p2x,
+        "top": "11em",
+        "right": "2em",
         "boxShadow": "none",
         "background": "none"
     };
 
     // Need to figure out which hp is which
-
     return (
         <>
             <div>The whole battle!</div>
-            <img src={process.env.PUBLIC_URL + '/' + "background_temp_leeched.webp"} height="50%"></img>
-            <Paper sx={sx1}><div  >{PokemonDisplay(self_pokemon, hp1)}</div></Paper>
-            <Paper sx={sx2}><div  >{PokemonDisplay(target_pokemon, hp2)}</div></Paper>
+            <Card sx={sxbackouter}><Card sx={sxback}><img src={process.env.PUBLIC_URL + '/' + "background_temp_leeched.webp"} height="400em"></img></Card></Card>
+            <Paper ><div  >{PokemonDisplay(self_pokemon, hp1, sx1, barsx1)}</div></Paper>
+            <Paper ><div  >{PokemonDisplay(target_pokemon, hp2, sx2, barsx2)}</div></Paper>
 
 
 
