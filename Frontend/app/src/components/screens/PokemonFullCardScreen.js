@@ -7,23 +7,33 @@ import { useContext } from 'react';
 import { TbPokeball } from "react-icons/tb";
 import { Button } from '@mui/material';
 import { useLoaderData } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import NavBar from '../NavBar.js';
 
 
 function StatDisplay(stats) {
-    return (<>
-        <div>HP: {stats.hp}</div>
-        <div>Attack: {stats.attack}</div>
-        <div>Sp. Attack: {stats.special_attack}</div>
-        <div>Defence: {stats.defence}</div>
-        <div>Sp. Defence: {stats.special_defence}</div>
-        <div>Speed: {stats.speed}</div>
-    </>
-
-    )
+    if (stats) {
+        return (<>
+            <div>HP: {stats.hp}</div>
+            <div>Attack: {stats.attack}</div>
+            <div>Sp. Attack: {stats.special_attack}</div>
+            <div>Defence: {stats.defence}</div>
+            <div>Sp. Defence: {stats.special_defence}</div>
+            <div>Speed: {stats.speed}</div>
+        </>)
+    } else {
+        return (<></>)
+    }
 }
 
 function MovesDisplay(attacks) {
-    return attacks.map(move => MoveDisplay(move))
+    if (attacks) {
+        return attacks.map(move => MoveDisplay(move))
+    }
+    else {
+        return (<></>)
+    }
+
 }
 
 function MoveDisplay(attack) {
@@ -37,50 +47,57 @@ export default function PokemonFullCardScreen(id) {
 
     const data = useContext(GlobalData);
     const setPokemon = data.setPokemon
-    const loaderData = useLoaderData(); // Depreciate this
-    const pokemons = loaderData;
-    const pokemon = pokemons[0]
+    const [pokemon, setter] = useState({})
 
-    console.log(pokemons)
-    console.log(id)
+    console.log("henlo")
+
+    useEffect(() => {
+        console.log("hi")
+        console.log(data.viewPokemon)
+        setter(data.viewPokemon)
+        data.setViewPokemon({})
+    }, [])
+
     console.log(pokemon)
 
 
 
     return (
-        <Card sx={{
-            minWidth: 275, backgroundColor: "white"
-        }}>
-            <CardContent>
-                <Typography variant="h5" component="div">
-                    Name: {pokemon.name}
-                </Typography>
-                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    Type: {pokemon.element}
-                </Typography>
-                <Typography variant="h6" component="div">
-                    Description
-                </Typography>
-                <Typography variant="body2">
-                    {pokemon.description}
-                </Typography>
-                <br />
-                <Typography variant="h6" component="div">
-                    Stats
-                </Typography>
-                <Typography variant="body2">
-                    {StatDisplay(pokemon.stats)}
-                </Typography>
-                <br />
-                <Typography variant="h6" component="div">
-                    Moves
-                </Typography>
-                <Typography variant="body2">
-                    {MovesDisplay(pokemon.attacks)}
-                </Typography>
-                <Button onClick={() => setPokemon(pokemon)}> <TbPokeball /> Select </Button>
-            </CardContent>
+        <>{NavBar()}
+            <Card sx={{
+                minWidth: 275, backgroundColor: "white"
+            }}>
+                <CardContent>
+                    <Typography variant="h5" component="div">
+                        Name: {pokemon.name}
+                    </Typography>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                        Type: {pokemon.element}
+                    </Typography>
+                    <Typography variant="h6" component="div">
+                        Description
+                    </Typography>
+                    <Typography variant="body2">
+                        {pokemon.description}
+                    </Typography>
+                    <br />
+                    <Typography variant="h6" component="div">
+                        Stats
+                    </Typography>
+                    <Typography variant="body2">
+                        {StatDisplay(pokemon.stats)}
+                    </Typography>
+                    <br />
+                    <Typography variant="h6" component="div">
+                        Moves
+                    </Typography>
+                    <Typography variant="body2">
+                        {MovesDisplay(pokemon.attacks)}
+                    </Typography>
+                    <Button onClick={() => setPokemon(pokemon)}> <TbPokeball /> Select </Button>
+                </CardContent>
 
-        </Card >
+            </Card ></>
+
     );
 }

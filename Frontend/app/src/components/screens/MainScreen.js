@@ -130,13 +130,13 @@ export default function MainScreen() {
           <div style={{ textAlign: 'center' }}>{LoginInputBox(updateAndInitialiseUser, sx)}</div>
           <br />
           <div style={{ textAlign: 'center' }}><Display display={display} /></div>
-          <Button sx={sx} fullWidth='true' onClick={() => { createBattle(pokemon) }} variant='contained' startIcon={<GiBattleGear size="1rem" />} endIcon={<GiBattleGear size="1rem" />} color='error'>Create Battle</Button>
+          <Button sx={sx} disabled={!pokemon} fullWidth='true' onClick={() => { createBattle(pokemon) }} variant='contained' startIcon={<GiBattleGear size="1rem" />} endIcon={<GiBattleGear size="1rem" />} color='error'>Create Battle</Button>
           <br /><br />
           <div style={{ textAlign: 'center' }}>{JoinRoomInputBox(pokemon, sx)}</div>
           <br /><br />
-          <Button sx={sx} fullWidth='true' variant='contained' size='large'><Link style={{ textDecoration: 'none' }} to={`../PokemonListScreen/${username}`} >View Pokemon ({data.noNewPokemon})  </Link>{getPokemonWaitingIcon()}</Button>
+          <Button sx={sx} disabled={!username} fullWidth='true' variant='contained' size='large'><Link style={{ textDecoration: 'none' }} to={`../PokemonListScreen/${username}`} >View Pokemon ({data.noNewPokemon})  </Link>{getPokemonWaitingIcon()}</Button>
           <br /><br />
-          <Button sx={sx} fullWidth='true' variant='contained' size='large' startIcon={<MdCatchingPokemon size="1rem" />} endIcon={<MdCatchingPokemon size="1rem" />}><Link style={{ textDecoration: 'none' }} to={`../PokemonCaptureScreen/${username}`}>Capture Pokemon!</Link></Button>
+          <Button sx={sx} disabled={!username} fullWidth='true' variant='contained' size='large' startIcon={<MdCatchingPokemon size="1rem" />} endIcon={<MdCatchingPokemon size="1rem" />}><Link style={{ textDecoration: 'none' }} to={`../PokemonCaptureScreen/${username}`}>Capture Pokemon!</Link></Button>
         </CardContent>
       </Card >
     </>

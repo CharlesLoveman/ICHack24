@@ -31,7 +31,7 @@ const theme = createTheme({
 });
 
 //const backend_address = "http://127.0.0.1:5000"
-const backend_address = "http://192.168.0.27:5000"
+const backend_address = "http://192.168.1.15:5000"
 
 
 const router = createBrowserRouter([
@@ -52,7 +52,7 @@ const router = createBrowserRouter([
         element: <WaitingRoomScreen />
       },
       {
-        path: "PokemonBattleScreen/",
+        path: "PokemonBattleScreen/:game_id/",
         element: <PokemonBattleScreen />
       },
       {
@@ -68,10 +68,7 @@ const router = createBrowserRouter([
       },
       {
         path: "PokemonFullCardScreen/:id/",
-        element: <PokemonFullCardScreen />,
-        loader: async ({ params }) => {
-          return (await axios.get(`${backend_address}/ListPokemon/${params.id}`)).data;
-        }
+        element: <PokemonFullCardScreen />
       }
     ]
   }
@@ -88,10 +85,15 @@ export default function App() {
   const [pokemon, setPokemon] = useState("")
   const [pokemonReturned, setPokemonReturned] = useState("")
   const [noNewPokemon, setNoNewPokemon] = useState(0)
+  const [viewPokemon, setViewPokemon] = useState({})
+  const [battleData, setBattleData] = useState({})
+  const [newTurn, setNewTurn] = useState(false)
+  const [battleResult, setBattleResult] = useState("")
+  const [battleHP, setBattleHP] = useState({})
 
 
   return (
-    <GlobalData.Provider value={{ username, setUsername, pokemon, setPokemon, backend_address, pokemonReturned, setPokemonReturned, noNewPokemon, setNoNewPokemon }}>
+    <GlobalData.Provider value={{ username, setUsername, pokemon, setPokemon, backend_address, pokemonReturned, setPokemonReturned, noNewPokemon, setNoNewPokemon, viewPokemon, setViewPokemon, battleData, setBattleData, newTurn, setNewTurn, battleResult, setBattleResult, battleHP, setBattleHP }}>
       <ThemeProvider theme={theme}>
         <RouterProvider router={router} />
       </ThemeProvider>

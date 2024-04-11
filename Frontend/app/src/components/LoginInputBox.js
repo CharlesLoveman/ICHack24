@@ -16,9 +16,15 @@ export default function LoginInputBox(updateAndInitialiseUser, sx) {
         updateAndInitialiseUser(username)
     }
 
+    function handleKeyDown(e) {
+        if (e.keyCode == 13) {
+            updateUsername()
+        }
+    }
+
     return (<>
         <Button sx={sx} fullWidth='true' color='error' startIcon={<GiBattleAxe size="1rem" />} endIcon={<GiBattleAxe size="1rem" />} variant='contained' size='large' type="submit" onClick={() => updateUsername()}>Login</Button><br />
-        <Input defaultValue={orig_username} onChange={e => setUsername(e.target.value)} />
+        <Input onKeyDown={e => handleKeyDown(e)} defaultValue={orig_username} onChange={e => setUsername(e.target.value)} />
     </>
 
 

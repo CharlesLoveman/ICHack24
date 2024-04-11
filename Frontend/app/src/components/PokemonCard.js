@@ -7,6 +7,7 @@ import { useContext } from 'react';
 import { TbPokeball } from "react-icons/tb";
 import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
+import Paper from '@mui/material/Paper';
 
 function StatDisplay(stats) {
   return (<>
@@ -27,6 +28,7 @@ export default function PokemonCard(pokemon, isNew) {
 
   const data = useContext(GlobalData);
   const setPokemon = data.setPokemon
+  const setViewPokemon = data.setViewPokemon
 
   const backgroundColor = isNew ? "khaki" : "white"
 
@@ -36,6 +38,9 @@ export default function PokemonCard(pokemon, isNew) {
       minWidth: 275, backgroundColor: { backgroundColor }
     }}>
       <CardContent>
+        <Typography variant="h5" component="div">
+          <img src={process.env.PUBLIC_URL + '/' + pokemon.image_id} width="100"></img>
+        </Typography>
         <Typography variant="h5" component="div">
           Name: {pokemon.name} {isNew}
         </Typography>
@@ -49,7 +54,7 @@ export default function PokemonCard(pokemon, isNew) {
           {StatDisplay(pokemon.stats)}
         </Typography>
         <Button onClick={() => setPokemon(pokemon)}> <TbPokeball /> Select </Button>
-        <Button> <Link to={`../PokemonFullCardScreen/${1}`}>View</Link> </Button>
+        <Button> <Link to={`../PokemonFullCardScreen/${1}`} onClick={() => setViewPokemon(pokemon)}>View</Link> </Button>
       </CardContent>
 
     </Card >

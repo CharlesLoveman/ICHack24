@@ -14,13 +14,13 @@ export default function JoinRoomInputBox(pokemon, sx) {
         if (pokemon) {
             var game_id = code;
 
-            socket.emit('joinBattle', { player_id: document.cookie["player_id"], pokemon_id: pokemon.id, game_id: game_id })
+            socket.emit('joinBattle', { pokemon_id: pokemon.id, game_id: game_id })
         }
 
     }
 
     return (<>
-        <Button sx={sx} fullWidth='true' color='error' startIcon={<GiBattleAxe size="1rem" />} endIcon={<GiBattleAxe size="1rem" />} variant='contained' size='large' type="submit" onClick={() => joinBattle(pokemon, code)}>Join Battle</Button><br />
+        <Button disabled={!pokemon} sx={sx} fullWidth='true' color='error' startIcon={<GiBattleAxe size="1rem" />} endIcon={<GiBattleAxe size="1rem" />} variant='contained' size='large' type="submit" onClick={() => joinBattle(pokemon, code)}>Join Battle</Button><br />
         <Input onChange={e => setCode(e.target.value)} />
     </>
 

@@ -11,6 +11,7 @@ import vertexai
 from vertexai.preview.generative_models import GenerativeModel, Image
 import re
 
+
 vertexai.init(project="crucial-bucksaw-413121")
 model = GenerativeModel("gemini-pro")
 vision_model = GenerativeModel("gemini-pro-vision")
@@ -24,6 +25,7 @@ STATS_KEYS = [
     "Special Defence",
     "Speed",
 ]
+PATH_TO_PUBLIC = "../Frontend/app/public/"
 
 
 class GeminiError(Exception):
@@ -66,12 +68,12 @@ def get_gemini_response(template, img=None, safety_feedback=False):
         return response.text
 
 
-def create_pokemon(img, create_image=False, return_prompt=False):
+def create_pokemon(img_path, create_image=False, return_prompt=False):
     """Create a new pokemon from an image.
 
     Args:
         prompt (str): The prompt to use to create the pokemon.
-        img (Image): The image to use to create the pokemon.
+        img_path (str): The path to the image to use to create the pokemon.
         create_image (bool): Whether to create an image of the pokemon.
         return_prompt (bool): Whether to return the prompt.
 
@@ -85,6 +87,8 @@ def create_pokemon(img, create_image=False, return_prompt=False):
     else:
         template = GEMINI_PROMPT_TEMPLATE
         cat_names = ["Name", "Pokedex", "Stats"]
+
+    img = load_image_from_file(PATH_TO_PUBLIC + img_path)
 
     response = get_gemini_response(template, img)
 
@@ -119,11 +123,15 @@ def create_pokemon(img, create_image=False, return_prompt=False):
 
         # Generate the image
         img = generate_image(image_prompt)
+        img_name = hash(img)
+        img_path = f"images/pokemon/uploaded_images/{img_name}.jpg"
+
+        img.save(PATH_TO_PUBLIC + img_path)
 
         if return_prompt:
-            return name, pokedex, stats, img, image_prompt
+            return name, pokedex, stats, img_path, image_prompt
         else:
-            return name, pokedex, stats, img
+            return name, pokedex, stats, img_path
 
     else:
         return name, pokedex, stats
@@ -166,21 +174,23 @@ def create_attacks(name, pokedex, element):
     return attacks
 
 
-def build_pokemon(img, create_image=False):
+def build_pokemon(original_img_path, create_image=False):
     """Build a pokemon from its details.
 
     Args:
-        img (Image): The image of the pokemon.
+        img_path (str): The path to the image of the pokemon.
         create_image (bool): Whether to create an image of the pokemon.
 
     Returns:
         pokemon (Pokemon): The pokemon built from its details.
     """
 
+    img_path = original_img_path
+
     if create_image:
-        name, pokedex, stats, img = create_pokemon(img, create_image)
+        name, pokedex, stats, img_path = create_pokemon(img_path, create_image)
     else:
-        name, pokedex, stats = create_pokemon(img, create_image)
+        name, pokedex, stats = create_pokemon(img_path, create_image)
 
     element = stats.pop("type")
 
@@ -190,4 +200,4 @@ def build_pokemon(img, create_image=False):
     except:
         raise GeminiError("Gemini API returned an invalid response.")
 
-    return Pokemon(name, pokedex, element, stats, attacks, img)
+    return Pokemon(name, pokedex, element, stats, attacks, img_path, original_img_path)
