@@ -20,7 +20,7 @@ export default function JoinRoomInputBox(pokemon, sx) {
     }
 
     return (<>
-        <Button sx={sx} fullWidth='true' color='error' startIcon={<GiBattleAxe size="1rem" />} endIcon={<GiBattleAxe size="1rem" />} variant='contained' size='large' type="submit" onClick={() => joinBattle(pokemon, code)}>Join Battle</Button><br />
+        <Button disabled={!pokemon} sx={sx} fullWidth='true' color='error' startIcon={<GiBattleAxe size="1rem" />} endIcon={<GiBattleAxe size="1rem" />} variant='contained' size='large' type="submit" onClick={() => joinBattle(pokemon, code)}>Join Battle</Button><br />
         <Input onChange={e => setCode(e.target.value)} />
     </>
 
