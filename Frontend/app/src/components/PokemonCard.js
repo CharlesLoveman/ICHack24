@@ -7,6 +7,7 @@ import { useContext } from 'react';
 import { TbPokeball } from "react-icons/tb";
 import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
+import Paper from '@mui/material/Paper';
 
 function StatDisplay(stats) {
   return (<>
@@ -38,7 +39,7 @@ export default function PokemonCard(pokemon, isNew) {
     }}>
       <CardContent>
         <Typography variant="h5" component="div">
-          <img src={"data:image/jpg;base64," + pokemon.image}></img>
+          <img src={process.env.PUBLIC_URL + '/' + pokemon.image_id} width="100"></img>
         </Typography>
         <Typography variant="h5" component="div">
           Name: {pokemon.name} {isNew}

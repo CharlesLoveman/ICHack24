@@ -62,7 +62,8 @@ class Pokemon:
         element: str,
         stats: dict,
         attacks: list,
-        image: Image.Image,
+        image_id : str,
+        original_image_id : str,
         id: str = "",
     ):
         self.name = name
@@ -70,8 +71,9 @@ class Pokemon:
         self.element = element
         self.stats = stats
         self.attacks = attacks
-        self.image = image
         self.id = id
+        self.image_id = image_id
+        self.original_image_id = original_image_id
 
         if not isinstance(self.name, str):
             raise TypeError(
@@ -127,9 +129,9 @@ class Pokemon:
                     f"Moves must be a list of Move objects, but {attack} is a {type(attack).__name__}"
                 )
 
-        if not isinstance(self.image, Image.Image):
+        if not isinstance(self.image_id, str):
             raise TypeError(
-                f"image should be of type PIL.Image.Image, not {type(self.image)}"
+                f"image should be of type string, not {type(self.image_id)}"
             )
 
     def __repr__(self):
@@ -204,7 +206,6 @@ class Pokemon:
         """
         attack_ids = [attack.save(db) for attack in self.attacks]
         stats_id = str(db.attack_stats.insert_one(self.stats).inserted_id)
-        img_raw = self.image.tobytes()  # What format should this be?
 
         return str(
             db.pokemon.insert_one(
@@ -214,7 +215,8 @@ class Pokemon:
                     "element": self.element,
                     "stats_id": stats_id,
                     "attack_ids": attack_ids,
-                    "image": img_raw,
+                    "image_id": self.image_id,
+                    "original_image_id": self.original_image_id
                 }
             ).inserted_id
         )
@@ -237,8 +239,8 @@ class Pokemon:
 
         attacks = [Attack.load(db, attack_id) for attack_id in pokemon["attack_ids"]]
 
-        img_raw = pokemon["image_id"]
-        img = Image.open(io.BytesIO(img_raw))
+        image_id = pokemon["image_id"]
+        original_image_id = pokemon["original_image_id"]
 
         return Pokemon(
             pokemon["name"],
@@ -246,7 +248,8 @@ class Pokemon:
             pokemon["element"],
             stats,
             attacks,
-            img,
+            image_id,
+            original_image_id,
             id,
         )
 

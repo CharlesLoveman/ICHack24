@@ -82,8 +82,6 @@ def get_pokemon_from_id(pokemon_id):
     attack_ids = pokemon["attack_ids"]
     pokemon["attacks"] = [get_attack_from_id(attack_id) for attack_id in attack_ids]
 
-    pokemon["image"] = bytes_to_json(pokemon["image"])
-
     return pokemon
 
 
@@ -240,18 +238,18 @@ def CreatePokemon(username):
     # Load image
     img_raw = request.files["img"].read()
     img_name = hash(img_raw)
-    img_path = f"UploadedImages/{img_name}.jpg"
-
-    with open(img_path, "wb") as file:
+    img_path = (
+        f"images/pokemon/uploaded_images/{img_name}.jpg"  # Path from the public folder
+    )
+    with open(PATH_TO_PUBLIC + img_path, "wb") as file:
         file.write(img_raw)
     # TODO: Add a new try, catch. Send to frontend, and make an error there.
-    img = load_image_from_file(img_path)
 
     # Generate Pokemon
     print("Generating Pokemon.")
     for i in range(3):
         try:
-            pokemon = build_pokemon(img)
+            pokemon = build_pokemon(img_path)
             pokemon_id = pokemon.save(database)
             print(f"Pokemon created successfully. id: {pokemon_id}")
             break
