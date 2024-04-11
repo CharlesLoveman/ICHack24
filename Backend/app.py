@@ -6,7 +6,7 @@ from flask_socketio import SocketIO, send, emit
 from random import randrange
 
 from .pokemon import Battle, Pokemon
-from .api import GeminiError, build_pokemon, load_image_from_file
+from .api import GeminiError, build_pokemon, PATH_TO_PUBLIC
 from pymongo import MongoClient
 from dotenv import dotenv_values
 import os
@@ -17,6 +17,7 @@ import base64
 config = dotenv_values(".prod" if os.getenv("FLASK_ENV") == "prod" else ".dev")
 
 ERRORMON_ID = None  # Run create_errormon.py and set this!
+
 
 ip = "127.0.0.1"
 # Change this back
@@ -39,7 +40,7 @@ socketio = SocketIO(app, cors_credentials=True, cors_allowed_origins=py_cors_or)
 battles = {}
 
 if __name__ == "__main__":
-    socketio.run(app)
+    socketio.run(app, port=5000, host="0.0.0.0")
 
 
 class CreationError(Exception):
