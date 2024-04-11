@@ -14,7 +14,7 @@ export default function JoinRoomInputBox(pokemon, sx) {
         if (pokemon) {
             var game_id = code;
 
-            socket.emit('joinBattle', { player_id: document.cookie["player_id"], pokemon_id: pokemon.id, game_id: game_id })
+            socket.emit('joinBattle', { pokemon_id: pokemon.id, game_id: game_id })
         }
 
     }
