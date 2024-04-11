@@ -148,8 +148,8 @@ def handle_createBattle(json):
 
     print(f"Creating battle (id: {game_id}) for client id: {request.sid}")
 
-    pokemon = Pokemon.load(database, pokemon_id)
-    battles[game_id] = Battle(request.sid, pokemon)
+    # pokemon = Pokemon.load(database, pokemon_id)
+    battles[game_id] = Battle(request.sid, pokemon_id, database)
     users[request.sid] = request.sid
 
     emit("joinWaitingRoom", {"game_id": game_id})
@@ -164,24 +164,25 @@ def handle_joinBattle(json):
     print(f"Client id: {request.sid} joining battle: {game_id}")
 
     battle = battles[game_id]
-    pokemon = Pokemon.load(database, pokemon_id)
-    battle.add_player(request.sid, pokemon)
+    battle.add_player(request.sid, pokemon_id)
 
     emit(
         "joinBattle",
         {
-            "self_pokemon": battle.p2,
-            "target_pokemon": battle.p1,
+            "self_pokemon": get_pokemon_from_id(battle.p2_id),
+            "target_pokemon": get_pokemon_from_id(battle.p1_id),
+            "game_id": game_id,
         },
         to=request.sid,
     )
     emit(
         "joinBattleFromRoom",
         {
-            "self_pokemon": battle.p1,
-            "target_pokemon": battle.p2,
+            "self_pokemon": get_pokemon_from_id(battle.p1_id),
+            "target_pokemon": get_pokemon_from_id(battle.p2_id),
+            "game_id": game_id,
         },
-        to=battle.player1,
+        to=battle.u1,
     )
 
 

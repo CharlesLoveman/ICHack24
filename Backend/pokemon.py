@@ -516,76 +516,77 @@ def generate_attack(name: str, element: str, category: str):
 class Battle:
     """Create a battle between two Pokemon."""
 
-    def __init__(self, player1, pokemon1, db):
+    def __init__(self, u1, p1_id, db):
         """Create a battle between two Pokemon.
 
         Args:
-            player1 (str): player 1 client id
-            pokemon1 (Pokemon): Pokemon for player 1
+            u1 (str): user/ player 1 client id
+            p1 (str): pokemon id for player 1
             db (database): the MongoDB database
 
         Returns:
             self (Battle)
         """
-        self.player1 = player1
-        self.p1 = pokemon1
-        self.state = None
+        self.u1 = u1
+        self.p1_id = p1_id
+        self.db = db
 
-        if not isinstance(self.p1, Pokemon):
-            raise TypeError(
-                f"Pokemon 1 must be a Pokemon, but {self.p1} is a {type(self.p1).__name__}"
-            )
+        self.p1 = Pokemon.load(self.db, self.p1_id)
+        self.p1.stats["max_hp"] = self.p1.stats["hp"]
+        self.state = WaitingForAttacks()
 
-    def add_player(self, player2, pokemon2, db):
+    def add_player(self, u2, p2_id):
         """Add a second player to the battle.
 
         Args:
-            player2 (str): player 2 client id
-            pokemon2 (Pokemon): Pokemon for player 2
-            db (database): the MongoDB database
+            u2 (str): user/ player 2 client id
+            p2 (str): pokemon id for player 2
         """
-        self.player2 = player2
-        self.p2 = db.pokemon.find_one({"_id": pokemon2})
+        self.u2 = u2
+        self.p2_id = p2_id
+        self.p2 = Pokemon.load(self.db, self.p2_id)
+        self.p2.stats["max_hp"] = self.p2.stats["hp"]
 
-    def handle_event(self, event: str, json: dict, socket_id: str, db, users):
+    def handle_event(self, event: str, json: dict, socket_id: str, db):
         return self.state.handle_event(self, event, json, socket_id, db)
 
-    def execute(self, users):
+    def execute(self):
         if self.p1.stats["speed"] <= self.p2.stats["speed"]:
             self.p1.attack(self.attack1, self.p2)
             if self.p2.stats["hp"] <= 0:
-                emit("win", {}, to=users[self.player1])
-                emit("lose", {}, to=users[self.player2])
+                emit("win", {}, to=self.u1)
+                emit("lose", {}, to=self.u2)
             elif self.p1.stats["hp"] <= 0:
-                emit("lose", {}, to=users[self.player1])
-                emit("win", {}, to=users[self.player2])
+                emit("lose", {}, to=self.u1)
+                emit("win", {}, to=self.u2)
             self.p2.attack(self.attack2, self.p1)
             if self.p1.stats["hp"] <= 0:
-                emit("lose", {}, to=users[self.player1])
-                emit("win", {}, to=users[self.player2])
+                emit("lose", {}, to=self.u1)
+                emit("win", {}, to=self.u2)
             elif self.p2.stats["hp"] <= 0:
-                emit("win", {}, to=users[self.player1])
-                emit("lose", {}, to=users[self.player2])
+                emit("win", {}, to=self.u1)
+                emit("lose", {}, to=self.u2)
         else:
             self.p2.attack(self.attack2, self.p1)
             if self.p1.stats["hp"] <= 0:
-                emit("lose", {}, to=users[self.player1])
-                emit("win", {}, to=users[self.player2])
+                emit("lose", {}, to=self.u1)
+                emit("win", {}, to=self.u2)
             elif self.p2.stats["hp"] <= 0:
-                emit("win", {}, to=users[self.player1])
-                emit("lose", {}, to=users[self.player2])
+                emit("win", {}, to=self.u1)
+                emit("lose", {}, to=self.u2)
             self.p1.attack(self.attack1, self.p2)
             if self.p2.stats["hp"] <= 0:
-                emit("win", {}, to=users[self.player1])
-                emit("lose", {}, to=users[self.player2])
+                emit("win", {}, to=self.u1)
+                emit("lose", {}, to=self.u2)
             elif self.p1.stats["hp"] <= 0:
-                emit("lose", {}, to=users[self.player1])
-                emit("win", {}, to=users[self.player2])
+                emit("lose", {}, to=self.u1)
+                emit("win", {}, to=self.u2)
+        print("Battle finished executing.")
 
 
 class BattleState:
     def handle_event(
-        self, battle: Battle, event: str, json: dict, socket_id: str, db, users
+        self, battle: Battle, event: str, json: dict, socket_id: str, db
     ):
         pass
 
@@ -595,15 +596,23 @@ class WaitingForAttacks(BattleState):
         super()
 
     def handle_event(
-        self, battle: Battle, event: str, json: dict, socket_id: str, db, users
+        self, battle: Battle, event: str, json: dict, socket_id: str, db
     ):
         if event == "attack":
-            if socket_id == battle.player1:
-                battle.attack1 = db.attacks.find_one({"_id": json["attack_id"]})
+            if socket_id == battle.u1:
+                battle.attack1 = Attack.load(db, json["attack_id"])
                 battle.state = WaitingForPlayer2Attack()
-            elif socket_id == battle.player2:
-                battle.attack2 = db.attacks.find_one({"_id": json["attack_id"]})
+                print("Waiting for player 2.")
+                print(battle.attack1)
+                emit("makeOtherPlayerWait", {}, to=battle.u2)
+                emit("onWaitOnOtherPlayer", {}, to=battle.u1)
+            elif socket_id == battle.u2:
+                battle.attack2 = Attack.load(db, json["attack_id"])
+                print(battle.attack2)
                 battle.state = WaitingForPlayer1Attack()
+                print("Waiting for player 1.")
+                emit("makeOtherPlayerWait", {}, to=battle.u1)
+                emit("onWaitOnOtherPlayer", {}, to=battle.u2)
 
 
 class WaitingForPlayer1Attack(BattleState):
@@ -611,12 +620,16 @@ class WaitingForPlayer1Attack(BattleState):
         super()
 
     def handle_event(
-        self, battle: Battle, event: str, json: dict, socket_id: str, db, users
+        self, battle: Battle, event: str, json: dict, socket_id: str, db
     ):
         if event == "attack":
-            if socket_id == battle.player2:
-                battle.attack2 = db.attacks.find_one({"_id": json["attack_id"]})
-                battle.execute(users)
+            if socket_id == battle.u1:
+                battle.attack1 = Attack.load(db, json["attack_id"])
+                print(battle.attack1)
+                battle.execute()
+                emit("onTurnEnd", {"self_hp": battle.p1.stats["hp"], "target_hp": battle.p2.stats["hp"]}, to=battle.u1)
+                emit("onTurnEnd", {"target_hp": battle.p1.stats["hp"], "self_hp": battle.p2.stats["hp"]}, to=battle.u2)
+                battle.state = WaitingForAttacks()
 
 
 class WaitingForPlayer2Attack(BattleState):
@@ -624,9 +637,13 @@ class WaitingForPlayer2Attack(BattleState):
         super()
 
     def handle_event(
-        self, battle: Battle, event: str, json: dict, socket_id: str, db, users
+        self, battle: Battle, event: str, json: dict, socket_id: str, db
     ):
         if event == "attack":
-            if socket_id == battle.player1:
-                battle.attack1 = db.attacks.find_one({"_id": json["attack_id"]})
-                battle.execute(users)
+            if socket_id == battle.u2:
+                battle.attack2 = Attack.load(db, json["attack_id"])
+                print(battle.attack2)
+                battle.execute()
+                emit("onTurnEnd", {"self_hp": battle.p1.stats["hp"], "target_hp": battle.p2.stats["hp"]}, to=battle.u1)
+                emit("onTurnEnd", {"target_hp": battle.p1.stats["hp"], "self_hp": battle.p2.stats["hp"]}, to=battle.u2)
+                battle.state = WaitingForAttacks()
