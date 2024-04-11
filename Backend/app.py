@@ -42,6 +42,7 @@ if __name__ == "__main__":
 
 class CreationError(Exception):
     """Raised when a Pokemon cannot be created."""
+
     pass
 
 
@@ -248,7 +249,9 @@ def CreatePokemon(username):
             print(f"Error creating Pokemon for: {username}. Attempt: {i}. Retrying...")
     else:
         try:
-            print(f"Failed to create Pokemon for: {username}. Returning Errormon instead.")
+            print(
+                f"Failed to create Pokemon for: {username}. Returning Errormon instead."
+            )
             pokemon = Pokemon.load(database, ERRORMON_ID)
         except:
             print(f"Failed to load Erromon for: {username}. No Errormon found.")

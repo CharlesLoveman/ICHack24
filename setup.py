@@ -10,5 +10,5 @@ setup(
         "flask-cors",
         "pytest",
         "pillow",
-        ],
+    ],
 )
