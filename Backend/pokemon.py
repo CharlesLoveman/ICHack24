@@ -136,7 +136,7 @@ class Pokemon:
 
     def __repr__(self):
         """Return a string representation of the Pokemon."""
-        return f"Pokemon({repr(self.name)}, {repr(self.description)}, {repr(self.element)}, {repr(self.stats)}, {repr(self.attacks)}, {repr(self.image)})"
+        return f"Pokemon({repr(self.name)}, {repr(self.description)}, {repr(self.element)}, {repr(self.stats)}, {repr(self.attacks)}, {repr(self.image_id)})"
 
     def attack(self, attack, target):
         """Hit the target Pokemon with an attack."""
@@ -144,10 +144,13 @@ class Pokemon:
             raise TypeError(
                 f"Attack must be an Attack, but {attack} is a {type(attack).__name__}"
             )
+        
+        """
         if attack not in self.attacks:
             raise ValueError(
                 f"Chosen attack must be one of the Pokemon's attacks, but {attack} is not"
             )
+        """
         if not isinstance(target, Pokemon):
             raise TypeError(
                 f"Target must be a Pokemon, but {target} is a {type(target).__name__}"
@@ -232,9 +235,15 @@ class Pokemon:
         Returns:
             pokemon (Pokemon): the resulting Pokemon object
         """
-        pokemon = db.pokemon.find_one({"_id": id})
+        pokemon = db.pokemon.find_one({"_id": ObjectId(id)})
+        if pokemon is None:
+            raise KeyError(f"No Pokemon with the id {repr(id)} was found.")
 
-        stats = db.attack_stats.find_one({"_id": ObjectId(pokemon["stats_id"])})
+        stats_id = pokemon["stats_id"]
+        stats = db.attack_stats.find_one({"_id": ObjectId(stats_id)})
+        if stats is None:
+            raise KeyError(f"No Stats object with the id {repr(stats_id)} was found.")
+
         stats.pop("_id")
 
         attacks = [Attack.load(db, attack_id) for attack_id in pokemon["attack_ids"]]
@@ -382,15 +391,21 @@ class Attack:
             attack (Attack): the resulting Attack object
         """
         attack = db.attacks.find_one({"_id": ObjectId(id)})
+        if attack is None:
+            raise KeyError(f"No Attack object with the id {repr(id)} was found.")
 
         self_status = db.attack_stats.find_one(
             {"_id": ObjectId(attack["self_status_id"])}
         )
+        if self_status is None:
+            raise KeyError(f"No Stats object with the id {repr(attack["self_status_id"])} was found.")
         self_status.pop("_id")
 
         target_status = db.attack_stats.find_one(
             {"_id": ObjectId(attack["target_status_id"])}
         )
+        if target_status is None:
+            raise KeyError(f"No Stats object with the id {repr(attack["target_status_id"])} was found.")
         target_status.pop("_id")
 
         return Attack(

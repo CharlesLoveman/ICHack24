@@ -74,6 +74,7 @@ def get_pokemon_from_id(pokemon_id):
     """Return a Pokemon as a dict."""
     print(f"Attempting to load data on Pokemon: {pokemon_id}")
     pokemon = database.pokemon.find_one({"_id": ObjectId(pokemon_id)})
+    pokemon["id"] = str(pokemon["_id"])
     pokemon.pop("_id")
 
     stats_id = pokemon["stats_id"]
@@ -98,6 +99,7 @@ def get_attack_from_id(attack_id):
     """Return an attack as a dict."""
     print(f"Attempting to load data on Attack: {attack_id}")
     attack = database.attacks.find_one({"_id": ObjectId(attack_id)})
+    attack["id"] = str(attack["_id"])
     attack.pop("_id")
 
     self_status_id = attack["self_status_id"]
