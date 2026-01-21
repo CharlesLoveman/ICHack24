@@ -12,7 +12,7 @@ import { GiHouse } from "react-icons/gi";
 import './styles.css';
 import Paper from '@mui/material/Paper';
 
-import { socket } from '../../socket';
+import { socket } from '../../socket.js';
 import { fontFamily } from '@mui/system';
 
 import { useLayoutEffect } from 'react';

@@ -137,3 +137,5 @@ Backend/UploadedImages/
 Scripts/Windows/reinstall_backend.bat
 Frontend/app/public/images/pokemon
 Backend/test_uncommited.py
+
+node_modules

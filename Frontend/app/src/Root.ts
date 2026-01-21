@@ -11,6 +11,7 @@ import { useNavigate, Outlet } from "react-router-dom";
 import { useMediaQuery } from "@mui/material";
 import React, { useState, useEffect, useLayoutEffect, useContext } from 'react';
 import { GlobalData } from './App.js';
+import { GlobalData } from './App';
 
 
 export default function Root() {
