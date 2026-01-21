@@ -17,7 +17,7 @@ import { GlobalData } from "../../App";
 import { TbPokeball } from "react-icons/tb";
 import { GiPokecog } from "react-icons/gi";
 import "./MainScreen.css";
-import { GlobalContextType, Pokemon } from "../../types";
+import { CreateBattleData, GlobalContextType, Pokemon } from "../../types";
 
 export default function MainScreen() {
   const data = useContext(GlobalData) as GlobalContextType;
@@ -56,7 +56,7 @@ export default function MainScreen() {
       socket.emit("createBattle", {
         username: username,
         pokemon_id: pokemon.id,
-      });
+      } as CreateBattleData);
     }
   }
 

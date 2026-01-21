@@ -19,6 +19,16 @@ export interface Attack {
   target_status_id?: string;
 }
 
+export interface CreateBattleData {
+  username: string;
+  pokemon_id: string;
+}
+
+export interface JoinBattleData {
+  pokemon_id: string;
+  game_id: string;
+}
+
 export interface Pokemon {
   id: string;
   name: string;
