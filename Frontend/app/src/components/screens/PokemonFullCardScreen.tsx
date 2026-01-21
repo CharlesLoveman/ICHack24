@@ -16,7 +16,7 @@ function StatDisplay(stats: PokemonStats | undefined) {
       <>
         <div>HP: {stats.hp}</div>
         <div>Attack: {stats.attack}</div>
-        <div>Sp. Attack: {stats["special attack"]}</div>
+        <div>Sp. Attack: {stats["special_attack"]}</div>
         <div>Defence: {stats.defence}</div>
         <div>Sp. Defence: {stats["special defence"]}</div>
         <div>Speed: {stats.speed}</div>

@@ -6,6 +6,7 @@ from bson.objectid import ObjectId
 from PIL import Image
 import io
 import random
+from interfaces import *
 
 element_options = [
     "Normal",
@@ -27,7 +28,7 @@ element_options = [
     "Dark",
     "Fairy",
 ]
-stats_keys = ["hp", "attack", "defence", "special attack", "special defence", "speed"]
+stats_keys = ["hp", "attack", "defence", "special_attack", "special defence", "speed"]
 element_chart = np.array(
     [
         [1, 1, 1, 1, 1, 0.5, 1, 0, 0.5, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -169,7 +170,7 @@ class Pokemon:
             atk = self.stats["attack"]
             dfs = target.stats["defence"]
             if attack.special:
-                atk = self.stats["special attack"]
+                atk = self.stats["special_attack"]
                 dfs = target.stats["special defence"]
             damage = int(
                 2

@@ -1,5 +1,6 @@
 """Flask app for the backend."""
 
+from interfaces import *
 from flask import Flask, make_response, request, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO, send, emit

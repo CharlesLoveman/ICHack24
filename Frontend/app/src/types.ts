@@ -2,8 +2,8 @@ export interface PokemonStats {
   hp: number;
   attack: number;
   defence: number;
-  "special attack": number;
-  "special defence": number;
+  special_attack: number;
+  special_defence: number;
   speed: number;
 }
 

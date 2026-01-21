@@ -18,7 +18,7 @@ stats = {
         "hp": 1,
         "attack": 1,
         "defence": 1,
-        "special attack": 1,
+        "special_attack": 1,
         "special defence": 1,
         "speed": 1
     }
