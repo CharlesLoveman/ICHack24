@@ -7,6 +7,7 @@ from PIL import Image
 import io
 import random
 from interfaces import *
+from typing import List, Dict, Any, Optional
 
 element_options = [
     "Normal",
@@ -61,10 +62,10 @@ class Pokemon:
         name: str,
         description: str,
         element: str,
-        stats: dict,
-        attacks: list,
-        image_id : str,
-        original_image_id : str,
+        stats: Dict[str, int],
+        attacks: List["Attack"],
+        image_id: str,
+        original_image_id: str,
         id: str = "",
     ):
         self.name = name
@@ -139,7 +140,7 @@ class Pokemon:
         """Return a string representation of the Pokemon."""
         return f"Pokemon({repr(self.name)}, {repr(self.description)}, {repr(self.element)}, {repr(self.stats)}, {repr(self.attacks)}, {repr(self.image_id)})"
 
-    def attack(self, attack, target):
+    def attack(self, attack: "Attack", target: "Pokemon"):
         """Hit the target Pokemon with an attack."""
         if not isinstance(attack, Attack):
             raise TypeError(
@@ -199,7 +200,7 @@ class Pokemon:
                     1, target.stats[key] + attack.target_status[key]
                 )
 
-    def save(self, db):
+    def save(self, db: Any) -> str:
         """Save a Pokemon object to the database.
 
         Args:
@@ -226,7 +227,7 @@ class Pokemon:
         )
 
     @classmethod
-    def load(cls, db, id):
+    def load(cls, db: Any, id: str) -> "Pokemon":
         """Load a Pokemon object from the database.
 
         Args:
@@ -273,8 +274,8 @@ class Attack:
         element: str,
         power: int = 0,
         special: bool = False,
-        self_status: dict = {},
-        target_status: dict = {},
+        self_status: Dict[str, int] = {},
+        target_status: Dict[str, int] = {},
         id: str = "",
     ):
         """Create an attack with a name, element and optional power and status effects."""
@@ -352,7 +353,7 @@ class Attack:
         """Return a string representation of the Attack."""
         return f"Attack({repr(self.name)}, {repr(self.element)}, {repr(self.power)}, {repr(self.special)}, {repr(self.self_status)}, {repr(self.target_status)})"
 
-    def save(self, db):
+    def save(self, db: Any) -> str:
         """Save an Attack object to the database.
 
         Args:
@@ -381,7 +382,7 @@ class Attack:
         )
 
     @classmethod
-    def load(cls, db, id):
+    def load(cls, db: Any, id: str) -> "Attack":
         """Load an Attack object from the database.
 
         Args:
@@ -420,7 +421,7 @@ class Attack:
         )
 
 
-def generate_attack(name: str, element: str, category: str):
+def generate_attack(name: str, element: str, category: str) -> Attack:
     """Generate a random attack with the given name, element and category."""
 
     if not isinstance(name, str):
@@ -517,7 +518,7 @@ def generate_attack(name: str, element: str, category: str):
 class Battle:
     """Create a battle between two Pokemon."""
 
-    def __init__(self, u1, p1_id, db):
+    def __init__(self, u1: str, p1_id: str, db: Any):
         """Create a battle between two Pokemon.
 
         Args:
@@ -536,7 +537,7 @@ class Battle:
         self.p1.stats["max_hp"] = self.p1.stats["hp"]
         self.state = WaitingForAttacks()
 
-    def add_player(self, u2, p2_id):
+    def add_player(self, u2: str, p2_id: str):
         """Add a second player to the battle.
 
         Args:
@@ -548,7 +549,7 @@ class Battle:
         self.p2 = Pokemon.load(self.db, self.p2_id)
         self.p2.stats["max_hp"] = self.p2.stats["hp"]
 
-    def handle_event(self, event: str, json: dict, socket_id: str, db):
+    def handle_event(self, event: str, json: Dict[str, Any], socket_id: str, db: Any):
         return self.state.handle_event(self, event, json, socket_id, db)
 
     def execute(self):
@@ -587,7 +588,7 @@ class Battle:
 
 class BattleState:
     def handle_event(
-        self, battle: Battle, event: str, json: dict, socket_id: str, db
+        self, battle: Battle, event: str, json: Dict[str, Any], socket_id: str, db: Any
     ):
         pass
 
@@ -597,7 +598,7 @@ class WaitingForAttacks(BattleState):
         super()
 
     def handle_event(
-        self, battle: Battle, event: str, json: dict, socket_id: str, db
+        self, battle: Battle, event: str, json: Dict[str, Any], socket_id: str, db: Any
     ):
         if event == "attack":
             if socket_id == battle.u1:
@@ -621,7 +622,7 @@ class WaitingForPlayer1Attack(BattleState):
         super()
 
     def handle_event(
-        self, battle: Battle, event: str, json: dict, socket_id: str, db
+        self, battle: Battle, event: str, json: Dict[str, Any], socket_id: str, db: Any
     ):
         if event == "attack":
             if socket_id == battle.u1:
@@ -638,7 +639,7 @@ class WaitingForPlayer2Attack(BattleState):
         super()
 
     def handle_event(
-        self, battle: Battle, event: str, json: dict, socket_id: str, db
+        self, battle: Battle, event: str, json: Dict[str, Any], socket_id: str, db: Any
     ):
         if event == "attack":
             if socket_id == battle.u2:

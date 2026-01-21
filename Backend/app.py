@@ -1,10 +1,12 @@
 """Flask app for the backend."""
 
+from typing import List, Dict, Any, Union
 from interfaces import *
-from flask import Flask, make_response, request, jsonify
+from flask import Flask, make_response, request, jsonify, Response
 from flask_cors import CORS
 from flask_socketio import SocketIO, send, emit
 from random import randrange
+from pymongo.collection import Collection
 
 from .pokemon import Battle, Pokemon
 from .api import GeminiError, build_pokemon, PATH_TO_PUBLIC
@@ -15,16 +17,59 @@ from bson.objectid import ObjectId
 import json
 import base64
 
+
 config = dotenv_values(".prod" if os.getenv("FLASK_ENV") == "prod" else ".dev")
 
 ERRORMON_ID = None  # Run create_errormon.py and set this!
+
+class DBPlayer(TypedDict):
+    pokemon_ids: List[str]
+    username: str
+
+class DBPokemon(TypedDict):
+    name: str
+    description: str
+    element: str
+    stats_id: str
+    attack_ids: List[str]
+    image_id: str
+    original_image_id: str
+
+class DBAttack(TypedDict):
+    name: str
+    element: str
+    power: int
+    special: bool
+    self_status_id: str
+    target_status_id: str
+
+class DBStats(TypedDict):
+    hp: int
+    attack: int
+    defence: int
+    special_attack: int
+    special_defence: int
+    speed: int
+class Database(TypedDict):
+    players: Collection[DBPlayer]
+    pokemon: DBPokemon
+    attacks: DBAttack
+    attack_stats: DBStats
+
+
+
 
 
 ip = "127.0.0.1"
 # Change this back
 mongodb_client = MongoClient(ip, 27017)
-database = mongodb_client["ic-hack"]
+database: Database = mongodb_client.db
 users = {}
+
+players: Collection[DBPlayer] = database.players
+pokemon: Collection[DBPokemon] = database.pokemon
+attacks: Collection[DBAttack] = database.attacks
+attack_stats: Collection[DBStats] = database.attack_stats
 
 py_cors_or = "*"
 sock_cors_or = "*"
@@ -50,32 +95,32 @@ class CreationError(Exception):
     pass
 
 
-def bytes_to_json(bytes):
+def bytes_to_json(bytes: bytes) -> str:
     b64bytes = base64.b64encode(bytes)
     strbytes = b64bytes.decode("utf-8")
     return json.dumps(strbytes)
 
 
-def get_player_by_username(username):
+def get_player_by_username(username: str) -> Union[Player, None]:
     """Return a player object from the database using a username."""
-    player = database.players.find_one({"username": username})
+    player = players.find_one({"username": username})
 
     return player
 
 
-def get_pokemon_ids_from_player(username):
+def get_pokemon_ids_from_player(username: str) -> List[str]:
     """Return a list of Pokemon ids for the given user."""
     print(f"Attempting to load Pokemon ids for user: {username}")
-    player = database.players.find_one({"username": username})
+    player = players.find_one({"username": username})
     pokemon_ids = player["pokemon_ids"]
 
     return pokemon_ids
 
 
-def get_pokemon_from_id(pokemon_id):
+def get_pokemon_from_id(pokemon_id: str) -> Pokemon:
     """Return a Pokemon as a dict."""
     print(f"Attempting to load data on Pokemon: {pokemon_id}")
-    pokemon = database.pokemon.find_one({"_id": ObjectId(pokemon_id)})
+    pokemon = pokemon.find_one({"_id": ObjectId(pokemon_id)})
     pokemon["id"] = str(pokemon["_id"])
     pokemon.pop("_id")
 
@@ -88,19 +133,19 @@ def get_pokemon_from_id(pokemon_id):
     return pokemon
 
 
-def get_stats_from_id(stats_id, flag="stats"):
+def get_stats_from_id(stats_id: str, flag: str = "stats") -> PokemonStats:
     """Return stats as a dict."""
     print(f"Attempting to load data on {flag}: {stats_id}")
-    stats = database.attack_stats.find_one({"_id": ObjectId(stats_id)})
+    stats = attack_stats.find_one({"_id": ObjectId(stats_id)})
     stats.pop("_id")
 
     return stats
 
 
-def get_attack_from_id(attack_id):
+def get_attack_from_id(attack_id: str) -> Attack:
     """Return an attack as a dict."""
     print(f"Attempting to load data on Attack: {attack_id}")
-    attack = database.attacks.find_one({"_id": ObjectId(attack_id)})
+    attack = attacks.find_one({"_id": ObjectId(attack_id)})
     attack["id"] = str(attack["_id"])
     attack.pop("_id")
 
@@ -113,23 +158,23 @@ def get_attack_from_id(attack_id):
     return attack
 
 
-def get_status_from_id(status_id):
+def get_status_from_id(status_id: str) -> PokemonStats:
     """Return a status as a dict."""
     return get_stats_from_id(status_id, flag="status")
 
 
 @socketio.on("message")
-def handle_message(message):
+def handle_message(message: Any):
     send(message)
 
 
 @socketio.on("json")
-def handle_json(json):
+def handle_json(json: Any):
     send(json, json=True)
 
 
 @socketio.on("createPokemon")  # TODO: remove this
-def handle_my_custom_event(json):
+def handle_my_custom_event(json: Any):
     emit(
         "createPokemonCard",
         {
@@ -142,7 +187,7 @@ def handle_my_custom_event(json):
 
 
 @socketio.on("createBattle")
-def handle_createBattle(json):
+def handle_createBattle(json: CreateBattleData):
     """Create a new battle."""
     # game_id = createGame(json.id)
     game_id = str(randrange(0, 1000000))
@@ -158,7 +203,7 @@ def handle_createBattle(json):
 
 
 @socketio.on("joinBattle")
-def handle_joinBattle(json):
+def handle_joinBattle(json: JoinBattleData):
     """Join a new player to a battle."""
     game_id = json["game_id"]
     pokemon_id = json["pokemon_id"]
@@ -189,12 +234,12 @@ def handle_joinBattle(json):
 
 
 @socketio.on("attack")
-def handle_attack(json):
+def handle_attack(json: Dict[str, Any]):
     battles[json["game_id"]].handle_event("attack", json, request.sid, database)
 
 
 @app.route("/InitialiseUser/<username>", methods=["POST"])
-def InitialiseUser(username):
+def InitialiseUser(username: str) -> Response:
     """Initialise a user using a username."""
     print(f"Attempting to log in user: {username}")
     player = get_player_by_username(username)
@@ -202,8 +247,8 @@ def InitialiseUser(username):
     if player is None:
         # Create a new user id
         print(f"User: {username} not found. Creating new user.")
-        new_user = {"pokemon_ids": [], "username": username}
-        pid = str(database.players.insert_one(new_user).inserted_id)
+        new_user: Player = {"pokemon_ids": [], "username": username}
+        pid = str(players.insert_one(new_user).inserted_id)
     else:
         # Return existing user id
         pid = str(player["_id"])
@@ -218,7 +263,7 @@ def InitialiseUser(username):
 
 
 @app.route("/ListPokemon/<username>", methods=["GET"])
-def ListPokemon(username):
+def ListPokemon(username: str) -> List[Pokemon]:
     """Return a list of Pokemon stats as a JSON object.
 
     Args:
@@ -236,7 +281,7 @@ def ListPokemon(username):
 
 
 @app.route("/CreatePokemon/<username>", methods=["POST"])
-def CreatePokemon(username):
+def CreatePokemon(username: str) -> Response:
     """Create a new Pokemon."""
     print(f"Creating new Pokemon for: {username}")
 
@@ -275,7 +320,7 @@ def CreatePokemon(username):
             raise CreationError("Failed to create Pokemon.")
 
     print(f"Saving Pokemon: {pokemon_id} to user: {username}")
-    database.players.update_one(
+    players.update_one(
         {"username": username}, {"$push": {"pokemon_ids": pokemon_id}}
     )
 

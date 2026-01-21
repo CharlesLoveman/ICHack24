@@ -12,7 +12,7 @@ API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffus
 headers = {"Authorization": f"Bearer {HF_KEY}"}
 
 
-def generate_image(image_prompt):
+def generate_image(image_prompt: str) -> PILImage:
     """Generate an image from a prompt.
 
     Args:
@@ -28,7 +28,7 @@ def generate_image(image_prompt):
     return PILImage.open(io.BytesIO(image_bytes))
 
 
-def pixelate_image(img):
+def pixelate_image(img: PILImage) -> PILImage:
     """Pixelate an image.
 
     Args:

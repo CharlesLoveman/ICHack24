@@ -6,10 +6,11 @@ from .prompt_templates import (
     GEMINI_PROMPT_TEMPLATE_ATTACKS,
 )
 from .image_processing import generate_image, pixelate_image
-from .pokemon import Pokemon, generate_attack
+from .pokemon import Pokemon, generate_attack, Attack
 import vertexai
 from vertexai.preview.generative_models import GenerativeModel, Image
 import re
+from typing import Union, Tuple, List, Dict, Any, Optional
 
 
 vertexai.init(project="crucial-bucksaw-413121")
@@ -34,7 +35,7 @@ class GeminiError(Exception):
     pass
 
 
-def load_image_from_file(file_path):
+def load_image_from_file(file_path: str) -> Image:
     """Load an image from a file.
 
     Args:
@@ -46,7 +47,9 @@ def load_image_from_file(file_path):
     return Image.from_bytes(open(file_path, "rb").read())
 
 
-def get_gemini_response(template, img=None, safety_feedback=False):
+def get_gemini_response(
+    template: str, img: Optional[Image] = None, safety_feedback: bool = False
+) -> Union[str, Tuple[str, Any]]:
     """Get a response from the Gemini model.
 
     Args:
@@ -68,7 +71,11 @@ def get_gemini_response(template, img=None, safety_feedback=False):
         return response.text
 
 
-def create_pokemon(img_path, create_image=False, return_prompt=False):
+def create_pokemon(
+    img_path: str, create_image: bool = False, return_prompt: bool = False
+) -> Union[
+    Tuple[str, str, Dict[str, Any]], Tuple[str, str, Dict[str, Any], str], Tuple[str, str, Dict[str, Any], str, str]
+]:
     """Create a new pokemon from an image.
 
     Args:
@@ -137,7 +144,7 @@ def create_pokemon(img_path, create_image=False, return_prompt=False):
         return name, pokedex, stats
 
 
-def create_attacks(name, pokedex, element):
+def create_attacks(name: str, pokedex: str, element: str) -> List[Attack]:
     """Create attacks for a pokemon.
 
     Args:
@@ -174,7 +181,7 @@ def create_attacks(name, pokedex, element):
     return attacks
 
 
-def build_pokemon(original_img_path, create_image=False):
+def build_pokemon(original_img_path: str, create_image=False) -> Pokemon:
     """Build a pokemon from its details.
 
     Args:
