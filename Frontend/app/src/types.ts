@@ -15,8 +15,8 @@ export interface Attack {
   description?: string;
   power?: number;
   special?: boolean;
-  self_status_id?: any;
-  target_status_id?: any;
+  self_status_id?: string;
+  target_status_id?: string;
 }
 
 export interface Pokemon {
