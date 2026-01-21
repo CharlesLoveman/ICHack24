@@ -1,5 +1,7 @@
-import React from 'react';
+interface ConnectionStateProps {
+  isConnected: boolean;
+}
 
-export function ConnectionState({ isConnected }) {
-  return <p>State: { '' + isConnected }</p>;
+export function ConnectionState({ isConnected }: ConnectionStateProps) {
+  return <p>State: {"" + isConnected}</p>;
 }

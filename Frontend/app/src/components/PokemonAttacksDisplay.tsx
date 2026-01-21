@@ -1,12 +1,16 @@
-import React from 'react';
-import Attack from './Attack.js'
-import { Stack } from '@mui/material';
+import Attack from "./Attack";
+import { Stack } from "@mui/material";
+import { Pokemon, Attack as IAttack } from "../types";
 
-export default function PokemonAttacksDisplay(pokemon, onAttack) {
-    return (
-        <>
-            <Stack direction="row" spacing="100px">{pokemon.attacks.map(attack => Attack(attack, onAttack))}</Stack>
-
-        </>
-    );
+export default function PokemonAttacksDisplay(
+  pokemon: Pokemon,
+  onAttack: (attack: IAttack) => void
+) {
+  return (
+    <>
+      <Stack direction="row" spacing="100px">
+        {pokemon.attacks.map((attack: IAttack) => Attack(attack, onAttack))}
+      </Stack>
+    </>
+  );
 }

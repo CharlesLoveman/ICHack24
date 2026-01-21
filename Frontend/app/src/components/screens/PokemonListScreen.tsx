@@ -1,26 +1,16 @@
-import PokemonList from '../PokemonList.js';
-import React from 'react';
-import TempAcquireBar from '../TempAcquireBar.js';
-import NavBar from '../NavBar.js';
-import { useLoaderData } from 'react-router-dom';
-
-
+import { useLoaderData } from "react-router-dom";
+import PokemonList from "../PokemonList";
+import NavBar from "../NavBar";
+import { Pokemon } from "../../types";
 
 export default function PokemonListScreen() {
+  const loaderData = useLoaderData() as Pokemon[];
+  console.log(loaderData);
 
-
-    const loaderData = useLoaderData()
-    console.log(loaderData)
-
-
-
-    return (
-        <>
-            {NavBar()}
-
-
-
-            {PokemonList(loaderData)}</>
-    );
-
+  return (
+    <>
+      {NavBar()}
+      {PokemonList(loaderData)}
+    </>
+  );
 }

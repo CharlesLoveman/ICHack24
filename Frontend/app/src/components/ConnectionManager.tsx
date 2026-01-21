@@ -1,7 +1,7 @@
-import React from 'react';
-import { socket } from '../socket';
+import { JSX } from "react";
+import { socket } from "../socket";
 
-export function ConnectionManager() {
+export function ConnectionManager(): JSX.Element {
   function connect() {
     socket.connect();
   }
@@ -12,8 +12,8 @@ export function ConnectionManager() {
 
   return (
     <>
-      <button onClick={ connect }>Connect</button>
-      <button onClick={ disconnect }>Disconnect</button>
+      <button onClick={connect}>Connect</button>
+      <button onClick={disconnect}>Disconnect</button>
     </>
   );
 }

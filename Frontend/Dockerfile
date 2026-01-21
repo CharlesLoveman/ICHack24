@@ -1,14 +1,19 @@
 FROM node:18
 
 WORKDIR /home/node/app
-EXPOSE 80
 
-
+RUN npm install -g pnpm
 
 COPY ./Frontend/app .
 
-RUN npm ci
+RUN pnpm install --quiet
+
+COPY . .
+
+RUN pnpm run build
 
 ENV NODE_ENV="production"
 
-CMD ["npm", "start"]
+EXPOSE 5173
+
+CMD ["pnpm", "dev"]
