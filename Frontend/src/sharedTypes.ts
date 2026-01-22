@@ -50,3 +50,13 @@ export interface BattleHP {
   self_hp: number;
   target_hp: number;
 }
+
+export interface JoinWaitingRoomData {
+  game_id: string;
+}
+
+export interface JoinBattleData {
+  self_pokemon: Pokemon;
+  target_pokemon: Pokemon;
+  game_id: string;
+}
