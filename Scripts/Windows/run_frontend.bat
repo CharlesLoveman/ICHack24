@@ -1,5 +1,5 @@
 REM Desc: Run the frontend.
 
-cd ../../Frontend/app
-npm run regstart
+cd ../../Frontend
+pnpm dev
 cd ../../Scripts/Windows

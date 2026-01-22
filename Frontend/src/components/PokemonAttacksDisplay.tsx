@@ -1,6 +1,6 @@
 import Attack from "./Attack";
 import { Stack } from "@mui/material";
-import { Pokemon, Attack as IAttack } from "../types";
+import { Pokemon, Attack as IAttack } from "../sharedTypes";
 
 export default function PokemonAttacksDisplay(
   pokemon: Pokemon,

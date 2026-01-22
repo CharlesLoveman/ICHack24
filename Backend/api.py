@@ -46,7 +46,7 @@ STATS_KEYS = [
     "Special Defence",
     "Speed",
 ]
-PATH_TO_PUBLIC = "../Frontend/app/public/"
+PATH_TO_PUBLIC = "../Frontend/public/"
 
 
 class GeminiError(Exception):

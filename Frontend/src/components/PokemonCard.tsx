@@ -6,7 +6,9 @@ import { useContext } from "react";
 import { TbPokeball } from "react-icons/tb";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import { Pokemon, PokemonStats, GlobalContextType } from "../types";
+import { Pokemon, PokemonStats } from "../sharedTypes";
+import { GlobalContextType } from "../types";
+import { publicFolder } from "../env";
 
 function StatDisplay(stats: PokemonStats) {
   return (
@@ -37,10 +39,7 @@ export default function PokemonCard(pokemon: Pokemon, isNew: boolean) {
     >
       <CardContent>
         <Typography variant="h5" component="div">
-          <img
-            src={process.env.PUBLIC_URL + "/" + pokemon.image_id}
-            width="100"
-          ></img>
+          <img src={publicFolder + "/" + pokemon.image_id} width="100"></img>
         </Typography>
         <Typography variant="h5" component="div">
           Name: {pokemon.name} {isNew}

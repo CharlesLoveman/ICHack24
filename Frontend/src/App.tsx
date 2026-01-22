@@ -17,16 +17,15 @@ import PokemonListScreen from "./components/screens/PokemonListScreen";
 import PokemonCaptureScreen from "./components/screens/PokemonCaptureScreen";
 import { createContext } from "react";
 import PokemonFullCardScreen from "./components/screens/PokemonFullCardScreen";
-import { GlobalContextType, Pokemon, BattleData, BattleHP } from "./types";
+import { Pokemon, BattleData, BattleHP } from "./sharedTypes";
+import { backendAddress } from "./env";
+import { GlobalContextType } from "./types";
 
 const theme = createTheme({
   typography: {
     fontFamily: ["Silkscreen"],
   },
 });
-
-//const backend_address = "http://127.0.0.1:5000"
-const backend_address = "http://192.168.1.15:5000";
 
 const router = createBrowserRouter([
   {
@@ -53,9 +52,8 @@ const router = createBrowserRouter([
         path: "PokemonListScreen/:id/",
         element: <PokemonListScreen />,
         loader: async ({ params }) => {
-          return (
-            await axios.get(`${backend_address}/ListPokemon/${params.id}`)
-          ).data;
+          return (await axios.get(`${backendAddress}/ListPokemon/${params.id}`))
+            .data;
         },
       },
       {
@@ -92,7 +90,6 @@ export default function App() {
         setUsername,
         pokemon,
         setPokemon,
-        backend_address,
         pokemonReturned,
         setPokemonReturned,
         noNewPokemon,

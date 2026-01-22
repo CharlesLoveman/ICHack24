@@ -17,12 +17,13 @@ import { GlobalData } from "../../App";
 import { TbPokeball } from "react-icons/tb";
 import { GiPokecog } from "react-icons/gi";
 import "./MainScreen.css";
-import { CreateBattleData, GlobalContextType, Pokemon } from "../../types";
+import { CreateBattleData, Pokemon } from "../../sharedTypes";
+import { backendAddress } from "../../env";
+import { GlobalContextType } from "../types";
 
 export default function MainScreen() {
   const data = useContext(GlobalData) as GlobalContextType;
 
-  const backend_address = data.backend_address;
   const username = data.username;
   const setUsername = data.setUsername;
   const pokemon = data.pokemon;
@@ -32,7 +33,7 @@ export default function MainScreen() {
   const [display, setDisplay] = useState("notReady");
 
   function initialiseUser(username: string) {
-    axios.post(`${backend_address}/InitialiseUser/${username}`);
+    axios.post(`${backendAddress}/InitialiseUser/${username}`);
   }
 
   function updateAndInitialiseUser(new_username: string) {

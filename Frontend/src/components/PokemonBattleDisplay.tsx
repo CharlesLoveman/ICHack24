@@ -1,6 +1,7 @@
 import PokemonDisplay from "./PokemonDisplay";
 import { Paper } from "@mui/material";
-import { Pokemon } from "../types";
+import { Pokemon } from "../sharedTypes";
+import { publicFolder } from "../env";
 
 export default function PokemonBattleDisplay(
   self_pokemon: Pokemon,
@@ -35,7 +36,7 @@ export default function PokemonBattleDisplay(
     <>
       <div>The whole battle!</div>
       <img
-        src={process.env.PUBLIC_URL + "/" + "background_temp_leeched.webp"}
+        src={publicFolder + "/" + "background_temp_leeched.webp"}
         height="50%"
       ></img>
       <Paper sx={sx1}>

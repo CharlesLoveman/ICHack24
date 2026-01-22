@@ -6,9 +6,9 @@ import { useContext } from "react";
 import { TbPokeball } from "react-icons/tb";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
-
+import { GlobalContextType } from "../../types";
 import NavBar from "../NavBar";
-import { GlobalContextType, Pokemon, PokemonStats, Attack } from "../../types";
+import { Pokemon, PokemonStats, Attack } from "../../sharedTypes";
 
 function StatDisplay(stats: PokemonStats | undefined) {
   if (stats) {
@@ -18,7 +18,7 @@ function StatDisplay(stats: PokemonStats | undefined) {
         <div>Attack: {stats.attack}</div>
         <div>Sp. Attack: {stats["special_attack"]}</div>
         <div>Defence: {stats.defence}</div>
-        <div>Sp. Defence: {stats["special defence"]}</div>
+        <div>Sp. Defence: {stats["special_defence"]}</div>
         <div>Speed: {stats.speed}</div>
       </>
     );

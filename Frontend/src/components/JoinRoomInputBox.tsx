@@ -3,7 +3,7 @@ import { socket } from "../socket";
 import Button from "@mui/material/Button";
 import Input from "@mui/material/Input";
 import { GiBattleAxe } from "react-icons/gi";
-import { Pokemon } from "../types";
+import { Pokemon } from "../sharedTypes";
 
 export default function JoinRoomInputBox(pokemon: Pokemon | null, sx: any) {
   const [code, setCode] = useState<string>("");

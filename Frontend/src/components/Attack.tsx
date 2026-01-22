@@ -1,5 +1,5 @@
 import Button from "@mui/material/Button";
-import { Attack as IAttack } from "../types";
+import { Attack as IAttack } from "../sharedTypes";
 
 export default function Attack(
   attack: IAttack,

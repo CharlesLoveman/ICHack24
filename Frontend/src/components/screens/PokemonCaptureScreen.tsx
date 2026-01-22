@@ -12,10 +12,10 @@ import { FaDog } from "react-icons/fa";
 import { FaBottleWater } from "react-icons/fa6";
 import { GlobalData } from "../../App";
 import { GlobalContextType } from "../../types";
+import { backendAddress } from "../../env";
 
 export default function PokemonCaptureScreen() {
   const data = useContext(GlobalData) as GlobalContextType;
-  const backend_address = data.backend_address;
   const [state, setState] = useState<{ selectedFile: File } | null>(null);
   const [url, setURL] = useState<string | undefined>(undefined);
   const [hidden, setHidden] = useState("");
@@ -50,7 +50,7 @@ export default function PokemonCaptureScreen() {
         formData.append("img", state.selectedFile);
         try {
           const res = await axios.post(
-            `${backend_address}/CreatePokemon/${params.id}`,
+            `${backendAddress}/CreatePokemon/${params.id}`,
             formData,
             {
               headers: {

@@ -3,7 +3,8 @@ import { ConnectionManager } from "./components/ConnectionManager";
 import { useNavigate, Outlet } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { GlobalData } from "./App";
-import { GlobalContextType, Pokemon } from "./types";
+import { Pokemon } from "./sharedTypes";
+import { GlobalContextType } from "./types";
 
 export default function Root() {
   const [isConnected, setIsConnected] = useState(socket.connected);

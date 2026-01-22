@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import { Button } from "@mui/material";
 import { useContext } from "react";
 import { GlobalData } from "../App";
-import { Pokemon, GlobalContextType } from "../types";
+import { Pokemon } from "../sharedTypes";
+import { GlobalContextType } from "../types";
 
 export default function PokemonList(pokemons: Pokemon[]) {
   const data = useContext(GlobalData) as GlobalContextType;

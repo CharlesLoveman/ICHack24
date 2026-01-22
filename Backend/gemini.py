@@ -7,7 +7,7 @@ from vertexai.preview.generative_models import Image
 
 
 
-PATH_TO_PUBLIC = "../Frontend/app/public/"
+PATH_TO_PUBLIC = "../Frontend/public/"
 
 RECORD_RESPONSES = True
 recorder = ResponseRecorder()

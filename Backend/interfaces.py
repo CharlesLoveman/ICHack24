@@ -55,33 +55,3 @@ class JoinBattleData(TypedDict):
 class BattleHP(TypedDict):
     self_hp: float
     target_hp: float
-
-
-class GlobalContextType(TypedDict):
-    class ViewPokemon_1(TypedDict):
-        pass
-    class SetViewPokemon_1(TypedDict):
-        pass
-    class BattleHP_1(TypedDict):
-        pass
-    class SetBattleHP_1(TypedDict):
-        pass
-    username: str
-    setUsername: 'React.Dispatch[React.SetStateAction[str]]'
-    pokemon: Pokemon|None
-    setPokemon: 'React.Dispatch[React.SetStateAction[Pokemon|None]]'
-    backend_address: str
-    pokemonReturned: str
-    setPokemonReturned: 'React.Dispatch[React.SetStateAction[str]]'
-    noNewPokemon: float
-    setNoNewPokemon: 'React.Dispatch[React.SetStateAction[float]]'
-    viewPokemon: Pokemon|ViewPokemon_1
-    setViewPokemon: 'React.Dispatch[React.SetStateAction[Pokemon|SetViewPokemon_1]]'
-    battleData: BattleData
-    setBattleData: 'React.Dispatch[React.SetStateAction[BattleData]]'
-    newTurn: bool
-    setNewTurn: 'React.Dispatch[React.SetStateAction[bool]]'
-    battleResult: str
-    setBattleResult: 'React.Dispatch[React.SetStateAction[str]]'
-    battleHP: BattleHP|BattleHP_1
-    setBattleHP: 'React.Dispatch[React.SetStateAction[BattleHP|SetBattleHP_1]]'

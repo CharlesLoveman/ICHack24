@@ -8,7 +8,8 @@ import { GlobalData } from "../../App";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
-import { GlobalContextType, Pokemon, Attack } from "../../types";
+import { Pokemon, Attack } from "../../sharedTypes";
+import { GlobalContextType } from "../../types";
 
 interface BattleLocationState {
   self_pokemon: Pokemon;
