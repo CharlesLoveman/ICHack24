@@ -38,7 +38,6 @@ function MovesDisplay(attacks: Attack[] | undefined) {
 function MoveDisplay(attack: Attack) {
   return (
     <>
-      {/* @ts-ignore - 'element' might be missing from the Attack type definition but exists in data */}
       <div>Name: {attack.name} </div>
       <div>Type: {attack.element}</div>
       <br />
@@ -47,20 +46,23 @@ function MoveDisplay(attack: Attack) {
 }
 
 export default function PokemonFullCardScreen() {
-  const data = useContext(GlobalData) as GlobalContextType;
-  const setPokemon = data.setPokemon;
-  const [pokemon, setter] = useState<Partial<Pokemon>>({});
+  const { setPokemon, viewPokemon, setViewPokemon } = useContext(
+    GlobalData
+  ) as GlobalContextType;
+  const [cardPokemon, setCardPokemon] = useState<Pokemon | undefined>(
+    undefined
+  );
 
   console.log("henlo");
 
   useEffect(() => {
     console.log("hi");
-    console.log(data.viewPokemon);
-    setter(data.viewPokemon);
-    data.setViewPokemon({});
+    console.log(viewPokemon);
+    setCardPokemon(viewPokemon);
+    setViewPokemon(undefined);
   }, []);
 
-  console.log(pokemon);
+  console.log(cardPokemon);
 
   return (
     <>
@@ -73,31 +75,32 @@ export default function PokemonFullCardScreen() {
       >
         <CardContent>
           <Typography variant="h5" component="div">
-            Name: {pokemon.name}
+            Name: {cardPokemon?.name}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            Type: {pokemon.element}
+            Type: {cardPokemon?.element}
           </Typography>
           <Typography variant="h6" component="div">
             Description
           </Typography>
           <Typography variant="body2">
-            {/* @ts-ignore - description might be missing on Partial<Pokemon> */}
-            {pokemon.description || ""}
+            {cardPokemon?.description || ""}
           </Typography>
           <br />
           <Typography variant="h6" component="div">
             Stats
           </Typography>
-          <Typography variant="body2">{StatDisplay(pokemon.stats)}</Typography>
+          <Typography variant="body2">
+            {StatDisplay(cardPokemon?.stats)}
+          </Typography>
           <br />
           <Typography variant="h6" component="div">
             Moves
           </Typography>
           <Typography variant="body2">
-            {MovesDisplay(pokemon.attacks)}
+            {MovesDisplay(cardPokemon?.attacks)}
           </Typography>
-          <Button onClick={() => setPokemon(pokemon as Pokemon)}>
+          <Button onClick={() => setPokemon(cardPokemon ?? null)}>
             {" "}
             <TbPokeball /> Select{" "}
           </Button>

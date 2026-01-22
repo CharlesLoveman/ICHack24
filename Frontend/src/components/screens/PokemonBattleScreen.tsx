@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import { Pokemon, Attack } from "../../sharedTypes";
-import { GlobalContextType } from "../../types";
+import { BATTLE_RESULT, GlobalContextType } from "../../types";
 
 interface BattleLocationState {
   self_pokemon: Pokemon;
@@ -18,8 +18,8 @@ interface BattleLocationState {
 }
 
 export default function PokemonBattleScreen() {
-  const data = useContext(GlobalData) as GlobalContextType;
-  const battleData = data.battleData;
+  const { battleData, newTurn, setNewTurn, battleResult, battleHP } =
+    useContext(GlobalData) as GlobalContextType;
   const { state } = useLocation() as { state: BattleLocationState };
   const params = useParams();
   const [chosenAttack, setChosenAttack] = useState("");
@@ -33,29 +33,29 @@ export default function PokemonBattleScreen() {
   }
 
   useEffect(() => {
-    if (data.newTurn) {
-      data.setNewTurn(false);
+    if (newTurn) {
+      setNewTurn(false);
       setChosenAttack("");
     }
-  }, [data.newTurn]);
+  }, [newTurn]);
 
   function showResult() {
-    if (data.battleResult == "win") {
+    if (battleResult === BATTLE_RESULT.WIN) {
       return (
         <>
           <Typography>You have won through sheer skill!</Typography>
-          <Button fullWidth="true" variant="contained" size="large">
+          <Button fullWidth={true} variant="contained" size="large">
             <Link style={{ textDecoration: "none" }} to={`../MainScreen`}>
               Back to the Main Screen
             </Link>
           </Button>
         </>
       );
-    } else if (data.battleResult == "lose") {
+    } else if (battleResult === BATTLE_RESULT.LOSE) {
       return (
         <>
           <Typography>Your pokemon has fainted and you have lost...</Typography>
-          <Button fullWidth="true" variant="contained" size="large">
+          <Button fullWidth={true} variant="contained" size="large">
             <Link style={{ textDecoration: "none" }} to={`../MainScreen`}>
               Back to the Main Screen
             </Link>
@@ -69,21 +69,21 @@ export default function PokemonBattleScreen() {
 
   return (
     <>
-      {"self_hp" in data.battleHP &&
+      {"self_hp" in (battleHP ?? {}) &&
         PokemonBattleDisplay(
           state.self_pokemon,
           state.target_pokemon,
-          data.battleHP.self_hp,
-          data.battleHP.target_hp
+          battleHP?.self_hp ?? 0,
+          battleHP?.target_hp ?? 0
         )}
-      {data.battleResult == "" &&
+      {battleResult === undefined &&
         PokemonAttacksDisplay(state.self_pokemon, onAttack)}
-      {battleData.otherPlayerWaiting && (
+      {battleData?.otherPlayerWaiting && (
         <Typography>
           The other player is now waiting for you to make a move.
         </Typography>
       )}
-      {battleData.thisPlayerWaiting && (
+      {battleData?.thisPlayerWaiting && (
         <Typography>
           The other player has not selected a move yet. You are ready to use{" "}
           {chosenAttack}!

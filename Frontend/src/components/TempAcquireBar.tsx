@@ -1,4 +1,5 @@
-export default function TempAcquireBar(exist: any) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function TempAcquireBar(exist: boolean) {
   function navigateToAcquisitionScreen() {
     // Change it!
   }

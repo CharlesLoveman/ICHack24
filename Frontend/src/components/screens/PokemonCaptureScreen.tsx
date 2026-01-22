@@ -11,7 +11,7 @@ import { GiForest, GiSpikyExplosion } from "react-icons/gi";
 import { FaDog } from "react-icons/fa";
 import { FaBottleWater } from "react-icons/fa6";
 import { GlobalData } from "../../App";
-import { GlobalContextType } from "../../types";
+import { GlobalContextType, POKEMON_HAS_RETURNED } from "../../types";
 import { backendAddress } from "../../env";
 
 export default function PokemonCaptureScreen() {
@@ -40,7 +40,7 @@ export default function PokemonCaptureScreen() {
   // On file upload (click the upload button)
   const uploadFile = async function () {
     // Create an object of formData
-    data.setPokemonReturned("waiting");
+    data.setPokemonReturned(POKEMON_HAS_RETURNED.WAITING);
     const formData = new FormData();
     navigate(-1);
 
@@ -68,7 +68,7 @@ export default function PokemonCaptureScreen() {
 
   const onFileUpload = async function () {
     await uploadFile();
-    data.setPokemonReturned("");
+    data.setPokemonReturned(POKEMON_HAS_RETURNED.RETURNED);
     data.setNoNewPokemon(data.noNewPokemon + 1);
   };
 

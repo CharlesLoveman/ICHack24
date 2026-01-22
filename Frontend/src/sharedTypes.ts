@@ -15,8 +15,8 @@ export interface Attack {
   description?: string;
   power?: number;
   special?: boolean;
-  self_status_id?: string;
-  target_status_id?: string;
+  self_status_id?: PokemonStats;
+  target_status_id?: PokemonStats;
 }
 
 export interface CreateBattleData {
@@ -42,8 +42,8 @@ export interface Pokemon {
 }
 
 export interface BattleData {
-  otherPlayerWaiting?: boolean;
-  thisPlayerWaiting?: boolean;
+  otherPlayerWaiting: boolean;
+  thisPlayerWaiting: boolean;
 }
 
 export interface BattleHP {

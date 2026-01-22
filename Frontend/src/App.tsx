@@ -19,11 +19,15 @@ import { createContext } from "react";
 import PokemonFullCardScreen from "./components/screens/PokemonFullCardScreen";
 import { Pokemon, BattleData, BattleHP } from "./sharedTypes";
 import { backendAddress } from "./env";
-import { GlobalContextType } from "./types";
+import {
+  BATTLE_RESULT,
+  GlobalContextType,
+  POKEMON_HAS_RETURNED,
+} from "./types";
 
 const theme = createTheme({
   typography: {
-    fontFamily: ["Silkscreen"],
+    fontFamily: "Silkscreen",
   },
 });
 
@@ -73,15 +77,23 @@ const GlobalData = createContext<GlobalContextType | null>(null);
 export { GlobalData };
 
 export default function App() {
-  const [username, setUsername] = useState<string>("");
+  const [username, setUsername] = useState<string | undefined>(undefined);
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
-  const [pokemonReturned, setPokemonReturned] = useState<string>("");
+  const [pokemonReturned, setPokemonReturned] = useState<POKEMON_HAS_RETURNED>(
+    POKEMON_HAS_RETURNED.RETURNED
+  );
   const [noNewPokemon, setNoNewPokemon] = useState<number>(0);
-  const [viewPokemon, setViewPokemon] = useState<Pokemon | {}>({});
-  const [battleData, setBattleData] = useState<BattleData>({});
+  const [viewPokemon, setViewPokemon] = useState<Pokemon | undefined>(
+    undefined
+  );
+  const [battleData, setBattleData] = useState<BattleData | undefined>(
+    undefined
+  );
   const [newTurn, setNewTurn] = useState<boolean>(false);
-  const [battleResult, setBattleResult] = useState<string>("");
-  const [battleHP, setBattleHP] = useState<BattleHP | {}>({});
+  const [battleResult, setBattleResult] = useState<BATTLE_RESULT | undefined>(
+    undefined
+  );
+  const [battleHP, setBattleHP] = useState<BattleHP | undefined>(undefined);
 
   return (
     <GlobalData.Provider

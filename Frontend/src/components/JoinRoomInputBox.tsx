@@ -4,8 +4,12 @@ import Button from "@mui/material/Button";
 import Input from "@mui/material/Input";
 import { GiBattleAxe } from "react-icons/gi";
 import { Pokemon } from "../sharedTypes";
+import { SxProps, Theme } from "@mui/material";
 
-export default function JoinRoomInputBox(pokemon: Pokemon | null, sx: any) {
+export default function JoinRoomInputBox(
+  pokemon: Pokemon | null,
+  sx: SxProps<Theme>
+) {
   const [code, setCode] = useState<string>("");
 
   function joinBattle(pokemon: Pokemon | null, code: string) {
@@ -21,7 +25,7 @@ export default function JoinRoomInputBox(pokemon: Pokemon | null, sx: any) {
       <Button
         disabled={!pokemon}
         sx={sx}
-        // fullWidth="true"
+        fullWidth={true}
         color="error"
         startIcon={<GiBattleAxe size="1rem" />}
         endIcon={<GiBattleAxe size="1rem" />}

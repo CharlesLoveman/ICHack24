@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Input from "@mui/material/Input";
 import { GiBattleAxe } from "react-icons/gi";
+import { SxProps, Theme } from "@mui/material";
 
 const orig_username = String(Math.floor(Math.random() * 1000000));
 
 export default function LoginInputBox(
   updateAndInitialiseUser: (username: string) => void,
-  sx: any
+  sx: SxProps<Theme>
 ) {
   const [username, setUsername] = useState<string>(orig_username);
 

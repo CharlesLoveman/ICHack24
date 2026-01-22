@@ -13,7 +13,7 @@ export default function Attack(
       <div>{"Power: " + attack.power}</div>
       <div>
         {" "}
-        {Object.keys(attack.self_status_id).map((key, value) => (
+        {Object.keys(attack.self_status_id ?? {}).map((key, value) => (
           <div>
             {key} : {value}
           </div>

@@ -19,16 +19,17 @@ import { GiPokecog } from "react-icons/gi";
 import "./MainScreen.css";
 import { CreateBattleData, Pokemon } from "../../sharedTypes";
 import { backendAddress } from "../../env";
-import { GlobalContextType } from "../types";
+import { POKEMON_HAS_RETURNED, GlobalContextType } from "../../types";
 
 export default function MainScreen() {
-  const data = useContext(GlobalData) as GlobalContextType;
-
-  const username = data.username;
-  const setUsername = data.setUsername;
-  const pokemon = data.pokemon;
-  const setPokemon = data.setPokemon;
-  const pokemonReturned = data.pokemonReturned;
+  const {
+    username,
+    setUsername,
+    pokemon,
+    setPokemon,
+    pokemonReturned,
+    noNewPokemon,
+  } = useContext(GlobalData) as GlobalContextType;
 
   const [display, setDisplay] = useState("notReady");
 
@@ -74,6 +75,7 @@ export default function MainScreen() {
     return size;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [width, height] = useWindowSize();
   //var sx = { "font-size": width / 15 };
   const sx = { "font-size": height / 30 };
@@ -99,7 +101,7 @@ export default function MainScreen() {
   }
 
   function getPokemonWaitingIcon() {
-    if (data.pokemonReturned == "waiting") {
+    if (pokemonReturned == POKEMON_HAS_RETURNED.WAITING) {
       return <GiPokecog style={{ animation: "rotation 2s infinite linear" }} />;
     }
   }
@@ -151,7 +153,7 @@ export default function MainScreen() {
               style={{ textDecoration: "none" }}
               to={`../PokemonListScreen/${username}`}
             >
-              View Pokemon ({data.noNewPokemon}){" "}
+              View Pokemon ({noNewPokemon}){" "}
             </Link>
             {getPokemonWaitingIcon()}
           </Button>

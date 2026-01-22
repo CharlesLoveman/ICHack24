@@ -18,8 +18,8 @@ class Attack(TypedDict):
     description: NotRequired[str]
     power: NotRequired[float]
     special: NotRequired[bool]
-    self_status_id: NotRequired[str]
-    target_status_id: NotRequired[str]
+    self_status_id: NotRequired[PokemonStats]
+    target_status_id: NotRequired[PokemonStats]
 
 
 class Pokemon(TypedDict):

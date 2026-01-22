@@ -4,11 +4,13 @@ import { useNavigate, Outlet } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { GlobalData } from "./App";
 import { Pokemon } from "./sharedTypes";
-import { GlobalContextType } from "./types";
+import { BATTLE_RESULT, GlobalContextType } from "./types";
 
 export default function Root() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isConnected, setIsConnected] = useState(socket.connected);
-  const globalData = useContext(GlobalData) as GlobalContextType;
+  const { setNewTurn, setBattleData, setBattleHP, setBattleResult } =
+    useContext(GlobalData) as GlobalContextType;
   //const [pokemonCards, setPokemonCards] = useState([]);
   const navigate = useNavigate();
   const baseBattleData = {
@@ -39,9 +41,9 @@ export default function Root() {
       target_pokemon: Pokemon;
       game_id: string;
     }) {
-      globalData.setBattleData(baseBattleData);
-      globalData.setBattleResult("");
-      globalData.setBattleHP({
+      setBattleData(baseBattleData);
+      setBattleResult(undefined);
+      setBattleHP({
         self_hp: data.self_pokemon.stats.hp,
         target_hp: data.target_pokemon.stats.hp,
       });
@@ -56,9 +58,9 @@ export default function Root() {
       game_id: string;
     }) {
       console.log(data);
-      globalData.setBattleData(baseBattleData);
-      globalData.setBattleResult("");
-      globalData.setBattleHP({
+      setBattleData(baseBattleData);
+      setBattleResult(undefined);
+      setBattleHP({
         self_hp: data.self_pokemon.stats.hp,
         target_hp: data.target_pokemon.stats.hp,
       });
@@ -67,40 +69,40 @@ export default function Root() {
       });
     }
 
-    function onWaitOnOtherPlayer(data: any) {
+    function onWaitOnOtherPlayer() {
       const battleData = { ...baseBattleData };
       battleData.thisPlayerWaiting = true;
-      globalData.setBattleData({ ...battleData });
+      setBattleData({ ...battleData });
     }
 
-    function onMakeOtherPlayerWait(data: any) {
+    function onMakeOtherPlayerWait() {
       const battleData = { ...baseBattleData };
       battleData.otherPlayerWaiting = true;
-      globalData.setBattleData({ ...battleData });
+      setBattleData({ ...battleData });
     }
 
     function onTurnEnd(data: { self_hp: number; target_hp: number }) {
       const battleData = { ...baseBattleData };
-      globalData.setBattleHP({
+      setBattleHP({
         self_hp: data.self_hp,
         target_hp: data.target_hp,
       });
       console.log(battleData);
       console.log(baseBattleData);
-      globalData.setNewTurn(true);
-      globalData.setBattleData({ ...battleData });
+      setNewTurn(true);
+      setBattleData({ ...battleData });
     }
 
-    function win(data: any) {
-      globalData.setNewTurn(true);
-      globalData.setBattleData({ ...baseBattleData });
-      globalData.setBattleResult("win");
+    function win() {
+      setNewTurn(true);
+      setBattleData({ ...baseBattleData });
+      setBattleResult(BATTLE_RESULT.WIN);
     }
 
-    function lose(data: any) {
-      globalData.setNewTurn(true);
-      globalData.setBattleData({ ...baseBattleData });
-      globalData.setBattleResult("lose");
+    function lose() {
+      setNewTurn(true);
+      setBattleData({ ...baseBattleData });
+      setBattleResult(BATTLE_RESULT.LOSE);
     }
 
     socket.on("connect", onConnect);
