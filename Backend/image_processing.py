@@ -2,9 +2,7 @@ from PIL import Image as PILImage
 import requests
 import io
 import os
-from dotenv import dotenv_values
-
-config = dotenv_values(".prod" if os.getenv("FLASK_ENV") == "prod" else ".dev")
+from env import config
 
 HF_KEY = config["HF_KEY"]
 

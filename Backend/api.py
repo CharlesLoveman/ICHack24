@@ -1,5 +1,8 @@
 """API for interfacing with the vision pipeline."""
 
+from Backend.gemini import RealGenerativeModel
+from Backend.gemini_mock import MockGenerativeModel
+from Backend.generative_model import GenerativeModel
 from .prompt_templates import (
     GEMINI_PROMPT_TEMPLATE,
     GEMINI_PROMPT_TEMPLATE_WITH_IMAGE,
@@ -7,15 +10,32 @@ from .prompt_templates import (
 )
 from .image_processing import generate_image, pixelate_image
 from .pokemon import Pokemon, generate_attack, Attack
+
 import vertexai
-from vertexai.preview.generative_models import GenerativeModel, Image
+from vertexai.preview.generative_models import GenerativeModel as _GenerativeModel, Image
 import re
 from typing import Union, Tuple, List, Dict, Any, Optional
+from abc import ABC, abstractmethod
+from env import config
+
+
 
 
 vertexai.init(project="crucial-bucksaw-413121")
-model = GenerativeModel("gemini-pro")
-vision_model = GenerativeModel("gemini-pro-vision")
+model = _GenerativeModel("gemini-pro")
+vision_model = _GenerativeModel("gemini-pro-vision")
+new_model: GenerativeModel
+
+
+
+
+if (config["USE_REAL_MODEL"] == "True"):
+    new_model = RealGenerativeModel()
+else:
+    new_model = MockGenerativeModel()
+
+
+
 
 STATS_KEYS = [
     "Type",
@@ -47,28 +67,7 @@ def load_image_from_file(file_path: str) -> Image:
     return Image.from_bytes(open(file_path, "rb").read())
 
 
-def get_gemini_response(
-    template: str, img: Optional[Image] = None, safety_feedback: bool = False
-) -> Union[str, Tuple[str, Any]]:
-    """Get a response from the Gemini model.
 
-    Args:
-        template (str): The prompt to use to get a response.
-        img (PIL.Image): The image to use to get a response.
-        safety_feedback (bool): Whether to get safety feedback.
-
-    Returns:
-        response (str): The response from the Gemini model.
-    """
-    if img is None:
-        response = model.generate_content([template])
-    else:
-        response = vision_model.generate_content([img, template])
-
-    if safety_feedback:
-        return response.text, response.prompt_feedback
-    else:
-        return response.text
 
 
 def create_pokemon(
@@ -97,7 +96,7 @@ def create_pokemon(
 
     img = load_image_from_file(PATH_TO_PUBLIC + img_path)
 
-    response = get_gemini_response(template, img)
+    response = new_model.get_gemini_response(template, img, img_path=img_path)
 
     sections = [
         re.search(
@@ -119,10 +118,12 @@ def create_pokemon(
     for key in STATS_KEYS:
         value = re.search(rf"{key}:(.*)", sections[2]).group(1).strip()
 
+        corrected_key = key.lower().replace(" ", "_")
+
         if key == "Type":
-            stats[key.lower()] = value
+            stats[corrected_key] = value
         else:
-            stats[key.lower()] = int(value)
+            stats[corrected_key] = int(value)
 
     if create_image:
         # Extract the image prompt
@@ -157,7 +158,7 @@ def create_attacks(name: str, pokedex: str, element: str) -> List[Attack]:
     """
 
     prompt = GEMINI_PROMPT_TEMPLATE_ATTACKS.format(name, pokedex, element)
-    response = get_gemini_response(prompt)
+    response = new_model.get_gemini_response(prompt)
 
     # Extract the attack names, categories and types
     attack_responses = [

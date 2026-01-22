@@ -1,0 +1,49 @@
+Here are four attacks for GitLuigi, keeping their nature and potential stat distribution in mind:
+
+[Start Attack 1]
+
+Name: Pipe Periscope
+
+Category: Status
+
+Type: Psychic
+
+Description: The GitLuigi pops its head out of an unseen pipe, scanning the battlefield with enhanced focus. This raises the GitLuigi's Special Defense and Speed.
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: Data Drill
+
+Category: Special
+
+Type: Steel
+
+Description: The GitLuigi unleashes a focused beam of data, chipping away at the opponent's defenses. This attack deals damage and has a chance to lower the opponent's Special Defense. This attack would be particularly effective if a GitLuigi has high Special Attack.
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: Sabotage Sync
+
+Category: Status
+
+Type: Steel
+
+Description: The GitLuigi, working in tandem with a fellow GitLuigi, disrupts the opponent's flow. This move randomly inflicts one of the following status conditions on the target: Confusion, Paralysis, or Sleep. This attack plays into their teamwork and specialized roles.
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: System Override
+
+Category: Special
+
+Type: Psychic
+
+Description: The GitLuigi delves into the opponent's very being, scrambling their mental faculties and causing a system-wide disruption. This attack deals heavy Psychic-type damage and has a chance to cause the target to attack its allies on its next turn, if applicable. This attack would be devastating if a GitLuigi has very high Special Attack and is the "Mario-like" variant.
+
+[End Attack 4]

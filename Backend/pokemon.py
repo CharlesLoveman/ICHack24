@@ -29,7 +29,7 @@ element_options = [
     "Dark",
     "Fairy",
 ]
-stats_keys = ["hp", "attack", "defence", "special_attack", "special defence", "speed"]
+stats_keys = ["hp", "attack", "defence", "special_attack", "special_defence", "speed"]
 element_chart = np.array(
     [
         [1, 1, 1, 1, 1, 0.5, 1, 0, 0.5, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -172,7 +172,7 @@ class Pokemon:
             dfs = target.stats["defence"]
             if attack.special:
                 atk = self.stats["special_attack"]
-                dfs = target.stats["special defence"]
+                dfs = target.stats["special_defence"]
             damage = int(
                 2
                 / 5

@@ -45,7 +45,7 @@ def e(pokemon):
     # Change this back
     mongodb_client = MongoClient(ip, 27017)
     database = mongodb_client["ic-hack"]
-    # pokemon = """Pokemon('Bananab', 'Bananab, the Banana Pokemon\n\nA Grass/Fairy type Pokemon that evolves from Oddish when exposed to a Leaf Stone. Bananab is a mischievous Pokemon that loves to play pranks on its friends. It is also very protective of its loved ones and will not hesitate to defend them against any threat.', 'Grass', {'hp': 65, 'attack': 65, 'defence': 90, 'special_attack': 135, 'special defence': 90, 'speed': 100}, [Attack('Banana Barrage', 'Grass', 6, False, {}, {}), Attack('Fairy Wind', 'Fairy', 55, True, {}, {}), Attack("Prankster's Play", 'Grass', 0, False, {'hp': 38}, {'special defence': 60}), Attack('Banana Blitz', 'Grass', 255, False, {}, {})], <vertexai.generative_models._generative_models.Image object at 0x0000024083E60170>)"""
+    # pokemon = """Pokemon('Bananab', 'Bananab, the Banana Pokemon\n\nA Grass/Fairy type Pokemon that evolves from Oddish when exposed to a Leaf Stone. Bananab is a mischievous Pokemon that loves to play pranks on its friends. It is also very protective of its loved ones and will not hesitate to defend them against any threat.', 'Grass', {'hp': 65, 'attack': 65, 'defence': 90, 'special_attack': 135, 'special_defence': 90, 'speed': 100}, [Attack('Banana Barrage', 'Grass', 6, False, {}, {}), Attack('Fairy Wind', 'Fairy', 55, True, {}, {}), Attack("Prankster's Play", 'Grass', 0, False, {'hp': 38}, {'special_defence': 60}), Attack('Banana Blitz', 'Grass', 255, False, {}, {})], <vertexai.generative_models._generative_models.Image object at 0x0000024083E60170>)"""
     pokemon_list = []
     pokemon_list = pokemon_list.append(pokemon)
     username = "852428"
@@ -55,7 +55,7 @@ def e(pokemon):
 
 def f():
     from pokemon import Pokemon, Attack
-    json_stats = """{"hp": 65, "attack": 65, "defence": 90, "special_attack": 135, "special defence":  6, "speed":100}"""
+    json_stats = """{"hp": 65, "attack": 65, "defence": 90, "special_attack": 135, "special_defence":  6, "speed":100}"""
     from json import loads
     stats = loads(json_stats)
     a = Attack("a","Grass")

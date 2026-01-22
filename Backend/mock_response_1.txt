@@ -1,0 +1,29 @@
+[Start Output Name]
+
+Name: GitLuigi
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+GitLuigi are elusive Pok�mon known for their ability to navigate complex systems and uncover hidden information. They are often seen with their heads emerging from pipes, peering through magnifying glasses to analyze their surroundings. Their name comes from their uncanny ability to "git" through any problem and their friendly, pipe-dwelling nature, reminiscent of the famous plumber brothers. They work in teams, with specialized roles: Mario-like GitLuigi are excellent at offense and direct problem-solving, Luigi-like GitLuigi excel at support and delicate tasks, and the V-hatted GitLuigi are strategists who analyze data.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Psychic / Steel
+
+HP: 90
+
+Attack: 100
+
+Defence: 110
+
+Special Attack: 95
+
+Special Defence: 105
+
+Speed: 75
+
+[End Output Stats]

@@ -1,0 +1,296 @@
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Luminaurora
+
+[End Output Pokedex]
+
+Luminaurora are ethereal Pokï¿½mon that are born from concentrated beams of moonlight that strike ancient, dew-kissed flowers. They are incredibly shy and only appear during the clearest, most radiant nights. Their bodies shimmer with soft, shifting colors, reminiscent of an aurora borealis, and they emit a gentle, soothing light that can calm even the most agitated creatures. Luminaurora are said to grant pleasant dreams to those who sleep under their faint glow.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Fairy/Psychic
+
+HP: 70
+Attack: 40
+Defence: 60
+Special Attack: 120
+Special Defence: 130
+Speed: 95
+[End Output Stats]
+
+=====RESPONSE END=====
+=====RESPONSE START=====
+
+Okay, I'm ready! Please provide the image of the object you'd like me to turn into a Pokï¿½mon. I'm excited to see what you've got!
+
+=====RESPONSE END======
+====RESPONSE START=====
+
+Let's do this! Show me an image, and I'll create a Pokï¿½mon for you.
+
+Once you provide an image, I'll generate the following:
+
+*   **Name:** A catchy and fitting name for your new Pokï¿½mon.
+*   **Pokï¿½dex Entry:** A brief, entertaining description that captures its essence and perhaps a bit of its origin or habits.
+*   **Stats:** A full breakdown of its HP, Attack, Defense, Special Attack, Special Defense, and Speed, all within the 0-255 range.
+
+I'm ready when you are! Just share that image.
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: GitLuigi
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+GitLuigi are elusive Pokï¿½mon known for their ability to navigate complex systems and uncover hidden information. They are often seen with their heads emerging from pipes, peering through magnifying glasses to analyze their surroundings. Their name comes from their uncanny ability to "git" through any problem and their friendly, pipe-dwelling nature, reminiscent of the famous plumber brothers. They work in teams, with specialized roles: Mario-like GitLuigi are excellent at offense and direct problem-solving, Luigi-like GitLuigi excel at support and delicate tasks, and the V-hatted GitLuigi are strategists who analyze data.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Psychic / Steel
+
+HP: 90
+
+Attack: 100
+
+Defence: 110
+
+Special Attack: 95
+
+Special Defence: 105
+
+Speed: 75
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Here are four attacks for GitLuigi, keeping their nature and potential stat distribution in mind:
+
+[Start Attack 1]
+
+Name: Pipe Periscope
+
+Category: Status
+
+Type: Psychic
+
+Description: The GitLuigi pops its head out of an unseen pipe, scanning the battlefield with enhanced focus. This raises the GitLuigi's Special Defense and Speed.
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: Data Drill
+
+Category: Special
+
+Type: Steel
+
+Description: The GitLuigi unleashes a focused beam of data, chipping away at the opponent's defenses. This attack deals damage and has a chance to lower the opponent's Special Defense. This attack would be particularly effective if a GitLuigi has high Special Attack.
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: Sabotage Sync
+
+Category: Status
+
+Type: Steel
+
+Description: The GitLuigi, working in tandem with a fellow GitLuigi, disrupts the opponent's flow. This move randomly inflicts one of the following status conditions on the target: Confusion, Paralysis, or Sleep. This attack plays into their teamwork and specialized roles.
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: System Override
+
+Category: Special
+
+Type: Psychic
+
+Description: The GitLuigi delves into the opponent's very being, scrambling their mental faculties and causing a system-wide disruption. This attack deals heavy Psychic-type damage and has a chance to cause the target to attack its allies on its next turn, if applicable. This attack would be devastating if a GitLuigi has very high Special Attack and is the "Mario-like" variant.
+
+[End Attack 4]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: GitLuigi
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+GitLuigi are curious Pokémon that inhabit the complex pipe systems of their homes. They are often found investigating strange occurrences, equipped with magnifying glasses and a keen eye for detail. Their unique ability to traverse through pipes allows them to appear and disappear unexpectedly. It is said that GitLuigi can solve any mystery, no matter how tangled.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Steel / Psychic
+
+HP: 80
+
+Attack: 70
+
+Defence: 90
+
+Special Attack: 100
+
+Special Defence: 95
+
+Speed: 85
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Here are 4 attacks for GitLuigi, taking into account its curious, investigative nature and its Steel/Psychic typing, as well as its ability to move through pipes:
+
+[Start Attack 1]
+
+Name: Pipe Plunge
+Category: Physical
+Type: Steel
+Description: GitLuigi dives headfirst into its surroundings, using its pipe-dwelling prowess to launch itself at the opponent from an unexpected angle. This attack gains increased power if GitLuigi has recently switched out or if the opponent has used a status move.
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: Deductive Gaze
+Category: Status
+Type: Psychic
+Description: GitLuigi intensely analyzes the opponent with its sharp, inquisitive eyes. This move has a high chance of lowering the opponent's Accuracy and Special Defense, representing GitLuigi spotting weaknesses and inconsistencies in their stance and energy.
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: Tangle Trap
+Category: Special
+Type: Steel
+Description: GitLuigi manipulates the very essence of its pipe-dwelling nature, creating a psychic illusion of an inescapable maze of pipes around the target. This attack deals damage and has a moderate chance of trapping the opponent, preventing them from switching out for a few turns.
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: Clue Conjuration
+Category: Status
+Type: Psychic
+Description: With a flash of insight and mental focus, GitLuigi conjures a small, glowing clue that it can then share. This move restores a small amount of GitLuigi's HP and boosts its Speed, symbolizing finding a helpful hint that clears its mind and makes it quicker to act.
+
+[End Attack 4]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Gitluigi
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Gitluigi are helpful Pokémon that spend their days exploring the intricate pipe systems of various Pokémon Centers. Equipped with magnifying glasses and keen minds, they are adept at finding lost items and solving complex puzzles within their pipe-filled homes. They are often seen working in teams, their different skills complementing each other perfectly.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Steel/Psychic
+
+HP: 70
+
+Attack: 65
+
+Defence: 90
+
+Special Attack: 80
+
+Special Defence: 95
+
+Speed: 75
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Here are four attacks for Gitluigi, taking into account its helpful, puzzle-solving nature and its Steel/Psychic typing:
+
+[Start Attack 1]
+
+Name: **Pipe Purge**
+
+Category: Physical
+
+Type: Steel
+
+Description: Gitluigi forcefully expels a stream of grime and debris from its internal pipe system, hitting the target with surprising force. This attack has a chance to lower the target's accuracy, as if they've been temporarily blinded by the sudden spray.
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Cognitive Conduit**
+
+Category: Special
+
+Type: Psychic
+
+Description: Gitluigi focuses its mental energy, creating a psychic link with the target's thoughts. This attack deals moderate psychic damage and has a chance to confuse the target, as their own thoughts become jumbled and disoriented.
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Scrap Sort**
+
+Category: Status
+
+Type: Steel
+
+Description: Gitluigi diligently sorts through any metallic debris it can find, reinforcing its own defenses. This move sharply raises Gitluigi's Defense and Special Defense stats, making it more resilient to incoming attacks.
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Lost & Found Lookup**
+
+Category: Status
+
+Type: Psychic
+
+Description: Drawing on its innate talent for finding things, Gitluigi briefly analyzes the opponent's item. This move reveals the target's held item to Gitluigi and its trainer. If Gitluigi has an item itself, this move has a chance to make its held item more potent for one turn.
+
+[End Attack 4]
+
+=====RESPONSE END=====
+

@@ -3,10 +3,6 @@
 from Backend.pokemon import Pokemon, generate_attack
 from pymongo import MongoClient
 from PIL import Image as PILImage
-from dotenv import dotenv_values
-import os
-
-config = dotenv_values(".prod" if os.getenv("FLASK_ENV") == "prod" else ".dev")
 
 # MongoDB setup
 ip = "127.0.0.1"
@@ -19,7 +15,7 @@ stats = {
         "attack": 1,
         "defence": 1,
         "special_attack": 1,
-        "special defence": 1,
+        "special_defence": 1,
         "speed": 1
     }
 
