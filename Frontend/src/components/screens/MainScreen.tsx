@@ -142,39 +142,38 @@ export default function MainScreen() {
           </div>
           <br />
           <br />
-          <Button
-            sx={sx}
-            disabled={!username}
-            fullWidth={true}
-            variant="contained"
-            size="large"
+          <Link
+            style={{ textDecoration: "none" }}
+            to={`../PokemonListScreen/${username}`}
           >
-            <Link
-              style={{ textDecoration: "none" }}
-              to={`../PokemonListScreen/${username}`}
+            <Button
+              sx={sx}
+              disabled={!username}
+              fullWidth={true}
+              variant="contained"
+              size="large"
             >
-              View Pokemon ({noNewPokemon}){" "}
-            </Link>
-            {getPokemonWaitingIcon()}
-          </Button>
+              View Pokemon ({noNewPokemon}) {getPokemonWaitingIcon()}
+            </Button>
+          </Link>
           <br />
           <br />
-          <Button
-            sx={sx}
-            disabled={!username}
-            fullWidth={true}
-            variant="contained"
-            size="large"
-            startIcon={<MdCatchingPokemon size="1rem" />}
-            endIcon={<MdCatchingPokemon size="1rem" />}
+          <Link
+            style={{ textDecoration: "none" }}
+            to={`../PokemonCaptureScreen/${username}`}
           >
-            <Link
-              style={{ textDecoration: "none" }}
-              to={`../PokemonCaptureScreen/${username}`}
+            <Button
+              sx={sx}
+              disabled={!username}
+              fullWidth={true}
+              variant="contained"
+              size="large"
+              startIcon={<MdCatchingPokemon size="1rem" />}
+              endIcon={<MdCatchingPokemon size="1rem" />}
             >
               Capture Pokemon!
-            </Link>
-          </Button>
+            </Button>
+          </Link>
         </CardContent>
       </Card>
     </>

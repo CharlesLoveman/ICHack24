@@ -84,19 +84,22 @@ export default function PokemonCaptureScreen() {
         Capture a new Pokemon!
         <GiForest />
       </div>
-      <Button fullWidth={true}>
-        <label htmlFor="imageUpload">
+      <div style={{ textAlign: "center" }}>
+        <label
+          htmlFor="imageUpload"
+          style={{ cursor: "pointer", textAlign: "center" }}
+        >
           <FaCameraRetro display={hidden} size="9rem"></FaCameraRetro>
         </label>
-      </Button>
+      </div>
       <div style={{ textAlign: "center" }}>
         {url && <img src={url} width="200rem" alt="preview" />}
       </div>
       <div style={{ textAlign: "center" }}>
-        Take a picture an animal <FaDog />, object <FaBottleWater /> or anything
-        else <GiSpikyExplosion /> you would like to Pokefy and upload it here.
-        If you're happy with the result, click the tick to adopt the Pokemon.
-        Happy capturing!
+        Take a picture of an animal <FaDog />, object <FaBottleWater /> or
+        anything else <GiSpikyExplosion /> you would like to Pokefy and upload
+        it here. If you're happy with the result, click the tick to adopt the
+        Pokemon. Happy capturing!
       </div>
 
       <Input
@@ -109,7 +112,7 @@ export default function PokemonCaptureScreen() {
 
       <Button fullWidth={true} onClick={onFileUpload}>
         {" "}
-        <IoIosCheckmarkCircle size="2rem" />
+        <IoIosCheckmarkCircle size="10rem" />
       </Button>
     </>
   );
