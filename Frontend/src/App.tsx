@@ -9,6 +9,15 @@ const theme = createTheme({
   typography: {
     fontFamily: "Silkscreen",
   },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          margin: "0.5rem",
+        },
+      },
+    },
+  },
 });
 
 const router = getBrowserRouter();

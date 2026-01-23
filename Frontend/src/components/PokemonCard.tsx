@@ -53,22 +53,28 @@ export default function PokemonCard({ pokemon, isNew }: PokemonCardProps) {
         <Typography variant="body2">
           Description: {pokemon.description}
         </Typography>
+        <br />
         <Typography variant="body2">
           <StatDisplay stats={pokemon.stats} />
         </Typography>
-        <Button onClick={() => setPokemon(pokemon)}>
+        <br></br>
+        <Button
+          onClick={() => setPokemon(pokemon)}
+          color="secondary"
+          variant="contained"
+        >
           {" "}
           <TbPokeball /> Select{" "}
         </Button>
-        <Button>
-          {" "}
-          <Link
-            to={`../PokemonFullCardScreen/${1}`}
-            onClick={() => setViewPokemon(pokemon)}
-          >
-            View
-          </Link>{" "}
-        </Button>
+        <Link
+          to={`../PokemonFullCardScreen/${1}`}
+          onClick={() => setViewPokemon(pokemon)}
+        >
+          <Button color="info" variant="contained">
+            {" "}
+            View{" "}
+          </Button>
+        </Link>
       </CardContent>
     </Card>
   );

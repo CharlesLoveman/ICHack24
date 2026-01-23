@@ -54,8 +54,14 @@ export default function PokemonList({ pokemons }: { pokemons: Pokemon[] }) {
 
   return (
     <>
-      <Button onClick={() => decrementIndex()}> View Above </Button>
-      <Button onClick={() => incrementIndex()}> View Below </Button>
+      <Button variant="contained" onClick={() => decrementIndex()}>
+        {" "}
+        View Above{" "}
+      </Button>
+      <Button variant="contained" onClick={() => incrementIndex()}>
+        {" "}
+        View Below{" "}
+      </Button>
 
       {GetPokemonList()}
     </>

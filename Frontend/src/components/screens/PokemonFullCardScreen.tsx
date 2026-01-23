@@ -96,7 +96,11 @@ export default function PokemonFullCardScreen() {
           <Typography variant="body2">
             {MovesDisplay(cardPokemon?.attacks)}
           </Typography>
-          <Button onClick={() => setPokemon(cardPokemon ?? null)}>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => setPokemon(cardPokemon ?? null)}
+          >
             {" "}
             <TbPokeball /> Select{" "}
           </Button>

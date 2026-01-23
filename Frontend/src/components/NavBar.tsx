@@ -8,7 +8,7 @@ export default function NavBar(): JSX.Element {
 
   return (
     <>
-      <Button onClick={() => navigate(-1)}>
+      <Button variant="contained" onClick={() => navigate(-1)}>
         <IoIosArrowBack size="30px" />
       </Button>
     </>
