@@ -13,9 +13,14 @@ from flask_socketio import SocketIO, send, emit
 from random import randrange
 from env import config
 
-from .pokemon import Battle, Pokemon
+from .pokemon import Battle, BattleEvent, Pokemon
 from .api import GeminiError, build_pokemon, PATH_TO_PUBLIC
-from .db import pokemon_collection, players_collection, attacks_collection, attack_stats_collection
+from .db import (
+    pokemon_collection,
+    players_collection,
+    attacks_collection,
+    attack_stats_collection,
+)
 
 from bson.objectid import ObjectId
 import json
@@ -68,7 +73,7 @@ def get_player_by_username(username: str) -> Union[Player, None]:
 
 def get_pokemon_ids_from_player(username: str) -> List[str]:
     """Return a list of Pokemon ids for the given user."""
-    print(f"Attempting to load Pokemon ids for user: {username}")
+    # print(f"Attempting to load Pokemon ids for user: {username}")
     player = players_collection.find_one({"username": username})
     pokemon_ids = player["pokemon_ids"]
 
@@ -77,7 +82,7 @@ def get_pokemon_ids_from_player(username: str) -> List[str]:
 
 def get_pokemon_from_id(pokemon_id: str) -> Pokemon:
     """Return a Pokemon as a dict."""
-    print(f"Attempting to load data on Pokemon: {pokemon_id}")
+    # print(f"Attempting to load data on Pokemon: {pokemon_id}")
     pokemon = pokemon_collection.find_one({"_id": ObjectId(pokemon_id)})
     pokemon["id"] = str(pokemon["_id"])
     pokemon.pop("_id")
@@ -93,7 +98,7 @@ def get_pokemon_from_id(pokemon_id: str) -> Pokemon:
 
 def get_stats_from_id(stats_id: str, flag: str = "stats") -> PokemonStats:
     """Return stats as a dict."""
-    print(f"Attempting to load data on {flag}: {stats_id}")
+    # print(f"Attempting to load data on {flag}: {stats_id}")
     stats = attack_stats_collection.find_one({"_id": ObjectId(stats_id)})
     stats.pop("_id")
 
@@ -102,7 +107,7 @@ def get_stats_from_id(stats_id: str, flag: str = "stats") -> PokemonStats:
 
 def get_attack_from_id(attack_id: str) -> Attack:
     """Return an attack as a dict."""
-    print(f"Attempting to load data on Attack: {attack_id}")
+    # print(f"Attempting to load data on Attack: {attack_id}")
     attack = attacks_collection.find_one({"_id": ObjectId(attack_id)})
     attack["id"] = str(attack["_id"])
     attack.pop("_id")
@@ -157,8 +162,7 @@ def handle_createBattle(json: CreateBattleData):
     battles[game_id] = Battle(request.sid, pokemon_id)
     users[request.sid] = request.sid
 
-    data: JoinWaitingRoomData = {"game_id": game_id}
-    emit_joinWaitingRoom(data)
+    emit_joinWaitingRoom(game_id=game_id)
 
 
 @socketio.on("joinBattle")
@@ -172,29 +176,24 @@ def handle_joinBattle(json: JoinBattleData):
     battle = battles[game_id]
     battle.add_player(request.sid, pokemon_id)
 
-    joinBattleData: JoinBattleData = (
-        {
-            "self_pokemon": get_pokemon_from_id(battle.p2_id),
-            "target_pokemon": get_pokemon_from_id(battle.p1_id),
-            "game_id": game_id,
-        },
+    emit_joinBattle(
+        self_pokemon=get_pokemon_from_id(battle.p2_id),
+        target_pokemon=get_pokemon_from_id(battle.p1_id),
+        game_id=game_id,
+        sid=battle.u2,
     )
 
-    emit_joinBattle(joinBattleData, request.sid)
-
-    joinBattleFromRoomData: JoinBattleData = (
-        {
-            "self_pokemon": get_pokemon_from_id(battle.p1_id),
-            "target_pokemon": get_pokemon_from_id(battle.p2_id),
-            "game_id": game_id,
-        },
+    emit_joinBattleFromRoom(
+        self_pokemon=get_pokemon_from_id(battle.p1_id),
+        target_pokemon=get_pokemon_from_id(battle.p2_id),
+        game_id=game_id,
+        sid=battle.u1,
     )
 
-    emit_joinBattleFromRoom(joinBattleFromRoomData, request.sid)
 
 @socketio.on("attack")
 def handle_attack(json: AttackData):
-    battles[json["game_id"]].handle_event("attack", json, request.sid)
+    battles[json["game_id"]].handle_event(BattleEvent.attack, json, request.sid)
 
 
 @app.route("/InitialiseUser/<username>", methods=["POST"])

@@ -2,39 +2,24 @@
 
 from Backend.gemini import RealGenerativeModel
 from Backend.gemini_mock import MockGenerativeModel
-from Backend.generative_model import GenerativeModel
 from .prompt_templates import (
     GEMINI_PROMPT_TEMPLATE,
     GEMINI_PROMPT_TEMPLATE_WITH_IMAGE,
     GEMINI_PROMPT_TEMPLATE_ATTACKS,
 )
-from .image_processing import generate_image, pixelate_image
+from .image_processing import generate_image
 from .pokemon import Pokemon, generate_attack, Attack
 
-import vertexai
-from vertexai.preview.generative_models import GenerativeModel as _GenerativeModel, Image
+from vertexai.preview.generative_models import Image
 import re
-from typing import Union, Tuple, List, Dict, Any, Optional
-from abc import ABC, abstractmethod
+from typing import Union, Tuple, List, Dict, Any
 from env import config
 
 
-
-
-vertexai.init(project="crucial-bucksaw-413121")
-model = _GenerativeModel("gemini-pro")
-vision_model = _GenerativeModel("gemini-pro-vision")
-new_model: GenerativeModel
-
-
-
-
-if (config["USE_REAL_MODEL"] == "True"):
+if config["USE_REAL_MODEL"] == "True":
     new_model = RealGenerativeModel()
 else:
     new_model = MockGenerativeModel()
-
-
 
 
 STATS_KEYS = [
@@ -67,13 +52,12 @@ def load_image_from_file(file_path: str) -> Image:
     return Image.from_bytes(open(file_path, "rb").read())
 
 
-
-
-
 def create_pokemon(
     img_path: str, create_image: bool = False, return_prompt: bool = False
 ) -> Union[
-    Tuple[str, str, Dict[str, Any]], Tuple[str, str, Dict[str, Any], str], Tuple[str, str, Dict[str, Any], str, str]
+    Tuple[str, str, Dict[str, Any]],
+    Tuple[str, str, Dict[str, Any], str],
+    Tuple[str, str, Dict[str, Any], str, str],
 ]:
     """Create a new pokemon from an image.
 

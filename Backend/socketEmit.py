@@ -2,8 +2,8 @@ from enum import Enum
 
 from flask_socketio import emit
 
-from Backend.app import Request
-from Backend.types import BattleData, BattleHP, JoinBattleData, JoinWaitingRoomData
+from Backend.types import BattleHP, JoinBattleData, JoinWaitingRoomData, Pokemon
+
 
 class SocketEventsTo(Enum):
     connect = "connect"
@@ -17,26 +17,50 @@ class SocketEventsTo(Enum):
     win = "win"
     lose = "lose"
 
-def emit_joinWaitingRoom(data: JoinWaitingRoomData):
-    emit(SocketEventsTo.joinWaitingRoom, data)
 
-def emit_joinBattle(data: JoinBattleData, sid: str):
-    emit(SocketEventsTo.joinBattle, data, to=sid)
+def emit_joinWaitingRoom(game_id: str):
+    data: JoinWaitingRoomData = {"game_id": game_id}
+    emit(SocketEventsTo.joinWaitingRoom.value, data)
 
-def emit_joinBattleFromRoom(data: JoinBattleData, sid: str):
-    emit(SocketEventsTo.joinBattleFromRoom, data, to=sid)
+
+def emit_joinBattle(
+    self_pokemon: Pokemon, target_pokemon: Pokemon, game_id: str, sid: str
+):
+    data: JoinBattleData = {
+        "self_pokemon": self_pokemon,
+        "target_pokemon": target_pokemon,
+        "game_id": game_id,
+    }
+    emit(SocketEventsTo.joinBattle.value, data, to=sid)
+
+
+def emit_joinBattleFromRoom(
+    self_pokemon: Pokemon, target_pokemon: Pokemon, game_id: str, sid: str
+):
+    data: JoinBattleData = {
+        "self_pokemon": self_pokemon,
+        "target_pokemon": target_pokemon,
+        "game_id": game_id,
+    }
+    emit(SocketEventsTo.joinBattleFromRoom.value, data, to=sid)
+
 
 def emit_makeOtherPlayerWait(sid: str):
-    emit(SocketEventsTo.makeOtherPlayerWait, to=sid)
+    emit(SocketEventsTo.makeOtherPlayerWait.value, to=sid)
+
 
 def emit_onWaitOnOtherPlayer(sid: str):
-    emit(SocketEventsTo.onWaitOnOtherPlayer, to=sid)
+    emit(SocketEventsTo.onWaitOnOtherPlayer.value, to=sid)
 
-def emit_onTurnEnd(data: BattleHP, sid: str):
-    emit(SocketEventsTo.onTurnEnd, data, to=sid)
+
+def emit_onTurnEnd(self_hp: float, target_hp: float, sid: str):
+    data: BattleHP = {"self_hp": self_hp, "target_hp": target_hp}
+    emit(SocketEventsTo.onTurnEnd.value, data, to=sid)
+
 
 def emit_win(sid: str):
-    emit(SocketEventsTo.win, to=sid)
+    emit(SocketEventsTo.win.value, to=sid)
+
 
 def emit_lose(sid: str):
-    emit(SocketEventsTo.lose, to=sid)
+    emit(SocketEventsTo.lose.value, to=sid)

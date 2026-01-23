@@ -1,9 +1,15 @@
-""""Pokemon game logic."""
+""" "Pokemon game logic."""
 
 import numpy as np
 from bson.objectid import ObjectId
 import random
-from Backend.socketEmit import emit_lose, emit_makeOtherPlayerWait, emit_onTurnEnd, emit_onWaitOnOtherPlayer, emit_win
+from Backend.socketEmit import (
+    emit_lose,
+    emit_makeOtherPlayerWait,
+    emit_onTurnEnd,
+    emit_onWaitOnOtherPlayer,
+    emit_win,
+)
 from Backend.types import PokemonStats, Attack, BattleHP, AttackData
 from typing import List, Dict
 from .db import pokemon_collection, attacks_collection, attack_stats_collection
@@ -52,6 +58,7 @@ element_chart = np.array(
         [1, 2, 1, 0.5, 1, 1, 1, 1, 0.5, 0.5, 1, 1, 1, 1, 1, 2, 2, 1],
     ]
 )
+
 
 class BattleEvent(Enum):
     attack = "attack"
@@ -149,7 +156,7 @@ class Pokemon:
             raise TypeError(
                 f"Attack must be an Attack, but {attack} is a {type(attack).__name__}"
             )
-        
+
         """
         if attack not in self.attacks:
             raise ValueError(
@@ -224,7 +231,7 @@ class Pokemon:
                     "stats_id": stats_id,
                     "attack_ids": attack_ids,
                     "image_id": self.image_id,
-                    "original_image_id": self.original_image_id
+                    "original_image_id": self.original_image_id,
                 }
             ).inserted_id
         )
@@ -402,14 +409,18 @@ class Attack:
             {"_id": ObjectId(attack["self_status_id"])}
         )
         if self_status is None:
-            raise KeyError(f"No Stats object with the id {repr(attack["self_status_id"])} was found.")
+            raise KeyError(
+                f"No Stats object with the id {repr(attack["self_status_id"])} was found."
+            )
         self_status.pop("_id")
 
         target_status = attack_stats_collection.find_one(
             {"_id": ObjectId(attack["target_status_id"])}
         )
         if target_status is None:
-            raise KeyError(f"No Stats object with the id {repr(attack["target_status_id"])} was found.")
+            raise KeyError(
+                f"No Stats object with the id {repr(attack["target_status_id"])} was found."
+            )
         target_status.pop("_id")
 
         return Attack(
@@ -517,14 +528,13 @@ def generate_attack(name: str, element: str, category: str) -> Attack:
     return Attack(name, element, power, special, self_status, target_status)
 
 
-
 class Battle:
     """Create a battle between two Pokemon."""
+
     attack1: Attack
     attack2: Attack
     p1: Pokemon
     p2: Pokemon
-
 
     def __init__(self, u1: str, p1_id: str):
         """Create a battle between two Pokemon.
@@ -578,15 +588,13 @@ class Battle:
         elif self.p2.stats["hp"] <= 0:
             self.broadcast_wins(1)
 
-    def broadcast_wins(self,winner: int):
+    def broadcast_wins(self, winner: int):
         if winner == 1:
             emit_win(self.u1)
             emit_lose(self.u2)
         else:
             emit_win(self.u2)
             emit_lose(self.u1)
-
-
 
 
 class BattleState:
@@ -596,10 +604,10 @@ class BattleState:
         pass
 
     def player_has_chosen(self, battle: Battle, number: int):
-        if (number == 1):
+        if number == 1:
             chosen_user = battle.u1
             not_yet_chosen_user = battle.u2
-        elif (number == 2):
+        elif number == 2:
             chosen_user = battle.u2
             not_yet_chosen_user = battle.u1
 
@@ -607,10 +615,16 @@ class BattleState:
         emit_onWaitOnOtherPlayer(not_yet_chosen_user)
 
     def broadcast_health(self, battle: Battle):
-        data1: BattleHP = {"self_hp": battle.p1.stats["hp"], "target_hp": battle.p2.stats["hp"]}
-        data2: BattleHP = {"target_hp": battle.p1.stats["hp"], "self_hp": battle.p2.stats["hp"]}
-        emit_onTurnEnd(data1, battle.u1)
-        emit_onTurnEnd(data2, battle.u2)
+        emit_onTurnEnd(
+            self_hp=battle.p1.stats["hp"],
+            target_hp=battle.p2.stats["hp"],
+            sid=battle.u1,
+        )
+        emit_onTurnEnd(
+            self_hp=battle.p2.stats["hp"],
+            target_hp=battle.p1.stats["hp"],
+            sid=battle.u2,
+        )
 
 
 class WaitingForAttacks(BattleState):
@@ -634,6 +648,7 @@ class WaitingForAttacks(BattleState):
                 print("Waiting for player 1.")
                 self.player_has_chosen(battle, 2)
 
+
 class WaitingForPlayer1Attack(BattleState):
     def __init__(self):
         super()
@@ -641,7 +656,7 @@ class WaitingForPlayer1Attack(BattleState):
     def handle_event(
         self, battle: Battle, event: str, json: AttackData, socket_id: str
     ):
-        if event == "attack":
+        if event == BattleEvent.attack:
             if socket_id == battle.u1:
                 battle.attack1 = Attack.load(json["attack_id"])
                 print(battle.attack1)
@@ -657,7 +672,7 @@ class WaitingForPlayer2Attack(BattleState):
     def handle_event(
         self, battle: Battle, event: str, json: AttackData, socket_id: str
     ):
-        if event == "attack":
+        if event == BattleEvent.attack:
             if socket_id == battle.u2:
                 battle.attack2 = Attack.load(json["attack_id"])
                 print(battle.attack2)
