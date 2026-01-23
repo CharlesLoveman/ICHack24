@@ -14,11 +14,9 @@ export default function JoinRoomInputBox(
 
   function joinBattle(pokemon: Pokemon | null, code: string) {
     if (pokemon) {
-      const game_id = code;
-
       socket.emit("joinBattle", {
         pokemon_id: pokemon.id,
-        game_id: game_id,
+        game_id: code,
       } as PlayerJoinBattleData);
     }
   }

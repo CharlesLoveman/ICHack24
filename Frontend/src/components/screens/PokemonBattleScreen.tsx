@@ -7,7 +7,7 @@ import { socket } from "../../socket";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
-import { Pokemon, Attack } from "../../sharedTypes";
+import { Pokemon, Attack, AttackData } from "../../sharedTypes";
 import { BATTLE_RESULT } from "../../types";
 import { useGlobalData } from "../../hooks/useGlobalData";
 
@@ -21,21 +21,25 @@ export default function PokemonBattleScreen() {
   const { battleData, newTurn, setNewTurn, battleResult, battleHP } =
     useGlobalData();
   const { state } = useLocation() as { state: BattleLocationState };
-  const params = useParams();
-  const [chosenAttack, setChosenAttack] = useState("");
+  const params = useParams<{ game_id: string }>();
+  const [chosenAttack, setChosenAttack] = useState<string | undefined>(
+    undefined
+  );
 
   function onAttack(attack: Attack) {
-    if (chosenAttack == "") {
+    if (!chosenAttack && params.game_id) {
       setChosenAttack(attack.name);
-      const attack_id = attack.id;
-      socket.emit("attack", { attack_id: attack_id, game_id: params.game_id });
+      socket.emit("attack", {
+        attack_id: attack.id,
+        game_id: params.game_id,
+      } as AttackData);
     }
   }
 
   useEffect(() => {
     if (newTurn) {
       setNewTurn(false);
-      setChosenAttack("");
+      setChosenAttack(undefined);
     }
   }, [newTurn]);
 
