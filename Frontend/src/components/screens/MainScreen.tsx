@@ -20,12 +20,7 @@ import { POKEMON_HAS_RETURNED } from "../../types";
 import { useGlobalData } from "../../hooks/useGlobalData";
 
 export default function MainScreen() {
-  const {
-    username,
-    pokemon,
-    pokemonReturned,
-    noNewPokemon,
-  } = useGlobalData();
+  const { username, pokemon, pokemonReturned, noNewPokemon } = useGlobalData();
 
   const [display, setDisplay] = useState("notReady");
 
@@ -97,12 +92,14 @@ export default function MainScreen() {
       <Card sx={sx}>
         <CardContent>
           <div style={{ textAlign: "center" }}>
-            Hello Pokemon Trainer {username}, what would you like to do?
+            {username ? (
+              <>Hello Pokemon Trainer {username}, what would you like to do?</>
+            ) : (
+              <>Welcome Pokemon Trainer! Please log in</>
+            )}
           </div>
 
-          <div style={{ textAlign: "center" }}>
-            {<LoginInputBox sx={sx}/>}
-          </div>
+          <div style={{ textAlign: "center" }}>{<LoginInputBox sx={sx} />}</div>
           <br />
           <div style={{ textAlign: "center" }}>
             <Display display={display} />

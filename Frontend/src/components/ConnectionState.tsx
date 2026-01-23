@@ -3,5 +3,5 @@ interface ConnectionStateProps {
 }
 
 export function ConnectionState({ isConnected }: ConnectionStateProps) {
-  return <p>State: {"" + isConnected}</p>;
+  return <p>Connected: {"" + isConnected}</p>;
 }

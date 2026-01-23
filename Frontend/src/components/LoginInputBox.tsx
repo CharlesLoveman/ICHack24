@@ -22,11 +22,17 @@ export default function LoginInputBox({ sx }: { sx: SxProps<Theme> }) {
     initialiseUser(storedUsername);
   }
 
+  interface LoginResponse {
+    pid: string;
+  }
+
   function initialiseUser(username: string) {
     axios
       .post(`${backendAddress}/InitialiseUser/${username}`)
       .then((response) => {
-        console.log(response.data.message);
+        // Plausible TODO: use the pid in the frontend and backend as a unique id
+        // For now, we assume usernames are unique, plus let you log in as the same user again
+        console.log((response as unknown as LoginResponse).pid);
         setUsername(username);
         localStorage.setItem("username", username);
       });

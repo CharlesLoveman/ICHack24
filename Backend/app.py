@@ -77,7 +77,7 @@ def InitialiseUser(username: str) -> Response:
 
     print(f"Login successful. pid: {pid}")
 
-    resp = jsonify(success=True)
+    resp = jsonify(success=True, pid=pid)
     resp = make_response(resp)
     resp.set_cookie("pid", pid)
 
