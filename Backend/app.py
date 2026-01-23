@@ -1,34 +1,29 @@
 """Flask app for the backend."""
 
-from typing import List, Dict, Any, Union
-from Backend.socketEmit import (
-    emit_joinBattle,
-    emit_joinBattleFromRoom,
-    emit_joinWaitingRoom,
-)
+from typing import List, Dict
 from Backend.types import *
 from flask import Flask, make_response, jsonify, Response
 from flask_cors import CORS
-from flask_socketio import SocketIO, send, emit
-from random import randrange
+
 from env import config
 
-from .pokemon import Battle, BattleEvent, Pokemon
+from .pokemon import Battle, Pokemon
 from .api import GeminiError, build_pokemon, PATH_TO_PUBLIC
 from .db import (
-    pokemon_collection,
+    get_player_by_username,
+    get_pokemon_from_id,
+    get_pokemon_ids_from_player,
     players_collection,
-    attacks_collection,
-    attack_stats_collection,
+    request,
 )
-
-from bson.objectid import ObjectId
+from flask_socketio import SocketIO
 import json
 import base64
 
 from Backend.types import *
-from .db import request
 
+users = {}
+battles: Dict[str, Battle] = {}
 
 ERRORMON_ID = None  # Run create_errormon.py and set this!
 
@@ -39,14 +34,15 @@ sock_cors_or = "*"
 # py_cors_or = f"{ip}"
 # sock_cors_or = py_cors_or
 
-users = {}
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": py_cors_or}})
 app.config["SECRET_KEY"] = config["APP_SECRET"]
+
 socketio = SocketIO(app, cors_credentials=True, cors_allowed_origins=py_cors_or)
 
-battles: Dict[str, Battle] = {}
+from .socketOn import *
+
 
 if __name__ == "__main__":
     socketio.run(app, port=5000, host="0.0.0.0")
@@ -62,138 +58,6 @@ def bytes_to_json(bytes: bytes) -> str:
     b64bytes = base64.b64encode(bytes)
     strbytes = b64bytes.decode("utf-8")
     return json.dumps(strbytes)
-
-
-def get_player_by_username(username: str) -> Union[Player, None]:
-    """Return a player object from the database using a username."""
-    player = players_collection.find_one({"username": username})
-
-    return player
-
-
-def get_pokemon_ids_from_player(username: str) -> List[str]:
-    """Return a list of Pokemon ids for the given user."""
-    # print(f"Attempting to load Pokemon ids for user: {username}")
-    player = players_collection.find_one({"username": username})
-    pokemon_ids = player["pokemon_ids"]
-
-    return pokemon_ids
-
-
-def get_pokemon_from_id(pokemon_id: str) -> Pokemon:
-    """Return a Pokemon as a dict."""
-    # print(f"Attempting to load data on Pokemon: {pokemon_id}")
-    pokemon = pokemon_collection.find_one({"_id": ObjectId(pokemon_id)})
-    pokemon["id"] = str(pokemon["_id"])
-    pokemon.pop("_id")
-
-    stats_id = pokemon["stats_id"]
-    pokemon["stats"] = get_stats_from_id(stats_id)
-
-    attack_ids = pokemon["attack_ids"]
-    pokemon["attacks"] = [get_attack_from_id(attack_id) for attack_id in attack_ids]
-
-    return pokemon
-
-
-def get_stats_from_id(stats_id: str, flag: str = "stats") -> PokemonStats:
-    """Return stats as a dict."""
-    # print(f"Attempting to load data on {flag}: {stats_id}")
-    stats = attack_stats_collection.find_one({"_id": ObjectId(stats_id)})
-    stats.pop("_id")
-
-    return stats
-
-
-def get_attack_from_id(attack_id: str) -> Attack:
-    """Return an attack as a dict."""
-    # print(f"Attempting to load data on Attack: {attack_id}")
-    attack = attacks_collection.find_one({"_id": ObjectId(attack_id)})
-    attack["id"] = str(attack["_id"])
-    attack.pop("_id")
-
-    self_status_id = attack["self_status_id"]
-    attack["self_status_id"] = get_status_from_id(self_status_id)
-
-    target_status_id = attack["target_status_id"]
-    attack["target_status_id"] = get_status_from_id(target_status_id)
-
-    return attack
-
-
-def get_status_from_id(status_id: str) -> PokemonStats:
-    """Return a status as a dict."""
-    return get_stats_from_id(status_id, flag="status")
-
-
-@socketio.on("message")
-def handle_message(message: Any):
-    send(message)
-
-
-@socketio.on("json")
-def handle_json(json: Any):
-    send(json, json=True)
-
-
-@socketio.on("createPokemon")  # TODO: remove this
-def handle_my_custom_event(json: Any):
-    emit(
-        "createPokemonCard",
-        {
-            "name": "Squirtle",
-            "element": "a bit wet",
-            "description": "best boy 1997",
-            "stats": {"attack": 0},
-        },
-    )
-
-
-@socketio.on("createBattle")
-def handle_createBattle(json: CreateBattleData):
-    """Create a new battle."""
-    # game_id = createGame(json.id)
-    game_id = str(randrange(0, 1000000))
-    pokemon_id = json["pokemon_id"]
-
-    print(f"Creating battle (id: {game_id}) for client id: {request.sid}")
-
-    # pokemon = Pokemon.load(database, pokemon_id)
-    battles[game_id] = Battle(request.sid, pokemon_id)
-    users[request.sid] = request.sid
-
-    emit_joinWaitingRoom(game_id=game_id)
-
-
-@socketio.on("joinBattle")
-def handle_joinBattle(json: JoinBattleData):
-    """Join a new player to a battle."""
-    game_id = json["game_id"]
-    pokemon_id = json["pokemon_id"]
-
-    print(f"Client id: {request.sid} joining battle: {game_id}")
-
-    battle = battles[game_id]
-    battle.add_player(request.sid, pokemon_id)
-
-    emit_joinBattle(
-        self_pokemon=get_pokemon_from_id(battle.p2_id),
-        target_pokemon=get_pokemon_from_id(battle.p1_id),
-        game_id=game_id,
-        sid=battle.u2,
-    )
-
-    emit_joinBattleFromRoom(
-        self_pokemon=get_pokemon_from_id(battle.p1_id),
-        target_pokemon=get_pokemon_from_id(battle.p2_id),
-        game_id=game_id,
-        sid=battle.u1,
-    )
-
-
-@socketio.on("attack")
-def handle_attack(json: AttackData):
-    battles[json["game_id"]].handle_event(BattleEvent.attack, json, request.sid)
 
 
 @app.route("/InitialiseUser/<username>", methods=["POST"])
