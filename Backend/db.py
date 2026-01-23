@@ -1,14 +1,14 @@
 from typing import Union
-from Backend.types import *
+from Backend.sharedTypes import *
 from flask import request as _request, Request
 from pymongo.collection import Collection
 from pymongo import MongoClient
 
-from .types import Pokemon
+from .sharedTypes import Pokemon
 
 from bson.objectid import ObjectId
 
-from Backend.types import *
+from Backend.sharedTypes import *
 
 
 class Request:
@@ -74,9 +74,11 @@ def get_pokemon_ids_from_player(username: str) -> List[str]:
     """Return a list of Pokemon ids for the given user."""
     # print(f"Attempting to load Pokemon ids for user: {username}")
     player = players_collection.find_one({"username": username})
-    pokemon_ids = player["pokemon_ids"]
-
-    return pokemon_ids
+    if player is not None:
+        pokemon_ids = player["pokemon_ids"]
+        return pokemon_ids
+    else:
+        return []
 
 
 def get_pokemon_from_id(pokemon_id: str) -> Pokemon:

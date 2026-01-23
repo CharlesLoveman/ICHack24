@@ -4,7 +4,7 @@ from Backend.socketEmit import (
     emit_joinBattleFromRoom,
     emit_joinWaitingRoom,
 )
-from Backend.types import *
+from Backend.sharedTypes import *
 from random import randrange
 
 from .pokemon import Battle, BattleEvent
@@ -13,7 +13,7 @@ from .db import (
     request,
 )
 
-from Backend.types import *
+from Backend.sharedTypes import *
 
 
 @socketio.on("createBattle")

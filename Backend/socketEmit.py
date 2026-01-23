@@ -2,7 +2,7 @@ from enum import Enum
 
 from flask_socketio import emit
 
-from Backend.types import BattleHP, JoinBattleData, JoinWaitingRoomData, Pokemon
+from Backend.sharedTypes import BattleHP, JoinBattleData, JoinWaitingRoomData, Pokemon
 
 
 class SocketEventsTo(Enum):

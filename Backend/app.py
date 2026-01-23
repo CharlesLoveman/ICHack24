@@ -1,7 +1,7 @@
 """Flask app for the backend."""
 
 from typing import List, Dict
-from Backend.types import *
+from Backend.sharedTypes import *
 from flask import Flask, make_response, jsonify, Response
 from flask_cors import CORS
 
@@ -20,7 +20,7 @@ from flask_socketio import SocketIO
 import json
 import base64
 
-from Backend.types import *
+from Backend.sharedTypes import *
 
 users = {}
 battles: Dict[str, Battle] = {}

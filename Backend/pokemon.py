@@ -10,7 +10,7 @@ from Backend.socketEmit import (
     emit_onWaitOnOtherPlayer,
     emit_win,
 )
-from Backend.types import PokemonStats, Attack, AttackData
+from Backend.sharedTypes import PokemonStats, Attack, AttackData
 from typing import List, Dict
 from .db import pokemon_collection, attacks_collection, attack_stats_collection
 from enum import Enum
