@@ -1,7 +1,10 @@
 import { useEffect } from "react";
-import { socket } from "../socket";
+import { ServerToClientEvents, socket } from "../socket";
 
-export function useSocket<T>(event?: string, handler?: (data: T) => void) {
+export function useSocket<T extends keyof ServerToClientEvents>(
+  event?: keyof ServerToClientEvents | T,
+  handler?: ServerToClientEvents[T]
+) {
   useEffect(() => {
     if (!event || !handler) {
       return;

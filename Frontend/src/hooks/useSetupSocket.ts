@@ -1,4 +1,4 @@
-import { socket } from "../socket";
+import { socket, SocketEventTo } from "../socket";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { BattleHP, JoinBattleData, JoinWaitingRoomData } from "../sharedTypes";
@@ -94,19 +94,6 @@ export function useSetupSocket() {
     setNewTurn(true);
     setBattleData({ ...baseBattleData });
     setBattleResult(BATTLE_RESULT.LOSE);
-  }
-  enum SocketEventTo {
-    connect = "connect",
-    disconnect = "disconnect",
-    // createPokemonCard = "createPokemonCard",
-    joinWaitingRoom = "joinWaitingRoom",
-    joinBattle = "joinBattle",
-    joinBattleFromRoom = "joinBattleFromRoom",
-    makeOtherPlayerWait = "makeOtherPlayerWait",
-    onWaitOnOtherPlayer = "onWaitOnOtherPlayer",
-    onTurnEnd = "onTurnEnd",
-    win = "win",
-    lose = "lose",
   }
 
   useSocket(SocketEventTo.connect, onConnect);

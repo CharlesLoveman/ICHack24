@@ -65,3 +65,9 @@ export interface AttackData {
   attack_id: string;
   game_id: string;
 }
+
+export interface OnTurnEndData {
+  self_hp: number;
+  target_hp: number;
+}
+
