@@ -10,10 +10,10 @@ from .prompt_templates import (
 from .image_processing import generate_image
 from .pokemon import Pokemon, generate_attack, Attack
 
-from vertexai.preview.generative_models import Image
 import re
 from typing import Union, Tuple, List, Dict, Any
 from env import config
+from PIL import Image
 
 
 if config["USE_REAL_MODEL"] == "True":
@@ -49,7 +49,7 @@ def load_image_from_file(file_path: str) -> Image:
     Returns:
         img (Image): The image loaded from the file.
     """
-    return Image.from_bytes(open(file_path, "rb").read())
+    return Image.open(file_path)
 
 
 def create_pokemon(
@@ -78,9 +78,7 @@ def create_pokemon(
         template = GEMINI_PROMPT_TEMPLATE
         cat_names = ["Name", "Pokedex", "Stats"]
 
-    img = load_image_from_file(PATH_TO_PUBLIC + img_path)
-
-    response = new_model.get_gemini_response(template, img, img_path=img_path)
+    response = new_model.get_gemini_response(template, img_path=img_path)
 
     sections = [
         re.search(
