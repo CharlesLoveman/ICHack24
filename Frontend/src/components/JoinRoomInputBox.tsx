@@ -3,7 +3,7 @@ import { socket } from "../socket";
 import Button from "@mui/material/Button";
 import Input from "@mui/material/Input";
 import { GiBattleAxe } from "react-icons/gi";
-import { Pokemon } from "../sharedTypes";
+import { PlayerJoinBattleData, Pokemon } from "../sharedTypes";
 import { SxProps, Theme } from "@mui/material";
 
 export default function JoinRoomInputBox(
@@ -16,7 +16,10 @@ export default function JoinRoomInputBox(
     if (pokemon) {
       const game_id = code;
 
-      socket.emit("joinBattle", { pokemon_id: pokemon.id, game_id: game_id });
+      socket.emit("joinBattle", {
+        pokemon_id: pokemon.id,
+        game_id: game_id,
+      } as PlayerJoinBattleData);
     }
   }
 

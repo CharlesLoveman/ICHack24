@@ -1,13 +1,13 @@
 """"Pokemon game logic."""
 
-from flask_socketio import emit
 import numpy as np
 from bson.objectid import ObjectId
-from PIL import Image
-import io
 import random
-from interfaces import *
-from typing import List, Dict, Any, Optional
+from Backend.socketEmit import emit_lose, emit_makeOtherPlayerWait, emit_onTurnEnd, emit_onWaitOnOtherPlayer, emit_win
+from Backend.types import PokemonStats, Attack, BattleHP, AttackData
+from typing import List, Dict
+from .db import pokemon_collection, attacks_collection, attack_stats_collection
+from enum import Enum
 
 element_options = [
     "Normal",
@@ -53,6 +53,9 @@ element_chart = np.array(
     ]
 )
 
+class BattleEvent(Enum):
+    attack = "attack"
+
 
 class Pokemon:
     """Create a Pokemon, with description, battle statistics and an image id."""
@@ -62,7 +65,7 @@ class Pokemon:
         name: str,
         description: str,
         element: str,
-        stats: Dict[str, int],
+        stats: PokemonStats,
         attacks: List["Attack"],
         image_id: str,
         original_image_id: str,
@@ -200,7 +203,7 @@ class Pokemon:
                     1, target.stats[key] + attack.target_status[key]
                 )
 
-    def save(self, db: Any) -> str:
+    def save(self) -> str:
         """Save a Pokemon object to the database.
 
         Args:
@@ -209,11 +212,11 @@ class Pokemon:
         Returns:
             id (str): the id where the Pokemon is located in the database
         """
-        attack_ids = [attack.save(db) for attack in self.attacks]
-        stats_id = str(db.attack_stats.insert_one(self.stats).inserted_id)
+        attack_ids = [attack.save() for attack in self.attacks]
+        stats_id = str(attack_stats_collection.insert_one(self.stats).inserted_id)
 
         return str(
-            db.pokemon.insert_one(
+            pokemon_collection.insert_one(
                 {
                     "name": self.name,
                     "description": self.description,
@@ -227,28 +230,27 @@ class Pokemon:
         )
 
     @classmethod
-    def load(cls, db: Any, id: str) -> "Pokemon":
+    def load(cls, id: str) -> "Pokemon":
         """Load a Pokemon object from the database.
 
         Args:
-            db (atabase): MongoDB database
             id (str): the Pokemon id to load
 
         Returns:
             pokemon (Pokemon): the resulting Pokemon object
         """
-        pokemon = db.pokemon.find_one({"_id": ObjectId(id)})
+        pokemon = pokemon_collection.find_one({"_id": ObjectId(id)})
         if pokemon is None:
             raise KeyError(f"No Pokemon with the id {repr(id)} was found.")
 
         stats_id = pokemon["stats_id"]
-        stats = db.attack_stats.find_one({"_id": ObjectId(stats_id)})
+        stats = attack_stats_collection.find_one({"_id": ObjectId(stats_id)})
         if stats is None:
             raise KeyError(f"No Stats object with the id {repr(stats_id)} was found.")
 
         stats.pop("_id")
 
-        attacks = [Attack.load(db, attack_id) for attack_id in pokemon["attack_ids"]]
+        attacks = [Attack.load(attack_id) for attack_id in pokemon["attack_ids"]]
 
         image_id = pokemon["image_id"]
         original_image_id = pokemon["original_image_id"]
@@ -353,7 +355,7 @@ class Attack:
         """Return a string representation of the Attack."""
         return f"Attack({repr(self.name)}, {repr(self.element)}, {repr(self.power)}, {repr(self.special)}, {repr(self.self_status)}, {repr(self.target_status)})"
 
-    def save(self, db: Any) -> str:
+    def save(self) -> str:
         """Save an Attack object to the database.
 
         Args:
@@ -363,13 +365,13 @@ class Attack:
             id (str): the id where the Attack is located in the database
         """
 
-        stats_object_ids = db.attack_stats.insert_many(
+        stats_object_ids = attack_stats_collection.insert_many(
             [self.self_status, self.target_status]
         ).inserted_ids
         stats_ids = [str(object_id) for object_id in stats_object_ids]
 
         return str(
-            db.attacks.insert_one(
+            attacks_collection.insert_one(
                 {
                     "name": self.name,
                     "element": self.element,
@@ -382,28 +384,28 @@ class Attack:
         )
 
     @classmethod
-    def load(cls, db: Any, id: str) -> "Attack":
+    def load(cls, id: str) -> "Attack":
         """Load an Attack object from the database.
 
         Args:
-            db (atabase): MongoDB database
+            db (database): MongoDB database
             id (str): the Attack id to load
 
         Returns:
             attack (Attack): the resulting Attack object
         """
-        attack = db.attacks.find_one({"_id": ObjectId(id)})
+        attack = attacks_collection.find_one({"_id": ObjectId(id)})
         if attack is None:
             raise KeyError(f"No Attack object with the id {repr(id)} was found.")
 
-        self_status = db.attack_stats.find_one(
+        self_status = attack_stats_collection.find_one(
             {"_id": ObjectId(attack["self_status_id"])}
         )
         if self_status is None:
             raise KeyError(f"No Stats object with the id {repr(attack["self_status_id"])} was found.")
         self_status.pop("_id")
 
-        target_status = db.attack_stats.find_one(
+        target_status = attack_stats_collection.find_one(
             {"_id": ObjectId(attack["target_status_id"])}
         )
         if target_status is None:
@@ -515,10 +517,16 @@ def generate_attack(name: str, element: str, category: str) -> Attack:
     return Attack(name, element, power, special, self_status, target_status)
 
 
+
 class Battle:
     """Create a battle between two Pokemon."""
+    attack1: Attack
+    attack2: Attack
+    p1: Pokemon
+    p2: Pokemon
 
-    def __init__(self, u1: str, p1_id: str, db: Any):
+
+    def __init__(self, u1: str, p1_id: str):
         """Create a battle between two Pokemon.
 
         Args:
@@ -531,9 +539,8 @@ class Battle:
         """
         self.u1 = u1
         self.p1_id = p1_id
-        self.db = db
 
-        self.p1 = Pokemon.load(self.db, self.p1_id)
+        self.p1 = Pokemon.load(self.p1_id)
         self.p1.stats["max_hp"] = self.p1.stats["hp"]
         self.state = WaitingForAttacks()
 
@@ -546,51 +553,64 @@ class Battle:
         """
         self.u2 = u2
         self.p2_id = p2_id
-        self.p2 = Pokemon.load(self.db, self.p2_id)
+        self.p2 = Pokemon.load(self.p2_id)
         self.p2.stats["max_hp"] = self.p2.stats["hp"]
 
-    def handle_event(self, event: str, json: Dict[str, Any], socket_id: str, db: Any):
-        return self.state.handle_event(self, event, json, socket_id, db)
+    def handle_event(self, event: BattleEvent, json: AttackData, socket_id: str):
+        return self.state.handle_event(self, event, json, socket_id)
 
     def execute(self):
         if self.p1.stats["speed"] <= self.p2.stats["speed"]:
             self.p1.attack(self.attack1, self.p2)
-            if self.p2.stats["hp"] <= 0:
-                emit("win", {}, to=self.u1)
-                emit("lose", {}, to=self.u2)
-            elif self.p1.stats["hp"] <= 0:
-                emit("lose", {}, to=self.u1)
-                emit("win", {}, to=self.u2)
+            self.check_hps()
             self.p2.attack(self.attack2, self.p1)
-            if self.p1.stats["hp"] <= 0:
-                emit("lose", {}, to=self.u1)
-                emit("win", {}, to=self.u2)
-            elif self.p2.stats["hp"] <= 0:
-                emit("win", {}, to=self.u1)
-                emit("lose", {}, to=self.u2)
+            self.check_hps()
         else:
             self.p2.attack(self.attack2, self.p1)
-            if self.p1.stats["hp"] <= 0:
-                emit("lose", {}, to=self.u1)
-                emit("win", {}, to=self.u2)
-            elif self.p2.stats["hp"] <= 0:
-                emit("win", {}, to=self.u1)
-                emit("lose", {}, to=self.u2)
+            self.check_hps()
             self.p1.attack(self.attack1, self.p2)
-            if self.p2.stats["hp"] <= 0:
-                emit("win", {}, to=self.u1)
-                emit("lose", {}, to=self.u2)
-            elif self.p1.stats["hp"] <= 0:
-                emit("lose", {}, to=self.u1)
-                emit("win", {}, to=self.u2)
+            self.check_hps()
         print("Battle finished executing.")
+
+    def check_hps(self):
+        if self.p1.stats["hp"] <= 0:
+            self.broadcast_wins(2)
+        elif self.p2.stats["hp"] <= 0:
+            self.broadcast_wins(1)
+
+    def broadcast_wins(self,winner: int):
+        if winner == 1:
+            emit_win(self.u1)
+            emit_lose(self.u2)
+        else:
+            emit_win(self.u2)
+            emit_lose(self.u1)
+
+
 
 
 class BattleState:
     def handle_event(
-        self, battle: Battle, event: str, json: Dict[str, Any], socket_id: str, db: Any
+        self, battle: Battle, event: str, json: AttackData, socket_id: str
     ):
         pass
+
+    def player_has_chosen(self, battle: Battle, number: int):
+        if (number == 1):
+            chosen_user = battle.u1
+            not_yet_chosen_user = battle.u2
+        elif (number == 2):
+            chosen_user = battle.u2
+            not_yet_chosen_user = battle.u1
+
+        emit_makeOtherPlayerWait(chosen_user)
+        emit_onWaitOnOtherPlayer(not_yet_chosen_user)
+
+    def broadcast_health(self, battle: Battle):
+        data1: BattleHP = {"self_hp": battle.p1.stats["hp"], "target_hp": battle.p2.stats["hp"]}
+        data2: BattleHP = {"target_hp": battle.p1.stats["hp"], "self_hp": battle.p2.stats["hp"]}
+        emit_onTurnEnd(data1, battle.u1)
+        emit_onTurnEnd(data2, battle.u2)
 
 
 class WaitingForAttacks(BattleState):
@@ -598,39 +618,35 @@ class WaitingForAttacks(BattleState):
         super()
 
     def handle_event(
-        self, battle: Battle, event: str, json: Dict[str, Any], socket_id: str, db: Any
+        self, battle: Battle, event: str, json: AttackData, socket_id: str
     ):
-        if event == "attack":
+        if event == BattleEvent.attack:
             if socket_id == battle.u1:
-                battle.attack1 = Attack.load(db, json["attack_id"])
+                battle.attack1 = Attack.load(json["attack_id"])
                 battle.state = WaitingForPlayer2Attack()
                 print("Waiting for player 2.")
                 print(battle.attack1)
-                emit("makeOtherPlayerWait", {}, to=battle.u2)
-                emit("onWaitOnOtherPlayer", {}, to=battle.u1)
+                self.player_has_chosen(battle, 1)
             elif socket_id == battle.u2:
-                battle.attack2 = Attack.load(db, json["attack_id"])
+                battle.attack2 = Attack.load(json["attack_id"])
                 print(battle.attack2)
                 battle.state = WaitingForPlayer1Attack()
                 print("Waiting for player 1.")
-                emit("makeOtherPlayerWait", {}, to=battle.u1)
-                emit("onWaitOnOtherPlayer", {}, to=battle.u2)
-
+                self.player_has_chosen(battle, 2)
 
 class WaitingForPlayer1Attack(BattleState):
     def __init__(self):
         super()
 
     def handle_event(
-        self, battle: Battle, event: str, json: Dict[str, Any], socket_id: str, db: Any
+        self, battle: Battle, event: str, json: AttackData, socket_id: str
     ):
         if event == "attack":
             if socket_id == battle.u1:
-                battle.attack1 = Attack.load(db, json["attack_id"])
+                battle.attack1 = Attack.load(json["attack_id"])
                 print(battle.attack1)
                 battle.execute()
-                emit("onTurnEnd", {"self_hp": battle.p1.stats["hp"], "target_hp": battle.p2.stats["hp"]}, to=battle.u1)
-                emit("onTurnEnd", {"target_hp": battle.p1.stats["hp"], "self_hp": battle.p2.stats["hp"]}, to=battle.u2)
+                self.broadcast_health(battle)
                 battle.state = WaitingForAttacks()
 
 
@@ -639,13 +655,12 @@ class WaitingForPlayer2Attack(BattleState):
         super()
 
     def handle_event(
-        self, battle: Battle, event: str, json: Dict[str, Any], socket_id: str, db: Any
+        self, battle: Battle, event: str, json: AttackData, socket_id: str
     ):
         if event == "attack":
             if socket_id == battle.u2:
-                battle.attack2 = Attack.load(db, json["attack_id"])
+                battle.attack2 = Attack.load(json["attack_id"])
                 print(battle.attack2)
                 battle.execute()
-                emit("onTurnEnd", {"self_hp": battle.p1.stats["hp"], "target_hp": battle.p2.stats["hp"]}, to=battle.u1)
-                emit("onTurnEnd", {"target_hp": battle.p1.stats["hp"], "self_hp": battle.p2.stats["hp"]}, to=battle.u2)
+                self.broadcast_health(battle)
                 battle.state = WaitingForAttacks()

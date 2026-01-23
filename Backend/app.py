@@ -1,71 +1,31 @@
 """Flask app for the backend."""
 
 from typing import List, Dict, Any, Union
-from interfaces import *
-from flask import Flask, make_response, request, jsonify, Response
+from Backend.socketEmit import (
+    emit_joinBattle,
+    emit_joinBattleFromRoom,
+    emit_joinWaitingRoom,
+)
+from Backend.types import *
+from flask import Flask, make_response, jsonify, Response
 from flask_cors import CORS
 from flask_socketio import SocketIO, send, emit
 from random import randrange
-from pymongo.collection import Collection
 from env import config
 
 from .pokemon import Battle, Pokemon
 from .api import GeminiError, build_pokemon, PATH_TO_PUBLIC
-from pymongo import MongoClient
+from .db import pokemon_collection, players_collection, attacks_collection, attack_stats_collection
 
-import os
 from bson.objectid import ObjectId
 import json
 import base64
 
-
+from Backend.types import *
+from .db import request
 
 
 ERRORMON_ID = None  # Run create_errormon.py and set this!
-
-class DBPlayer(TypedDict):
-    pokemon_ids: List[str]
-    username: str
-
-class DBPokemon(TypedDict):
-    name: str
-    description: str
-    element: str
-    stats_id: str
-    attack_ids: List[str]
-    image_id: str
-    original_image_id: str
-
-class DBAttack(TypedDict):
-    name: str
-    element: str
-    power: int
-    special: bool
-    self_status_id: str
-    target_status_id: str
-
-class DBStats(TypedDict):
-    hp: int
-    attack: int
-    defence: int
-    special_attack: int
-    special_defence: int
-    speed: int
-
-
-
-
-
-ip = "127.0.0.1"
-# Change this back
-mongodb_client = MongoClient(ip, 27017)
-database = mongodb_client.db
-users = {}
-
-players_collection: Collection[DBPlayer] = database.players
-pokemon_collection: Collection[DBPokemon] = database.pokemon
-attacks_collection: Collection[DBAttack] = database.attacks
-attack_stats_collection: Collection[DBStats] = database.attack_stats
 
 py_cors_or = "*"
 sock_cors_or = "*"
@@ -74,12 +34,14 @@ sock_cors_or = "*"
 # py_cors_or = f"{ip}"
 # sock_cors_or = py_cors_or
 
+users = {}
+
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": py_cors_or}})
 app.config["SECRET_KEY"] = config["APP_SECRET"]
 socketio = SocketIO(app, cors_credentials=True, cors_allowed_origins=py_cors_or)
 
-battles = {}
+battles: Dict[str, Battle] = {}
 
 if __name__ == "__main__":
     socketio.run(app, port=5000, host="0.0.0.0")
@@ -192,10 +154,11 @@ def handle_createBattle(json: CreateBattleData):
     print(f"Creating battle (id: {game_id}) for client id: {request.sid}")
 
     # pokemon = Pokemon.load(database, pokemon_id)
-    battles[game_id] = Battle(request.sid, pokemon_id, database)
+    battles[game_id] = Battle(request.sid, pokemon_id)
     users[request.sid] = request.sid
 
-    emit("joinWaitingRoom", {"game_id": game_id})
+    data: JoinWaitingRoomData = {"game_id": game_id}
+    emit_joinWaitingRoom(data)
 
 
 @socketio.on("joinBattle")
@@ -209,29 +172,29 @@ def handle_joinBattle(json: JoinBattleData):
     battle = battles[game_id]
     battle.add_player(request.sid, pokemon_id)
 
-    emit(
-        "joinBattle",
+    joinBattleData: JoinBattleData = (
         {
             "self_pokemon": get_pokemon_from_id(battle.p2_id),
             "target_pokemon": get_pokemon_from_id(battle.p1_id),
             "game_id": game_id,
         },
-        to=request.sid,
     )
-    emit(
-        "joinBattleFromRoom",
+
+    emit_joinBattle(joinBattleData, request.sid)
+
+    joinBattleFromRoomData: JoinBattleData = (
         {
             "self_pokemon": get_pokemon_from_id(battle.p1_id),
             "target_pokemon": get_pokemon_from_id(battle.p2_id),
             "game_id": game_id,
         },
-        to=battle.u1,
     )
 
+    emit_joinBattleFromRoom(joinBattleFromRoomData, request.sid)
 
 @socketio.on("attack")
-def handle_attack(json: Dict[str, Any]):
-    battles[json["game_id"]].handle_event("attack", json, request.sid, database)
+def handle_attack(json: AttackData):
+    battles[json["game_id"]].handle_event("attack", json, request.sid)
 
 
 @app.route("/InitialiseUser/<username>", methods=["POST"])
@@ -296,7 +259,7 @@ def CreatePokemon(username: str) -> Response:
     for i in range(3):
         try:
             pokemon = build_pokemon(img_path)
-            pokemon_id = pokemon.save(database)
+            pokemon_id = pokemon.save()
             print(f"Pokemon created successfully. id: {pokemon_id}")
             break
         except GeminiError:
@@ -310,7 +273,7 @@ def CreatePokemon(username: str) -> Response:
             print(
                 f"Failed to create Pokemon for: {username}. Returning Errormon instead."
             )
-            pokemon = Pokemon.load(database, ERRORMON_ID)
+            pokemon = Pokemon.load(ERRORMON_ID)
         except:
             print(f"Failed to load Erromon for: {username}. No Errormon found.")
             raise CreationError("Failed to create Pokemon.")

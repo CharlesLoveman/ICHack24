@@ -24,7 +24,7 @@ export interface CreateBattleData {
   pokemon_id: string;
 }
 
-export interface JoinBattleData {
+export interface PlayerJoinBattleData {
   pokemon_id: string;
   game_id: string;
 }
@@ -58,5 +58,10 @@ export interface JoinWaitingRoomData {
 export interface JoinBattleData {
   self_pokemon: Pokemon;
   target_pokemon: Pokemon;
+  game_id: string;
+}
+
+export interface AttackData {
+  attack_id: string;
   game_id: string;
 }
