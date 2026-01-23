@@ -20,6 +20,9 @@ importers:
       axios:
         specifier: ^1.6.7
         version: 1.13.2
+      random-words:
+        specifier: ^2.0.1
+        version: 2.0.1
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -5148,6 +5151,9 @@ packages:
   raf@3.4.1:
     resolution: {integrity: sha512-Sq4CW4QhwOHE8ucn6J34MqtZCeWFP2aQSmrlroYgqAV1PjStIhJXxYuTgUIfkEk7zTLjmIjLmU5q+fbD1NnOJA==}
 
+  random-words@2.0.1:
+    resolution: {integrity: sha512-nZNJAmgcFmtJMTDDIUCm/iK4R6RydC6NvALvWhYItXQrgYGk1F7Gww416LpVROFQtfVd5TaLEf4WuSsko03N7w==}
+
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
 
@@ -5455,6 +5461,9 @@ packages:
   schema-utils@4.3.3:
     resolution: {integrity: sha512-eflK8wEtyOE6+hsaRVPxvUKYCpRgzLqDTb8krvAsRIwOGlHoSgYLgBXoubGgLd2fT41/OUYdb48v4k4WWHQurA==}
     engines: {node: '>= 10.13.0'}
+
+  seedrandom@3.0.5:
+    resolution: {integrity: sha512-8OwmbklUNzwezjGInmZ+2clQmExQPvomqjL7LFqOYqtmuxRgQYqOD3mHaU+MvZn5FLUeVxVfQjwLZW/n/JFuqg==}
 
   select-hose@2.0.0:
     resolution: {integrity: sha512-mEugaLK+YfkijB4fx0e6kImuJdCIt2LxCRcbEYPqRGCs4F2ogyfZU5IAZRdjCP8JPq2AtdNoC/Dux63d9Kiryg==}
@@ -12285,6 +12294,10 @@ snapshots:
     dependencies:
       performance-now: 2.1.0
 
+  random-words@2.0.1:
+    dependencies:
+      seedrandom: 3.0.5
+
   randombytes@2.1.0:
     dependencies:
       safe-buffer: 5.2.1
@@ -12729,6 +12742,8 @@ snapshots:
       ajv: 8.17.1
       ajv-formats: 2.1.1(ajv@8.17.1)
       ajv-keywords: 5.1.0(ajv@8.17.1)
+
+  seedrandom@3.0.5: {}
 
   select-hose@2.0.0: {}
 

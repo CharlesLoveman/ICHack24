@@ -4,7 +4,6 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import JoinRoomInputBox from "../JoinRoomInputBox";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { GiBattleGear } from "react-icons/gi";
 import { MdCatchingPokemon } from "react-icons/md";
 import "./styles.css";
@@ -17,31 +16,18 @@ import { TbPokeball } from "react-icons/tb";
 import { GiPokecog } from "react-icons/gi";
 import "./MainScreen.css";
 import { CreateBattleData, Pokemon } from "../../sharedTypes";
-import { backendAddress } from "../../env";
 import { POKEMON_HAS_RETURNED } from "../../types";
 import { useGlobalData } from "../../hooks/useGlobalData";
 
 export default function MainScreen() {
   const {
     username,
-    setUsername,
     pokemon,
-    setPokemon,
     pokemonReturned,
     noNewPokemon,
   } = useGlobalData();
 
   const [display, setDisplay] = useState("notReady");
-
-  function initialiseUser(username: string) {
-    axios.post(`${backendAddress}/InitialiseUser/${username}`);
-  }
-
-  function updateAndInitialiseUser(new_username: string) {
-    setUsername(new_username);
-    setPokemon(null);
-    initialiseUser(new_username);
-  }
 
   useEffect(() => {
     if (pokemon) {
@@ -115,7 +101,7 @@ export default function MainScreen() {
           </div>
 
           <div style={{ textAlign: "center" }}>
-            {LoginInputBox(updateAndInitialiseUser, sx)}
+            {<LoginInputBox sx={sx}/>}
           </div>
           <br />
           <div style={{ textAlign: "center" }}>
