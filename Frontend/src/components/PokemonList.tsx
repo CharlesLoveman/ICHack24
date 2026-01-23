@@ -1,13 +1,11 @@
 import PokemonCard from "./PokemonCard";
 import { useState, useEffect } from "react";
 import { Button } from "@mui/material";
-import { useContext } from "react";
-import { GlobalData } from "../App";
 import { Pokemon } from "../sharedTypes";
-import { GlobalContextType } from "../types";
+import { useGlobalData } from "../hooks/useGlobalData";
 
 export default function PokemonList(pokemons: Pokemon[]) {
-  const data = useContext(GlobalData) as GlobalContextType;
+  const data = useGlobalData();
   const [newPokemonMarkers, setter] = useState<boolean[]>(
     new Array(Object.keys(pokemons).length)
   );

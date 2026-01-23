@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { socket } from "./socket";
+import { socket } from "../socket";
 
 export function useSocket<T>(event?: string, handler?: (data: T) => void) {
   useEffect(() => {

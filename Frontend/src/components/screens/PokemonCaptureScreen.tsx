@@ -1,4 +1,4 @@
-import React, { useState, useContext, ChangeEvent } from "react";
+import { useState, ChangeEvent } from "react";
 import axios from "axios";
 
 import NavBar from "../NavBar";
@@ -10,12 +10,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import { GiForest, GiSpikyExplosion } from "react-icons/gi";
 import { FaDog } from "react-icons/fa";
 import { FaBottleWater } from "react-icons/fa6";
-import { GlobalData } from "../../App";
-import { GlobalContextType, POKEMON_HAS_RETURNED } from "../../types";
+import { POKEMON_HAS_RETURNED } from "../../types";
 import { backendAddress } from "../../env";
+import { useGlobalData } from "../../hooks/useGlobalData";
 
 export default function PokemonCaptureScreen() {
-  const data = useContext(GlobalData) as GlobalContextType;
+  const data = useGlobalData();
   const [state, setState] = useState<{ selectedFile: File } | null>(null);
   const [url, setURL] = useState<string | undefined>(undefined);
   const [hidden, setHidden] = useState("");

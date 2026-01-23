@@ -1,14 +1,12 @@
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { GlobalData } from "../App";
-import { useContext } from "react";
 import { TbPokeball } from "react-icons/tb";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import { Pokemon, PokemonStats } from "../sharedTypes";
-import { GlobalContextType } from "../types";
 import { publicFolder } from "../env";
+import { useGlobalData } from "../hooks/useGlobalData";
 
 function StatDisplay(stats: PokemonStats) {
   return (
@@ -24,7 +22,7 @@ function StatDisplay(stats: PokemonStats) {
 }
 
 export default function PokemonCard(pokemon: Pokemon, isNew: boolean) {
-  const data = useContext(GlobalData) as GlobalContextType;
+  const data = useGlobalData();
   const setPokemon = data.setPokemon;
   const setViewPokemon = data.setViewPokemon;
 

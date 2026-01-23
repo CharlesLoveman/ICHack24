@@ -1,14 +1,12 @@
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { GlobalData } from "../../App";
-import { useContext } from "react";
 import { TbPokeball } from "react-icons/tb";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
-import { GlobalContextType } from "../../types";
 import NavBar from "../NavBar";
 import { Pokemon, PokemonStats, Attack } from "../../sharedTypes";
+import { useGlobalData } from "../../hooks/useGlobalData";
 
 function StatDisplay(stats: PokemonStats | undefined) {
   if (stats) {
@@ -46,9 +44,7 @@ function MoveDisplay(attack: Attack) {
 }
 
 export default function PokemonFullCardScreen() {
-  const { setPokemon, viewPokemon, setViewPokemon } = useContext(
-    GlobalData
-  ) as GlobalContextType;
+  const { setPokemon, viewPokemon, setViewPokemon } = useGlobalData();
   const [cardPokemon, setCardPokemon] = useState<Pokemon | undefined>(
     undefined
   );

@@ -29,7 +29,7 @@ export default function MainScreen() {
     setPokemon,
     pokemonReturned,
     noNewPokemon,
-  } = useContext(GlobalData) as GlobalContextType;
+  } = useGlobalData();
 
   const [display, setDisplay] = useState("notReady");
 

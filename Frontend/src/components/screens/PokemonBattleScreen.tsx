@@ -1,15 +1,15 @@
-import React, { useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import PokemonBattleDisplay from "../PokemonBattleDisplay";
 import PokemonAttacksDisplay from "../PokemonAttacksDisplay";
 import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { socket } from "../../socket";
-import { GlobalData } from "../../App";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import { Pokemon, Attack } from "../../sharedTypes";
-import { BATTLE_RESULT, GlobalContextType } from "../../types";
+import { BATTLE_RESULT } from "../../types";
+import { useGlobalData } from "../../hooks/useGlobalData";
 
 interface BattleLocationState {
   self_pokemon: Pokemon;
@@ -19,7 +19,7 @@ interface BattleLocationState {
 
 export default function PokemonBattleScreen() {
   const { battleData, newTurn, setNewTurn, battleResult, battleHP } =
-    useContext(GlobalData) as GlobalContextType;
+    useGlobalData();
   const { state } = useLocation() as { state: BattleLocationState };
   const params = useParams();
   const [chosenAttack, setChosenAttack] = useState("");
