@@ -8,20 +8,25 @@ import { Pokemon, PokemonStats } from "../sharedTypes";
 import { publicFolder } from "../env";
 import { useGlobalData } from "../hooks/useGlobalData";
 
-function StatDisplay(stats: PokemonStats) {
+function StatDisplay({ stats }: { stats: PokemonStats }) {
   return (
     <>
-      <div>HP: {stats.hp}</div>
-      <div>Attack: {stats.attack}</div>
-      <div>Sp. Attack: {stats.special_attack}</div>
-      <div>Defence: {stats.defence}</div>
-      <div>Sp. Defence: {stats.special_defence}</div>
-      <div>Speed: {stats.speed}</div>
+      HP: {stats.hp} <br />
+      Attack: {stats.attack} <br />
+      Sp. Attack: {stats.special_attack} <br />
+      Defence: {stats.defence} <br />
+      Sp. Defence: {stats.special_defence} <br />
+      Speed: {stats.speed} <br />
     </>
   );
 }
 
-export default function PokemonCard(pokemon: Pokemon, isNew: boolean) {
+interface PokemonCardProps {
+  pokemon: Pokemon;
+  isNew: boolean;
+}
+
+export default function PokemonCard({ pokemon, isNew }: PokemonCardProps) {
   const data = useGlobalData();
   const setPokemon = data.setPokemon;
   const setViewPokemon = data.setViewPokemon;
@@ -48,7 +53,9 @@ export default function PokemonCard(pokemon: Pokemon, isNew: boolean) {
         <Typography variant="body2">
           Description: {pokemon.description}
         </Typography>
-        <Typography variant="body2">{StatDisplay(pokemon.stats)}</Typography>
+        <Typography variant="body2">
+          <StatDisplay stats={pokemon.stats} />
+        </Typography>
         <Button onClick={() => setPokemon(pokemon)}>
           {" "}
           <TbPokeball /> Select{" "}

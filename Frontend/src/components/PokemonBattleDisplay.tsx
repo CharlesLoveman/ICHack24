@@ -3,12 +3,19 @@ import { Paper } from "@mui/material";
 import { Pokemon } from "../sharedTypes";
 import { publicFolder } from "../env";
 
-export default function PokemonBattleDisplay(
-  self_pokemon: Pokemon,
-  target_pokemon: Pokemon,
-  hp1: number,
-  hp2: number
-) {
+interface PokemonBattleDisplayProps {
+  self_pokemon: Pokemon;
+  target_pokemon: Pokemon;
+  self_hp: number;
+  target_hp: number;
+}
+
+export default function PokemonBattleDisplay({
+  self_pokemon,
+  target_pokemon,
+  self_hp: hp1,
+  target_hp: hp2,
+}: PokemonBattleDisplayProps) {
   const p1x = "300px";
   const p1y = "300px";
   const p2x = "650px";

@@ -73,15 +73,20 @@ export default function PokemonBattleScreen() {
 
   return (
     <>
-      {"self_hp" in (battleHP ?? {}) &&
-        PokemonBattleDisplay(
-          state.self_pokemon,
-          state.target_pokemon,
-          battleHP?.self_hp ?? 0,
-          battleHP?.target_hp ?? 0
-        )}
-      {battleResult === undefined &&
-        PokemonAttacksDisplay(state.self_pokemon, onAttack)}
+      {"self_hp" in (battleHP ?? {}) && (
+        <PokemonBattleDisplay
+          self_pokemon={state.self_pokemon}
+          target_pokemon={state.target_pokemon}
+          self_hp={battleHP?.self_hp ?? 0}
+          target_hp={battleHP?.target_hp ?? 0}
+        />
+      )}
+      {battleResult === undefined && (
+        <PokemonAttacksDisplay
+          pokemon={state.self_pokemon}
+          onAttack={onAttack}
+        />
+      )}
       {battleData?.otherPlayerWaiting && (
         <Typography>
           The other player is now waiting for you to make a move.

@@ -9,8 +9,8 @@ export default function PokemonListScreen() {
 
   return (
     <>
-      {NavBar()}
-      {PokemonList(loaderData)}
+      {<NavBar />}
+      {<PokemonList pokemons={loaderData}></PokemonList>}
     </>
   );
 }

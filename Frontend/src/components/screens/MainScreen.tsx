@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
@@ -13,13 +13,13 @@ import { socket } from "../../socket";
 
 import { useLayoutEffect } from "react";
 import LoginInputBox from "../LoginInputBox";
-import { GlobalData } from "../../App";
 import { TbPokeball } from "react-icons/tb";
 import { GiPokecog } from "react-icons/gi";
 import "./MainScreen.css";
 import { CreateBattleData, Pokemon } from "../../sharedTypes";
 import { backendAddress } from "../../env";
-import { POKEMON_HAS_RETURNED, GlobalContextType } from "../../types";
+import { POKEMON_HAS_RETURNED } from "../../types";
+import { useGlobalData } from "../../hooks/useGlobalData";
 
 export default function MainScreen() {
   const {

@@ -4,7 +4,7 @@ import { Button } from "@mui/material";
 import { Pokemon } from "../sharedTypes";
 import { useGlobalData } from "../hooks/useGlobalData";
 
-export default function PokemonList(pokemons: Pokemon[]) {
+export default function PokemonList({ pokemons }: { pokemons: Pokemon[] }) {
   const data = useGlobalData();
   const [newPokemonMarkers, setter] = useState<boolean[]>(
     new Array(Object.keys(pokemons).length)
@@ -47,9 +47,9 @@ export default function PokemonList(pokemons: Pokemon[]) {
       (pokemon: Pokemon, i: number) =>
         [pokemon, sliced_markers[i]] as [Pokemon, boolean]
     );
-    return zipped.map((pokemon_pair: [Pokemon, boolean]) =>
-      PokemonCard(...pokemon_pair)
-    );
+    return zipped.map(([pokemon, isNew]: [Pokemon, boolean], index) => (
+      <PokemonCard pokemon={pokemon} isNew={isNew} key={index} />
+    ));
   }
 
   return (

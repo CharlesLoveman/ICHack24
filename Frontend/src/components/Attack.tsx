@@ -1,10 +1,12 @@
 import Button from "@mui/material/Button";
 import { Attack as IAttack } from "../sharedTypes";
 
-export default function Attack(
-  attack: IAttack,
-  onAttack: (attack: IAttack) => void
-) {
+interface AttackProps {
+  attack: IAttack;
+  onAttack: (attack: IAttack) => void;
+}
+
+export default function Attack({ attack, onAttack }: AttackProps) {
   return (
     <div>
       <div>{attack.name}</div>
@@ -13,11 +15,13 @@ export default function Attack(
       <div>{"Power: " + attack.power}</div>
       <div>
         {" "}
-        {Object.keys(attack.self_status_id ?? {}).map((key, value) => (
-          <div>
-            {key} : {value}
-          </div>
-        ))}
+        {Object.entries(attack.self_status_id ?? {}).map(
+          ([key, value], index) => (
+            <div key={index}>
+              {key} : {value}
+            </div>
+          )
+        )}
       </div>
       <Button onClick={() => onAttack(attack)}>Attack!</Button>
     </div>
