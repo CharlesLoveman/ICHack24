@@ -5,13 +5,12 @@ import { Pokemon } from "../sharedTypes";
 import { useGlobalData } from "../hooks/useGlobalData";
 
 export default function PokemonList({ pokemons }: { pokemons: Pokemon[] }) {
-  const data = useGlobalData();
+  const { noNewPokemon, setNoNewPokemon } = useGlobalData();
   const [newPokemonMarkers, setter] = useState<boolean[]>(
     new Array(Object.keys(pokemons).length)
   );
 
   useEffect(() => {
-    const noNewPokemon = data.noNewPokemon.valueOf();
     setter(constructPokemonMarkers(noNewPokemon, newPokemonMarkers));
     console.log(noNewPokemon);
     console.log(newPokemonMarkers);
@@ -28,7 +27,7 @@ export default function PokemonList({ pokemons }: { pokemons: Pokemon[] }) {
     return newPokemonMarkers;
   }
 
-  data.setNoNewPokemon(0);
+  setNoNewPokemon(0);
 
   const [startIndex, setStartIndex] = useState(0);
 

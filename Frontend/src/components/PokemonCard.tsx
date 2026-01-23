@@ -30,8 +30,9 @@ export default function PokemonCard({ pokemon, isNew }: PokemonCardProps) {
   const data = useGlobalData();
   const setPokemon = data.setPokemon;
   const setViewPokemon = data.setViewPokemon;
+  const isSelected = pokemon?.id === data.pokemon?.id;
 
-  const backgroundColor = isNew ? "khaki" : "white";
+  const backgroundColor = isSelected ? "lightblue" : isNew ? "khaki" : "white";
 
   return (
     <Card
