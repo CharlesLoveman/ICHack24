@@ -73,15 +73,21 @@ export function useSetupSocket() {
   }
 
   function onTurnEnd(data: BattleHP) {
-    const battleData = { ...baseBattleData };
-    setBattleHP({
-      self_hp: data.self_hp,
-      target_hp: data.target_hp,
-    });
-    console.log(battleData);
-    console.log(baseBattleData);
-    setNewTurn(true);
-    setBattleData({ ...battleData });
+    const doTurnEndTransition = () => {
+      const battleData = { ...baseBattleData };
+      setBattleHP({
+        self_hp: data.self_hp,
+        target_hp: data.target_hp,
+      });
+      console.log(battleData);
+      console.log(baseBattleData);
+      setNewTurn(true);
+      setBattleData({ ...battleData });
+    };
+
+    setTimeout(() => {
+      doTurnEndTransition();
+    }, 1000);
   }
 
   function win() {

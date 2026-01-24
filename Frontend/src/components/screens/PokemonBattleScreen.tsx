@@ -51,11 +51,11 @@ export default function PokemonBattleScreen() {
             ? "You have won through sheer skill!"
             : "Your pokemon has fainted and you have lost..."}
         </Typography>
-        <Button fullWidth={true} variant="contained" size="large">
-          <Link style={{ textDecoration: "none" }} to={`../MainScreen`}>
+        <Link style={{ textDecoration: "none" }} to={`../MainScreen`}>
+          <Button fullWidth={true} variant="contained" size="large">
             Back to the Main Screen
-          </Link>
-        </Button>
+          </Button>{" "}
+        </Link>
       </>
     ) : (
       <></>
