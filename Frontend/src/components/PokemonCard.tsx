@@ -5,7 +5,7 @@ import { TbPokeball } from "react-icons/tb";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import { Pokemon, PokemonStats } from "../sharedTypes";
-import { publicFolder } from "../env";
+import { assetsFolder } from "../env";
 import { useGlobalData } from "../hooks/useGlobalData";
 
 function StatDisplay({ stats }: { stats: PokemonStats }) {
@@ -43,7 +43,7 @@ export default function PokemonCard({ pokemon, isNew }: PokemonCardProps) {
     >
       <CardContent>
         <Typography variant="h5" component="div">
-          <img src={publicFolder + "/" + pokemon.image_id} width="100"></img>
+          <img src={assetsFolder + "/" + pokemon.image_id} width="100"></img>
         </Typography>
         <Typography variant="h5" component="div">
           Name: {pokemon.name} {isNew}

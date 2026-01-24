@@ -1,7 +1,7 @@
 import PokemonDisplay from "./PokemonDisplay";
 import { Paper } from "@mui/material";
 import { Pokemon } from "../sharedTypes";
-import { publicFolder } from "../env";
+import { assetsFolder } from "../env";
 
 interface PokemonBattleDisplayProps {
   self_pokemon: Pokemon;
@@ -43,7 +43,7 @@ export default function PokemonBattleDisplay({
     <>
       <div>The whole battle!</div>
       <img
-        src={publicFolder + "/" + "background_temp_leeched.webp"}
+        src={assetsFolder + "/" + "background_temp_leeched.webp"}
         height="50%"
       ></img>
       <Paper sx={sx1}>

@@ -1,6 +1,6 @@
 import { Card } from "@mui/material";
 import { Pokemon } from "../sharedTypes";
-import { publicFolder } from "../env";
+import { assetsFolder } from "../env";
 
 export default function PokemonDisplay(pokemon: Pokemon, hp: number) {
   return (
@@ -9,7 +9,7 @@ export default function PokemonDisplay(pokemon: Pokemon, hp: number) {
       <br />
       <br />
       <br />
-      <img src={publicFolder + "/" + pokemon.image_id} width="100"></img>
+      <img src={assetsFolder + "/" + pokemon.image_id} width="100"></img>
     </>
   );
 }
