@@ -1,4 +1,4 @@
-import PokemonDisplay from "./PokemonDisplay";
+import PokemonDisplay from "./pokedex/PokemonDisplay";
 import { Pokemon } from "../sharedTypes";
 
 // Count down the stack of new pokemans etc. (well, do receive it from the backend, and process it)

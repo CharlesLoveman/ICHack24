@@ -4,9 +4,9 @@ import Typography from "@mui/material/Typography";
 import { TbPokeball } from "react-icons/tb";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import { Pokemon, PokemonStats } from "../sharedTypes";
-import { assetsFolder } from "../env";
-import { useGlobalData } from "../hooks/useGlobalData";
+import { Pokemon, PokemonStats } from "../../sharedTypes";
+import { assetsFolder } from "../../env";
+import { useGlobalData } from "../../hooks/useGlobalData";
 
 function StatDisplay({ stats }: { stats: PokemonStats }) {
   return (

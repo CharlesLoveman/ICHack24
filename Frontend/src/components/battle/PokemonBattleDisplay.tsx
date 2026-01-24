@@ -1,7 +1,7 @@
-import PokemonDisplay from "./PokemonDisplay";
+import PokemonDisplay from "../pokedex/PokemonDisplay";
 import { Paper } from "@mui/material";
-import { Pokemon } from "../sharedTypes";
-import { assetsFolder } from "../env";
+import { Pokemon } from "../../sharedTypes";
+import { assetsFolder } from "../../env";
 
 interface PokemonBattleDisplayProps {
   self_pokemon: Pokemon;

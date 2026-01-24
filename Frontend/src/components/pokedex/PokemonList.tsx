@@ -1,8 +1,8 @@
 import PokemonCard from "./PokemonCard";
 import { useState, useEffect } from "react";
 import { Button } from "@mui/material";
-import { Pokemon } from "../sharedTypes";
-import { useGlobalData } from "../hooks/useGlobalData";
+import { Pokemon } from "../../sharedTypes";
+import { useGlobalData } from "../../hooks/useGlobalData";
 
 export default function PokemonList({ pokemons }: { pokemons: Pokemon[] }) {
   const { noNewPokemon, setNoNewPokemon } = useGlobalData();

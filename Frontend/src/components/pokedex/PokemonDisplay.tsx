@@ -1,6 +1,6 @@
 import { Card } from "@mui/material";
-import { Pokemon } from "../sharedTypes";
-import { assetsFolder } from "../env";
+import { Pokemon } from "../../sharedTypes";
+import { assetsFolder } from "../../env";
 
 export default function PokemonDisplay(pokemon: Pokemon, hp: number) {
   return (

@@ -1,6 +1,6 @@
 import Attack from "./Attack";
 import { Stack } from "@mui/material";
-import { Pokemon, Attack as IAttack } from "../sharedTypes";
+import { Pokemon, Attack as IAttack } from "../../sharedTypes";
 
 interface PokemonAttacksDisplayProps {
   pokemon: Pokemon;

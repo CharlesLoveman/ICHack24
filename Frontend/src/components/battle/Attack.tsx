@@ -1,5 +1,5 @@
 import Button from "@mui/material/Button";
-import { Attack as IAttack } from "../sharedTypes";
+import { Attack as IAttack } from "../../sharedTypes";
 import { Typography } from "@mui/material";
 
 interface AttackProps {

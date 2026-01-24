@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
-import JoinRoomInputBox from "../JoinRoomInputBox";
+import JoinRoomInputBox from "../home/JoinRoomInputBox";
 import { Link } from "react-router-dom";
 import { GiBattleGear } from "react-icons/gi";
 import { MdCatchingPokemon } from "react-icons/md";
@@ -11,7 +11,7 @@ import "./styles.css";
 import { socket } from "../../socket";
 
 import { useLayoutEffect } from "react";
-import LoginInputBox from "../LoginInputBox";
+import LoginInputBox from "../home/LoginInputBox";
 import { TbPokeball } from "react-icons/tb";
 import { GiPokecog } from "react-icons/gi";
 import "./MainScreen.css";

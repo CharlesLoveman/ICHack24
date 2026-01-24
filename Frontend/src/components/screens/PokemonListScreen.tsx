@@ -1,5 +1,5 @@
 import { useLoaderData } from "react-router-dom";
-import PokemonList from "../PokemonList";
+import PokemonList from "../pokedex/PokemonList";
 import NavBar from "../NavBar";
 import { Pokemon } from "../../sharedTypes";
 

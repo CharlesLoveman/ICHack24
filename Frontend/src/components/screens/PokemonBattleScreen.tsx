@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import PokemonBattleDisplay from "../PokemonBattleDisplay";
-import PokemonAttacksDisplay from "../PokemonAttacksDisplay";
+import PokemonBattleDisplay from "../battle/PokemonBattleDisplay";
+import PokemonAttacksDisplay from "../battle/PokemonAttacksDisplay";
 import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { socket } from "../../socket";

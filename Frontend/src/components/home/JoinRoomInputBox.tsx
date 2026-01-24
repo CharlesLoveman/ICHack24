@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { socket } from "../socket";
+import { socket } from "../../socket";
 import Button from "@mui/material/Button";
 import Input from "@mui/material/Input";
 import { GiBattleAxe } from "react-icons/gi";
-import { PlayerJoinBattleData, Pokemon } from "../sharedTypes";
+import { PlayerJoinBattleData, Pokemon } from "../../sharedTypes";
 import { SxProps, Theme } from "@mui/material";
 
 export default function JoinRoomInputBox(

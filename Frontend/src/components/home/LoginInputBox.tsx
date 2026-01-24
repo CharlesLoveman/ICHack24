@@ -4,8 +4,8 @@ import Input from "@mui/material/Input";
 import { GiBattleAxe } from "react-icons/gi";
 import { SxProps, Theme } from "@mui/material";
 import axios from "axios";
-import { backendAddress } from "../env";
-import { useGlobalData } from "../hooks/useGlobalData";
+import { backendAddress } from "../../env";
+import { useGlobalData } from "../../hooks/useGlobalData";
 import { generate } from "random-words";
 
 const generateRandomUserName = () => generate({ exactly: 3, join: "-" });

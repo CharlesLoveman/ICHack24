@@ -1,5 +1,5 @@
 import { JSX } from "react";
-import { socket } from "../socket";
+import { socket } from "../../socket";
 
 export function ConnectionManager(): JSX.Element {
   function connect() {
