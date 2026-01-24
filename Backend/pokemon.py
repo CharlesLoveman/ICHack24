@@ -611,8 +611,8 @@ class BattleState:
             chosen_user = battle.u2
             not_yet_chosen_user = battle.u1
 
-        emit_makeOtherPlayerWait(chosen_user)
-        emit_onWaitOnOtherPlayer(not_yet_chosen_user)
+        emit_makeOtherPlayerWait(not_yet_chosen_user)
+        emit_onWaitOnOtherPlayer(chosen_user)
 
     def broadcast_health(self, battle: Battle):
         emit_onTurnEnd(

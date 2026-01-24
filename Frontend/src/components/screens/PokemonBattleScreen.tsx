@@ -22,13 +22,13 @@ export default function PokemonBattleScreen() {
     useGlobalData();
   const { state } = useLocation() as { state: BattleLocationState };
   const params = useParams<{ game_id: string }>();
-  const [chosenAttack, setChosenAttack] = useState<string | undefined>(
+  const [chosenAttack, setChosenAttack] = useState<Attack | undefined>(
     undefined
   );
 
   function onAttack(attack: Attack) {
     if (!chosenAttack && params.game_id) {
-      setChosenAttack(attack.name);
+      setChosenAttack(attack);
       socket.emit("attack", {
         attack_id: attack.id,
         game_id: params.game_id,
@@ -73,19 +73,24 @@ export default function PokemonBattleScreen() {
 
   return (
     <>
-      {"self_hp" in (battleHP ?? {}) && (
-        <PokemonBattleDisplay
-          self_pokemon={state.self_pokemon}
-          target_pokemon={state.target_pokemon}
-          self_hp={battleHP?.self_hp ?? 0}
-          target_hp={battleHP?.target_hp ?? 0}
-        />
-      )}
-      {battleResult === undefined && (
-        <PokemonAttacksDisplay
-          pokemon={state.self_pokemon}
-          onAttack={onAttack}
-        />
+      <PokemonBattleDisplay
+        self_pokemon={state.self_pokemon}
+        target_pokemon={state.target_pokemon}
+        self_hp={battleHP?.self_hp ?? 0}
+        target_hp={battleHP?.target_hp ?? 0}
+      />
+      {!battleResult && (
+        <>
+          <div style={{ textAlign: "center" }}>
+            <Typography variant="h4">Select a move</Typography>
+          </div>
+
+          <PokemonAttacksDisplay
+            pokemon={state.self_pokemon}
+            onAttack={onAttack}
+            chosenAttack={chosenAttack}
+          />
+        </>
       )}
       {battleData?.otherPlayerWaiting && (
         <Typography>
@@ -95,7 +100,7 @@ export default function PokemonBattleScreen() {
       {battleData?.thisPlayerWaiting && (
         <Typography>
           The other player has not selected a move yet. You are ready to use{" "}
-          {chosenAttack}!
+          {chosenAttack?.name}!
         </Typography>
       )}
       {showResult()}

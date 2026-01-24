@@ -1,29 +1,36 @@
 import Button from "@mui/material/Button";
 import { Attack as IAttack } from "../sharedTypes";
+import { Typography } from "@mui/material";
 
 interface AttackProps {
   attack: IAttack;
   onAttack: (attack: IAttack) => void;
+  isChosen: boolean;
 }
 
-export default function Attack({ attack, onAttack }: AttackProps) {
+export default function Attack({ attack, onAttack, isChosen }: AttackProps) {
   return (
-    <div>
-      <div>{attack.name}</div>
-      <div>{attack.element}</div>
-      <div>{attack.special ? "Special" : "Physical"}</div>
-      <div>{"Power: " + attack.power}</div>
+    <Button
+      variant="contained"
+      color={isChosen ? "secondary" : "primary"}
+      onClick={() => onAttack(attack)}
+    >
       <div>
-        {" "}
-        {Object.entries(attack.self_status_id ?? {}).map(
-          ([key, value], index) => (
-            <div key={index}>
-              {key} : {value}
-            </div>
-          )
-        )}
+        <Typography variant="h6">{attack.name}</Typography>
+        <div>{attack.element}</div>
+        <div>{attack.special ? "Special" : "Physical"}</div>
+        <div>{"Power: " + attack.power}</div>
+        <div>
+          {" "}
+          {Object.entries(attack.self_status_id ?? {}).map(
+            ([key, value], index) => (
+              <div key={index}>
+                {key} : {value}
+              </div>
+            )
+          )}
+        </div>
       </div>
-      <Button onClick={() => onAttack(attack)}>Attack!</Button>
-    </div>
+    </Button>
   );
 }
