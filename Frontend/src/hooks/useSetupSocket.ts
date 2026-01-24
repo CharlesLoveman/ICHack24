@@ -1,7 +1,12 @@
 import { socket, SocketEventTo } from "../socket";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { BattleHP, JoinBattleData, JoinWaitingRoomData } from "../sharedTypes";
+import { useEffect, useState } from "react";
+import {
+  JoinBattleData,
+  JoinWaitingRoomData,
+  MoveData,
+  OnTurnEndData,
+} from "../sharedTypes";
 import { BATTLE_RESULT } from "../types";
 import { useSocket } from "./useSocket";
 import { useGlobalData } from "./useGlobalData";
@@ -9,8 +14,16 @@ import { useGlobalData } from "./useGlobalData";
 export function useSetupSocket() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isConnected, setIsConnected] = useState(socket.connected);
-  const { setNewTurn, setBattleData, setBattleHP, setBattleResult } =
-    useGlobalData();
+  const {
+    setNewTurn,
+    setBattleData,
+    setBattleHP,
+    setBattleResult,
+    setCurrentBattleMoves,
+    setCommentaryFinished,
+    commentaryFinished,
+    currentBattleMoves,
+  } = useGlobalData();
   //const [pokemonCards, setPokemonCards] = useState([]);
   const navigate = useNavigate();
   const baseBattleData = {
@@ -25,6 +38,29 @@ export function useSetupSocket() {
   function onDisconnect() {
     setIsConnected(false);
   }
+
+  const emptyStateFunction = () => () => {};
+
+  /** Because useState and setState can take in functional setters, we need to add an extra level so the actual stored value is a function */
+  const [doTurnEndTransition, setDoTurnEndTransition] =
+    useState<() => void>(emptyStateFunction);
+  const [doBattleResultTransition, setDoBattleResultTransition] =
+    useState<() => void>(emptyStateFunction);
+
+  useEffect(() => {
+    if (commentaryFinished) {
+      doTurnEndTransition();
+      setDoTurnEndTransition(emptyStateFunction);
+      console.log(doBattleResultTransition);
+      doBattleResultTransition();
+      setDoBattleResultTransition(emptyStateFunction);
+      setCommentaryFinished(undefined);
+    }
+  }, [commentaryFinished]);
+
+  useEffect(() => {
+    console.log(currentBattleMoves);
+  });
 
   //function onCreatePokemonCardEvent(pokemon) {
   //  setPokemonCards([...pokemonCards, pokemon]);
@@ -72,34 +108,47 @@ export function useSetupSocket() {
     setBattleData({ ...battleData });
   }
 
-  function onTurnEnd(data: BattleHP) {
-    const doTurnEndTransition = () => {
-      const battleData = { ...baseBattleData };
+  function onTurnEnd(data: OnTurnEndData) {
+    const moves: MoveData = {
+      self_attack_name: data.self_attack_name,
+      target_attack_name: data.target_attack_name,
+    };
+    setCurrentBattleMoves(moves);
+    setBattleData({ ...baseBattleData });
+
+    const _doTurnEndTransition = () => {
       setBattleHP({
         self_hp: data.self_hp,
         target_hp: data.target_hp,
       });
-      console.log(battleData);
-      console.log(baseBattleData);
       setNewTurn(true);
-      setBattleData({ ...battleData });
+      setCurrentBattleMoves(undefined);
     };
 
     setTimeout(() => {
-      doTurnEndTransition();
+      setCommentaryFinished(false);
+      setDoTurnEndTransition(() => _doTurnEndTransition);
     }, 1000);
   }
 
   function win() {
     setNewTurn(true);
     setBattleData({ ...baseBattleData });
-    setBattleResult(BATTLE_RESULT.WIN);
+
+    const _doBattleResultTransition = () => {
+      setBattleResult(BATTLE_RESULT.WIN);
+    };
+    setDoBattleResultTransition(() => _doBattleResultTransition);
   }
 
   function lose() {
     setNewTurn(true);
     setBattleData({ ...baseBattleData });
-    setBattleResult(BATTLE_RESULT.LOSE);
+
+    const _doBattleResultTransition = () => {
+      setBattleResult(BATTLE_RESULT.LOSE);
+    };
+    setDoBattleResultTransition(() => _doBattleResultTransition);
   }
 
   useSocket(SocketEventTo.connect, onConnect);

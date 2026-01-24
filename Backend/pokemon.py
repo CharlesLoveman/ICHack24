@@ -618,11 +618,15 @@ class BattleState:
         emit_onTurnEnd(
             self_hp=battle.p1.stats["hp"],
             target_hp=battle.p2.stats["hp"],
+            self_attack_name=battle.attack1.name,
+            target_attack_name=battle.attack2.name,
             sid=battle.u1,
         )
         emit_onTurnEnd(
             self_hp=battle.p2.stats["hp"],
             target_hp=battle.p1.stats["hp"],
+            self_attack_name=battle.attack2.name,
+            target_attack_name=battle.attack1.name,
             sid=battle.u2,
         )
 

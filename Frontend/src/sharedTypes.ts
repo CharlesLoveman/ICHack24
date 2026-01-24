@@ -66,8 +66,9 @@ export interface AttackData {
   game_id: string;
 }
 
-export interface OnTurnEndData {
-  self_hp: number;
-  target_hp: number;
+export interface MoveData {
+  self_attack_name: string;
+  target_attack_name: string;
 }
 
+export type OnTurnEndData = BattleHP & MoveData;

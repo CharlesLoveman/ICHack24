@@ -44,25 +44,38 @@ class BattleData(TypedDict):
     otherPlayerWaiting: NotRequired[bool]
     thisPlayerWaiting: NotRequired[bool]
 
+
 class CreateBattleData(TypedDict):
     username: str
     pokemon_id: str
+
 
 class PlayerJoinBattleData(TypedDict):
     pokemon_id: str
     game_id: str
 
+
 class BattleHP(TypedDict):
     self_hp: float
     target_hp: float
 
+
+class OnTurnEndData(TypedDict):
+    self_hp: float
+    target_hp: float
+    self_attack_name: str
+    target_attack_name: str
+
+
 class JoinWaitingRoomData(TypedDict):
     game_id: str
+
 
 class JoinBattleData(TypedDict):
     self_pokemon: Pokemon
     target_pokemon: Pokemon
     game_id: str
+
 
 class AttackData(TypedDict):
     attack_id: Pokemon

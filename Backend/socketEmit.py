@@ -2,7 +2,12 @@ from enum import Enum
 
 from flask_socketio import emit
 
-from Backend.sharedTypes import BattleHP, JoinBattleData, JoinWaitingRoomData, Pokemon
+from Backend.sharedTypes import (
+    JoinBattleData,
+    JoinWaitingRoomData,
+    OnTurnEndData,
+    Pokemon,
+)
 
 
 class SocketEventsTo(Enum):
@@ -53,8 +58,19 @@ def emit_onWaitOnOtherPlayer(sid: str):
     emit(SocketEventsTo.onWaitOnOtherPlayer.value, to=sid)
 
 
-def emit_onTurnEnd(self_hp: float, target_hp: float, sid: str):
-    data: BattleHP = {"self_hp": self_hp, "target_hp": target_hp}
+def emit_onTurnEnd(
+    self_hp: float,
+    target_hp: float,
+    self_attack_name: str,
+    target_attack_name: str,
+    sid: str,
+):
+    data: OnTurnEndData = {
+        "self_hp": self_hp,
+        "target_hp": target_hp,
+        "self_attack_name": self_attack_name,
+        "target_attack_name": target_attack_name,
+    }
     emit(SocketEventsTo.onTurnEnd.value, data, to=sid)
 
 

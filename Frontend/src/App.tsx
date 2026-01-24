@@ -18,6 +18,16 @@ const theme = createTheme({
         },
       },
     },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          padding: "0.3rem",
+          margin: "1rem",
+          borderWidth: "0.3rem",
+          borderColor: "black",
+        },
+      },
+    },
   },
 });
 

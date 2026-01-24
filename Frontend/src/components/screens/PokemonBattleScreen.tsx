@@ -10,6 +10,8 @@ import { Link } from "react-router-dom";
 import { Pokemon, Attack, AttackData } from "../../sharedTypes";
 import { BATTLE_RESULT } from "../../types";
 import { useGlobalData } from "../../hooks/useGlobalData";
+import BattleCommentary from "../BattleCommentary";
+import NavBar from "../NavBar";
 
 interface BattleLocationState {
   self_pokemon: Pokemon;
@@ -18,13 +20,34 @@ interface BattleLocationState {
 }
 
 export default function PokemonBattleScreen() {
-  const { battleData, newTurn, setNewTurn, battleResult, battleHP } =
-    useGlobalData();
+  const {
+    battleData,
+    newTurn,
+    setNewTurn,
+    battleResult,
+    battleHP,
+    commentaryFinished,
+    currentBattleMoves,
+  } = useGlobalData();
   const { state } = useLocation() as { state: BattleLocationState };
   const params = useParams<{ game_id: string }>();
   const [chosenAttack, setChosenAttack] = useState<Attack | undefined>(
     undefined
   );
+
+  const getResultText = (battleResult: BATTLE_RESULT) => {
+    switch (battleResult) {
+      case BATTLE_RESULT.WIN:
+        return "You have won through sheer skill!";
+      case BATTLE_RESULT.LOSE:
+        return "Your pokemon has fainted and you have lost...";
+    }
+  };
+
+  const texts = [
+    `${currentBattleMoves?.target_attack_name} was used. It was unfortunately super effective.`,
+    `You used ${currentBattleMoves?.self_attack_name}. It was far more effective, probably.`,
+  ];
 
   function onAttack(attack: Attack) {
     if (!chosenAttack && params.game_id) {
@@ -46,11 +69,9 @@ export default function PokemonBattleScreen() {
   function showResult() {
     return battleResult != undefined ? (
       <>
-        <Typography>
-          {battleResult === BATTLE_RESULT.WIN
-            ? "You have won through sheer skill!"
-            : "Your pokemon has fainted and you have lost..."}
-        </Typography>
+        <BattleCommentary
+          texts={[getResultText(battleResult)]}
+        ></BattleCommentary>
         <Link style={{ textDecoration: "none" }} to={`../MainScreen`}>
           <Button fullWidth={true} variant="contained" size="large">
             Back to the Main Screen
@@ -64,37 +85,46 @@ export default function PokemonBattleScreen() {
 
   return (
     <>
+      <NavBar></NavBar>
       <PokemonBattleDisplay
         self_pokemon={state.self_pokemon}
         target_pokemon={state.target_pokemon}
         self_hp={battleHP?.self_hp ?? 0}
         target_hp={battleHP?.target_hp ?? 0}
       />
-      {!battleResult && (
-        <>
-          <div style={{ textAlign: "center" }}>
-            <Typography variant="h4">Select a move</Typography>
-          </div>
 
-          <PokemonAttacksDisplay
-            pokemon={state.self_pokemon}
-            onAttack={onAttack}
-            chosenAttack={chosenAttack}
-          />
-        </>
-      )}
-      {battleData?.otherPlayerWaiting && (
-        <Typography>
-          The other player is now waiting for you to make a move.
-        </Typography>
-      )}
-      {battleData?.thisPlayerWaiting && (
-        <Typography>
-          The other player has not selected a move yet. You are ready to use{" "}
-          {chosenAttack?.name}!
-        </Typography>
-      )}
-      {showResult()}
+      <>
+        {commentaryFinished || commentaryFinished === undefined ? (
+          <>
+            {battleResult === undefined && (
+              <>
+                <div style={{ textAlign: "center" }}>
+                  <Typography variant="h4">Select a move</Typography>
+                </div>
+                <PokemonAttacksDisplay
+                  pokemon={state.self_pokemon}
+                  onAttack={onAttack}
+                  chosenAttack={chosenAttack}
+                />
+              </>
+            )}
+            {battleData?.otherPlayerWaiting && (
+              <Typography>
+                The other player is now waiting for you to make a move.
+              </Typography>
+            )}
+            {battleData?.thisPlayerWaiting && (
+              <Typography>
+                The other player has not selected a move yet. You are ready to
+                use {chosenAttack?.name}!
+              </Typography>
+            )}
+            {showResult()}
+          </>
+        ) : (
+          <BattleCommentary texts={texts} />
+        )}
+      </>
     </>
   );
 }

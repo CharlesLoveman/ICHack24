@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
 
-import { Pokemon, BattleData, BattleHP } from "../sharedTypes";
+import { Pokemon, BattleData, BattleHP, MoveData } from "../sharedTypes";
 import {
   BATTLE_RESULT,
   GlobalContextType,
@@ -29,6 +29,12 @@ export function useSetupGlobalData() {
     undefined
   );
   const [battleHP, setBattleHP] = useState<BattleHP | undefined>(undefined);
+  const [currentBattleMoves, setCurrentBattleMoves] = useState<
+    MoveData | undefined
+  >(undefined);
+  const [commentaryFinished, setCommentaryFinished] = useState<
+    boolean | undefined
+  >(undefined);
 
   return {
     username,
@@ -49,5 +55,9 @@ export function useSetupGlobalData() {
     setBattleResult,
     battleHP,
     setBattleHP,
+    currentBattleMoves,
+    setCurrentBattleMoves,
+    commentaryFinished,
+    setCommentaryFinished,
   };
 }

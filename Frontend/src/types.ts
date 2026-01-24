@@ -1,4 +1,4 @@
-import { BattleData, BattleHP, Pokemon } from "./sharedTypes";
+import { BattleData, BattleHP, MoveData, Pokemon } from "./sharedTypes";
 
 export enum POKEMON_HAS_RETURNED {
   WAITING,
@@ -33,4 +33,12 @@ export interface GlobalContextType {
   >;
   battleHP?: BattleHP;
   setBattleHP: React.Dispatch<React.SetStateAction<BattleHP | undefined>>;
+  currentBattleMoves: MoveData | undefined;
+  setCurrentBattleMoves: React.Dispatch<
+    React.SetStateAction<MoveData | undefined>
+  >;
+  commentaryFinished?: boolean;
+  setCommentaryFinished: React.Dispatch<
+    React.SetStateAction<boolean | undefined>
+  >;
 }
