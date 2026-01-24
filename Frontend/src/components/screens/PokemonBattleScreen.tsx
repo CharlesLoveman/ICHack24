@@ -28,6 +28,8 @@ export default function PokemonBattleScreen() {
     battleHP,
     commentaryFinished,
     currentBattleMoves,
+    setCommentaryFinished,
+    setCurrentBattleMoves,
   } = useGlobalData();
   const { state } = useLocation() as { state: BattleLocationState };
   const params = useParams<{ game_id: string }>();
@@ -63,6 +65,8 @@ export default function PokemonBattleScreen() {
     if (newTurn) {
       setNewTurn(false);
       setChosenAttack(undefined);
+      setCommentaryFinished(undefined);
+      setCurrentBattleMoves(undefined);
     }
   }, [newTurn]);
 

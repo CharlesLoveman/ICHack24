@@ -22,6 +22,7 @@ export default function PokemonAttacksDisplay({
             key={index}
             isChosen={attack === chosenAttack}
             onAttack={onAttack}
+            disabled={chosenAttack !== undefined}
           />
         ))}
       </Stack>

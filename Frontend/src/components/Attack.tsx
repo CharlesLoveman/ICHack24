@@ -6,14 +6,21 @@ interface AttackProps {
   attack: IAttack;
   onAttack: (attack: IAttack) => void;
   isChosen: boolean;
+  disabled: boolean;
 }
 
-export default function Attack({ attack, onAttack, isChosen }: AttackProps) {
+export default function Attack({
+  attack,
+  onAttack,
+  isChosen,
+  disabled,
+}: AttackProps) {
   return (
     <Button
       variant="contained"
       color={isChosen ? "secondary" : "primary"}
       onClick={() => onAttack(attack)}
+      disabled={!isChosen && disabled}
     >
       <div>
         <Typography variant="h6">{attack.name}</Typography>

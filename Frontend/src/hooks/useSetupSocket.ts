@@ -132,7 +132,6 @@ export function useSetupSocket() {
   }
 
   function win() {
-    setNewTurn(true);
     setBattleData({ ...baseBattleData });
 
     const _doBattleResultTransition = () => {
@@ -142,7 +141,6 @@ export function useSetupSocket() {
   }
 
   function lose() {
-    setNewTurn(true);
     setBattleData({ ...baseBattleData });
 
     const _doBattleResultTransition = () => {
