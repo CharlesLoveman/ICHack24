@@ -44,31 +44,22 @@ export default function PokemonBattleScreen() {
   }, [newTurn]);
 
   function showResult() {
-    if (battleResult === BATTLE_RESULT.WIN) {
-      return (
-        <>
-          <Typography>You have won through sheer skill!</Typography>
-          <Button fullWidth={true} variant="contained" size="large">
-            <Link style={{ textDecoration: "none" }} to={`../MainScreen`}>
-              Back to the Main Screen
-            </Link>
-          </Button>
-        </>
-      );
-    } else if (battleResult === BATTLE_RESULT.LOSE) {
-      return (
-        <>
-          <Typography>Your pokemon has fainted and you have lost...</Typography>
-          <Button fullWidth={true} variant="contained" size="large">
-            <Link style={{ textDecoration: "none" }} to={`../MainScreen`}>
-              Back to the Main Screen
-            </Link>
-          </Button>
-        </>
-      );
-    } else {
-      return <></>;
-    }
+    return battleResult != undefined ? (
+      <>
+        <Typography>
+          {battleResult === BATTLE_RESULT.WIN
+            ? "You have won through sheer skill!"
+            : "Your pokemon has fainted and you have lost..."}
+        </Typography>
+        <Button fullWidth={true} variant="contained" size="large">
+          <Link style={{ textDecoration: "none" }} to={`../MainScreen`}>
+            Back to the Main Screen
+          </Link>
+        </Button>
+      </>
+    ) : (
+      <></>
+    );
   }
 
   return (

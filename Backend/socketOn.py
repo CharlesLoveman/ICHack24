@@ -39,8 +39,11 @@ def handle_joinBattle(json: JoinBattleData):
     pokemon_id = json["pokemon_id"]
 
     print(f"Client id: {request.sid} joining battle: {game_id}")
+    if game_id in battles:
+        battle = battles[game_id]
+    else:
+        return
 
-    battle = battles[game_id]
     battle.add_player(request.sid, pokemon_id)
 
     emit_joinBattle(
