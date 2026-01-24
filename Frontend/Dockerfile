@@ -2,9 +2,11 @@ FROM node:18
 
 WORKDIR /home/node/app
 
-RUN npm install -g pnpm
+RUN npm install -g pnpm@latest-10
 
-COPY ./Frontend/app .
+ARG CI=true
+
+COPY . .
 
 RUN pnpm install --quiet
 

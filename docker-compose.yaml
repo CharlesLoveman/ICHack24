@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  frontend:
+    build:
+      context: ./Frontend
+    container_name: frontend
+    env_file:
+      - ./Frontend/.env
+    environment:
+      - FRONTEND_PORT=${FRONTEND_PORT}
+      - API_BASE_URL=${API_BASE_URL}
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./Backend
+    container_name: backend
+    env_file:
+      - ./Backend/.dev
+    environment:
+      - BACKEND_PORT=${BACKEND_PORT}
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_NAME=${DATABASE_NAME}
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    depends_on:
+      - database
+
+  database:
+    build:
+      context: ./Database
+    container_name: database
+    environment:
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    ports:
+      - "${DATABASE_PORT}:5432"
+    volumes:
+      - ${DB_DATA_LOCATION}:/data/db
+
+volumes:
+  database_data:
