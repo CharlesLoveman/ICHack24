@@ -37,6 +37,9 @@ export function useTheme() {
       navigation: createColor("#FFFFFF"),
     },
     components: {
+      MuiCardHeader: {
+        defaultProps: {},
+      },
       MuiOutlinedInput: {
         styleOverrides: {
           notchedOutline: {

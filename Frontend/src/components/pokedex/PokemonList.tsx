@@ -1,8 +1,9 @@
 import PokemonCard from "./PokemonCard";
 import { useState, useEffect } from "react";
-import { Button } from "@mui/material";
 import { Pokemon } from "../../sharedTypes";
 import { useGlobalData } from "../../hooks/useGlobalData";
+import { Title } from "../layout/Title";
+import { ScrollableMain } from "../layout/ScrollableMain";
 
 export default function PokemonList({ pokemons }: { pokemons: Pokemon[] }) {
   const { noNewPokemon, setNoNewPokemon } = useGlobalData();
@@ -29,23 +30,13 @@ export default function PokemonList({ pokemons }: { pokemons: Pokemon[] }) {
 
   setNoNewPokemon(0);
 
-  const [startIndex, setStartIndex] = useState(0);
-
-  function incrementIndex() {
-    setStartIndex(startIndex + 1);
-  }
-
-  function decrementIndex() {
-    setStartIndex(startIndex - 1);
-  }
-
   function GetPokemonList() {
-    const sliced_pokemons = pokemons.toReversed().slice(startIndex);
-    const sliced_markers = newPokemonMarkers.slice(startIndex);
-    const zipped = sliced_pokemons.map(
-      (pokemon: Pokemon, i: number) =>
-        [pokemon, sliced_markers[i]] as [Pokemon, boolean]
-    );
+    const zipped = pokemons
+      .toReversed()
+      .map(
+        (pokemon: Pokemon, i: number) =>
+          [pokemon, newPokemonMarkers[i]] as [Pokemon, boolean]
+      );
     return zipped.map(([pokemon, isNew]: [Pokemon, boolean], index) => (
       <PokemonCard pokemon={pokemon} isNew={isNew} key={index} />
     ));
@@ -53,16 +44,8 @@ export default function PokemonList({ pokemons }: { pokemons: Pokemon[] }) {
 
   return (
     <>
-      <Button variant="contained" onClick={() => decrementIndex()}>
-        {" "}
-        View Above{" "}
-      </Button>
-      <Button variant="contained" onClick={() => incrementIndex()}>
-        {" "}
-        View Below{" "}
-      </Button>
-
-      {GetPokemonList()}
+      <Title>Pokedex</Title>
+      <ScrollableMain> {GetPokemonList()}</ScrollableMain>
     </>
   );
 }

@@ -11,7 +11,7 @@ const PokemonList = styled.div`
   gap: 1rem;
 `;
 
-const PokemonCard = styled.div`
+const PokemonCardContainer = styled.div`
   padding: 1rem;
   background-color: white;
   border-radius: 8px;
@@ -48,15 +48,15 @@ export const PokemonLayoutPage: React.FC = () => {
 
   return (
     <>
-      <Title title="GenAI Pokedex" />
+      <Title>GenAI Pokedex</Title>
 
       <ScrollableMain>
         <PokemonList>
           {displayList.map((poke, index) => (
-            <PokemonCard key={index}>
+            <PokemonCardContainer key={index}>
               <PokemonName>{poke.name}</PokemonName>
               <PokemonType>{poke.type}</PokemonType>
-            </PokemonCard>
+            </PokemonCardContainer>
           ))}
         </PokemonList>
       </ScrollableMain>

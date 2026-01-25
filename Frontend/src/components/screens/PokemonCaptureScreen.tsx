@@ -43,7 +43,7 @@ const uploadFile = async function (selectedFile?: File, id?: string) {
 
 export default function PokemonCaptureScreen() {
   const { setPokemonReturned, setNoNewPokemon, noNewPokemon } = useGlobalData();
-  const params = useParams();
+  const params = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const onFileUpload = async function (file?: File) {
