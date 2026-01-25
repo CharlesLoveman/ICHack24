@@ -18,8 +18,8 @@ import {
 import { assetsFolder } from "../../env";
 import { useLoaderData, useParams } from "react-router-dom";
 import { DetailsCard } from "../DetailsCard";
-import { PokemonMoveCard } from "../PokemonMoveCard";
-import { StatDisplay } from "../StatsDisplay";
+import { PokemonMoveCard } from "../pokedex/PokemonMoveCard";
+import { StatDisplay } from "../pokedex/StatsDisplay";
 
 function MovesDisplay(attacks: Attack[] | undefined) {
   if (attacks) {

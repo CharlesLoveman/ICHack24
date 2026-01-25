@@ -54,7 +54,6 @@ export default function Attack({
         <AiFillInfoCircle size="1.5rem" />
       </InfoButton>
       <AttackButton
-        variant="contained"
         color={isChosen ? "secondary" : "primary"}
         onClick={() => onAttack(attack)}
         disabled={!isChosen && disabled}
@@ -66,16 +65,6 @@ export default function Attack({
           </PokemonTypeContainer>
           <div>{attack.special ? "Special" : "Physical"}</div>
           <div>{"Power: " + attack.power}</div>
-          {/* <div>
-          {" "}
-          {Object.entries(attack.self_status_id ?? {}).map(
-            ([key, value], index) => (
-              <div key={index}>
-                {key} : {value}
-              </div>
-            )
-          )}
-        </div> */}
         </AttackButtonText>
       </AttackButton>
     </>

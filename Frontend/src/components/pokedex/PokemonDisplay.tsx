@@ -14,7 +14,7 @@ export default function PokemonDisplay(
     background-color: ${darkGrey};
     height: 0.5rem;
     padding: 0.3rem;
-    width: 20rem;
+    width: 15rem;
     z-index: 100;
     position: relative;
   `;
@@ -27,7 +27,7 @@ export default function PokemonDisplay(
   const Health = styled.div<HealthProps>`
     background-color: #59b859;
     height: 0.5rem;
-    width: ${(props) => (props.hp / props.maxHp) * 20}rem;
+    width: ${(props) => (props.hp / props.maxHp) * 15}rem;
     z-index: 100;
     position: relative;
   `;
@@ -41,13 +41,26 @@ export default function PokemonDisplay(
     margin-right: 0.5rem;
   `;
 
-  const ImageContainer = styled.div<{ onLeft: boolean }>`
+  interface OnLeftProps {
+    onLeft: boolean;
+  }
+
+  const ImageContainer = styled.div<OnLeftProps>`
     position: relative;
     float: ${(props) => (props.onLeft ? "left" : "right")};
   `;
 
+  const translateStyles = onLeft ? { translate: "-10%" } : { translate: "10%" };
+
   const pokemonInfo = (
-    <Card style={{ backgroundColor: "#ffffff" }}>
+    <Card
+      style={{
+        backgroundColor: "#ffffff",
+        scale: "80%",
+        margin: 0,
+        ...translateStyles,
+      }}
+    >
       <CardHeader
         title={
           <>
@@ -72,24 +85,17 @@ export default function PokemonDisplay(
     </ImageContainer>
   );
 
+  const PokemonDisplayContainer = styled.div<OnLeftProps>`
+    display: flex;
+    flex-direction: column;
+    align-items: ${(props) => (props.onLeft ? "flex-start" : "flex-end")};
+  `;
+
   return (
-    <>
+    <PokemonDisplayContainer onLeft={onLeft}>
       {onLeft ? pokemonImage : pokemonInfo}
       <br />
-      <br />
-      <br />
-      {onLeft ? (
-        <>
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-        </>
-      ) : (
-        <></>
-      )}
       {onLeft ? pokemonInfo : pokemonImage}
-    </>
+    </PokemonDisplayContainer>
   );
 }

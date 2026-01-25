@@ -1,12 +1,9 @@
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { CardHeader } from "@mui/material";
-import { Attack } from "../sharedTypes";
-import {
-  PokemonNameContainer,
-  PokemonTypeContainer,
-} from "./pokedex/PokemonCard";
-import { DetailsCard } from "./DetailsCard";
+import { Attack } from "../../sharedTypes";
+import { PokemonNameContainer, PokemonTypeContainer } from "./PokemonCard";
+import { DetailsCard } from "../DetailsCard";
 import { OptionalPokemonStats, StatDisplay } from "./StatsDisplay";
 
 function statsAreEmpty(stats: OptionalPokemonStats | undefined) {
@@ -46,11 +43,9 @@ export function PokemonMoveCard({ attack }: { attack: Attack }) {
       <CardContent>
         <Typography>{attack.description}</Typography>
         <Typography>Power: {attack.power}</Typography>
-        {attack.special ? (
-          <Typography>Special: {attack.special}</Typography>
-        ) : (
-          <></>
-        )}
+        <Typography>
+          Special: {attack.special ? "Special" : "Physical"}
+        </Typography>
         <CardHeader title="Effect on self"></CardHeader>
         <CardContent>
           <Typography>{MoveStatDisplay(attack.self_status_id)}</Typography>

@@ -1,7 +1,7 @@
 import Attack from "./Attack";
 import { Grid } from "@mui/material";
 import { Pokemon, Attack as IAttack } from "../../sharedTypes";
-import { PokemonMoveDisplay } from "../PokemonMoveDisplay";
+import { PokemonMoveDisplay } from "./PokemonMoveDisplay";
 import { useState } from "react";
 import { Title } from "../layout/Title";
 

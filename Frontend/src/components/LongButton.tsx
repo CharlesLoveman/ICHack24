@@ -20,7 +20,9 @@ const LongButtonTextContainer = styled.div`
   margin-bottom: 0.5rem;
 `;
 
-export function LongButton(props: ButtonProps & MaxWidthProps) {
+export type LongButtonProps = ButtonProps & MaxWidthProps;
+
+export function LongButton(props: LongButtonProps) {
   return (
     <LongButtonContainer noMaxWidth={props.noMaxWidth}>
       <Button fullWidth={true} color="primary" {...props}>

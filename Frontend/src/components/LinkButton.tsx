@@ -1,12 +1,11 @@
-import { ButtonProps } from "@mui/material";
 import React from "react";
 import { Link, LinkProps } from "react-router-dom";
 import styled from "styled-components";
-import { LongButton } from "./LongButton";
+import { LongButton, LongButtonProps } from "./LongButton";
 
 interface LinkButtonProps {
   linkProps: LinkProps;
-  buttonProps?: ButtonProps;
+  buttonProps?: LongButtonProps;
   children: React.ReactNode;
 }
 
