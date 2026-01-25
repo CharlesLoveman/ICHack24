@@ -8,6 +8,7 @@ import PokemonListScreen from "./screens/PokemonListScreen";
 import PokemonCaptureScreen from "./screens/PokemonCaptureScreen";
 import PokemonFullCardScreen from "./screens/PokemonFullCardScreen";
 import { backendAddress } from "../env";
+import { PokemonLayoutPage } from "./screens/PokemonLayoutPage";
 
 export const getBrowserRouter = () =>
   createBrowserRouter([

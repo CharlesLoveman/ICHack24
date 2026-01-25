@@ -11,7 +11,6 @@ import { Pokemon, Attack, AttackData } from "../../sharedTypes";
 import { BATTLE_RESULT } from "../../types";
 import { useGlobalData } from "../../hooks/useGlobalData";
 import BattleCommentary from "../BattleCommentary";
-import NavBar from "../NavBar";
 
 interface BattleLocationState {
   self_pokemon: Pokemon;
@@ -89,7 +88,6 @@ export default function PokemonBattleScreen() {
 
   return (
     <>
-      <NavBar></NavBar>
       <PokemonBattleDisplay
         self_pokemon={state.self_pokemon}
         target_pokemon={state.target_pokemon}

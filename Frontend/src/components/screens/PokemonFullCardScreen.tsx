@@ -4,7 +4,6 @@ import Typography from "@mui/material/Typography";
 import { TbPokeball } from "react-icons/tb";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
-import NavBar from "../NavBar";
 import { Pokemon, PokemonStats, Attack } from "../../sharedTypes";
 import { useGlobalData } from "../../hooks/useGlobalData";
 
@@ -62,7 +61,6 @@ export default function PokemonFullCardScreen() {
 
   return (
     <>
-      {NavBar()}
       <Card
         sx={{
           minWidth: 275,

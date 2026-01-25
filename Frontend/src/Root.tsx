@@ -1,18 +1,16 @@
-import { ConnectionManager } from "./components/ConnectionManager";
 import { Outlet } from "react-router-dom";
-import { useSetupSocket } from "./hooks/useSetupSocket";
-import { ConnectionState } from "./components/ConnectionState";
+import { DebugHeader } from "./components/debug/DebugHeader";
+import { LayoutContainer } from "./components/layout/Layout";
+import { CopyrightFooter } from "./components/root/CopyrightFooter";
+import NavBar from "./components/root/NavBar";
 
 export default function Root() {
-  const { isConnected } = useSetupSocket();
-
   return (
-    <>
-      <ConnectionManager />
-      <ConnectionState isConnected={isConnected} />
-      <div>
-        <Outlet />
-      </div>
-    </>
+    <LayoutContainer>
+      <DebugHeader></DebugHeader>
+      <NavBar />
+      <Outlet />
+      <CopyrightFooter />
+    </LayoutContainer>
   );
 }

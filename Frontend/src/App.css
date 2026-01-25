@@ -57,3 +57,7 @@ a {
     transform: rotate(360deg);
   }
 }
+
+*:not(dialog) {
+  margin: 0;
+}

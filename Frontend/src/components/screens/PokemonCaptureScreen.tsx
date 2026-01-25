@@ -1,7 +1,6 @@
 import { useState, ChangeEvent } from "react";
 import axios from "axios";
 
-import NavBar from "../NavBar";
 import Input from "@mui/material/Input";
 import Button from "@mui/material/Button";
 import { FaCameraRetro } from "react-icons/fa";
@@ -78,7 +77,6 @@ export default function PokemonCaptureScreen() {
 
   return (
     <>
-      <NavBar />
       <div style={{ textAlign: "center" }}>
         <GiForest />
         Capture a new Pokemon!

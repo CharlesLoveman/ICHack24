@@ -294,3 +294,1442 @@ Description: Drawing on its innate talent for finding things, Gitluigi briefly a
 
 =====RESPONSE END=====
 
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Aianoid
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Aianoid is a mysterious Pokémon that appears to be a synthetic being. Its face is covered by a clear, plastic-like mask, revealing a cold, mechanical interior with glowing red eyes. Despite its unsettling appearance, Aianoid is surprisingly intelligent and can process information at an astonishing rate. It often communicates through a series of beeps and synthesized tones, though it can learn to mimic human speech. Aianoid are often found in areas with high technological presence, suggesting they are either drawn to or created by advanced machinery.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Steel / Psychic
+
+HP: 70
+Attack: 80
+Defence: 90
+Special Attack: 110
+Special Defence: 100
+Speed: 95
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Here are 4 attacks for Aianoid, designed to be entertaining and leverage its Steel/Psychic typing and its synthetic, intelligent nature:
+
+[Start Attack 1]
+
+Name: Processed Overload
+Category: Special
+Type: Psychic
+Description: Aianoid's internal processors surge, emitting a blinding flash of psychic energy. This attack has a high chance to confuse the target, representing a digital overload of sensory input. Its high Special Attack stat allows it to inflict significant damage when confusion isn't achieved.
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: Nanite Infusion
+Category: Status
+Type: Steel
+Description: Aianoid releases a cloud of microscopic metallic particles that adhere to the target. This attack raises Aianoid's Defense and Special Defense, mimicking its synthetic body repairing or fortifying itself. It also slightly damages the opponent each turn for a few rounds, like tiny metallic irritants.
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: Logic Bomb
+Category: Special
+Type: Psychic
+Description: Aianoid projects a complex, rapidly evolving psychic construct designed to disrupt the target's mind. This attack's power increases significantly if the target has any active status conditions, as Aianoid can exploit existing mental vulnerabilities. Its high Speed stat allows it to land this devastating blow before the opponent can react effectively.
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: Gear Grind
+Category: Physical
+Type: Steel
+Description: Aianoid extends sharp, metallic appendages and forcefully grinds them against the opponent. This attack has a high critical hit ratio due to Aianoid's precise, mechanical movements. It's a straightforward but effective assault that showcases its physical capabilities despite its intellectual prowess.
+
+[End Attack 4]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Penguindroid
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Penguindroid are peculiar Pokémon that are said to be born from abandoned smartphones. They are often found near areas with high technological activity, scavenging for discarded electronics to sustain themselves. Despite their seemingly cold exterior, Penguindroids possess a surprisingly warm heart and will go out of their way to help those in need, often using their unique abilities to communicate with and assist other Pokémon.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Electric/Ice
+
+HP: 90
+
+Attack: 75
+
+Defence: 80
+
+Special Attack: 110
+
+Special Defence: 85
+
+Speed: 65
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Here are four attacks for Penguindroid, keeping its Electric/Ice typing, origin from abandoned smartphones, and helpful nature in mind:
+
+[Start Attack 1]
+
+Name: Glacial Signal
+Category: Status
+Type: Ice
+Description: Penguindroid emits a chilling data pulse that floods the opponent's systems. This move has a high chance to freeze the target, simulating a system crash due to overwhelming cold. Its Electric typing might subtly boost the accuracy of this status effect.
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: Circuit Surge Splash
+Category: Special
+Type: Electric
+Description: Penguindroid gathers ambient electrical energy and then blasts it outwards in a torrent of electrified water. The "splash" aspect comes from the liquid coolant Penguindroid uses to manage its internal temperature, now supercharged. This could have a chance to paralyze.
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: Tech Tundra Toss
+Category: Physical
+Type: Ice
+Description: Penguindroid absorbs discarded electronic components, supercools them with its internal ice core, and then launches them with surprising force. The metallic nature of the components, combined with the extreme cold, can inflict significant physical damage and potentially lower the target's Speed.
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: Empathy Overload
+Category: Status
+Type: Electric
+Description: Drawing on its unique origins and warm heart, Penguindroid sends out a wave of soothing, yet potent, electrical signals. This move can heal allies by a moderate amount and also cure any status conditions they may be suffering from. Against opponents, it has a chance to confuse them, overwhelming their senses with unexpected positive energy.
+
+[End Attack 4]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Scribblin
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Scribblin is a peculiar Pokemon born from the chaotic energy of unfinished sketches. It appears as a humanoid figure constantly shedding lines and shapes. It's said that staring directly into its 'face' can inspire intense creativity... or a headache. Scribblin are often found near artists' studios, absorbing stray pencil marks and ink splatters to fuel their erratic movements. They communicate through a series of frantic scribbles and gestures, which are surprisingly effective at conveying emotion. The more chaotic the environment, the stronger Scribblin becomes.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Psychic/Normal
+
+HP: 80
+
+Attack: 65
+
+Defence: 40
+
+Special Attack: 120
+
+Special Defence: 75
+
+Speed: 100
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Scribblin, taking into account its description as a chaotic, sketch-based Psychic/Normal type Pokemon that thrives in messy environments. I've included the requested format with Name, Category (Status, Physical, or Special), Type, and Description.
+
+[Start Attack 1]
+
+Name: **Line Rush**
+Category: Physical
+Type: Normal
+Description: Scribblin rapidly extends lines from its body, whipping them at the opponent. The lines aren't solid, but feel surprisingly impactful, like being struck by dozens of rubber bands. The more cluttered the battlefield (presence of items, hazards, etc.), the more lines Scribblin can generate, increasing the attack's power.
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Inspiration Overload**
+Category: Status
+Type: Psychic
+Description: Scribblin focuses its chaotic energy on the opponent, flooding their mind with a torrent of ideas and concepts. This confuses the target, potentially causing them to become confused, or lowering their Special Defense as they struggle to process the influx of thoughts. Has a chance to fail if the target is already confused.
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Sketch Shift**
+Category: Special
+Type: Psychic
+Description: Scribblin momentarily dissolves into a flurry of sketches, reforming behind the opponent. This attack deals Psychic damage and has a high chance to lower the opponent's Accuracy, as their perception is momentarily distorted by the shifting forms. The attack's power increases in areas with poor lighting or visual obstructions.
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Eraser Storm**
+Category: Physical
+Type: Normal
+Description: Scribblin summons a swirling vortex of eraser shavings, launching them at the opponent with incredible force. This attack has a chance to lower the target's Speed, as the abrasive particles hinder their movement. The attack gains power the longer the battle has been going on, representing Scribblin gathering 'mistakes' to fuel the storm.
+
+[End Attack 4]
+
+
+
+I tried to make the attacks feel unique to Scribblin's concept, tying them into its artistic origins and the idea that chaos empowers it. I also included elements that would make them strategically interesting, like battlefield conditions affecting power.
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Caprim
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Caprim are playful Pokémon that are often found near populated areas, especially parks and baseball fields. They are known to playfully snatch hats from unsuspecting trainers, and will only return them if offered a berry or a friendly battle. The brim of their head acts as a natural shield, protecting them from sunlight and weak attacks. They are surprisingly agile, able to quickly dart around obstacles. It is said that a Caprim will choose a trainer based on their sense of style.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Normal/Flying
+
+HP: 60
+
+Attack: 45
+
+Defence: 50
+
+Special Attack: 65
+
+Special Defence: 70
+
+Speed: 95
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Caprim, taking into account its playful nature, hat-snatching tendencies, agility, and Normal/Flying typing. I've included the requested formatting.
+
+[Start Attack 1]
+
+Name: **Brim Bounce**
+Category: Physical
+Type: Normal
+Description: Caprim uses the sturdy brim of its head to powerfully bounce towards the opponent! The impact can be surprisingly strong, and sometimes disorients the target. Has a small chance to flinch the opponent.
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Hat Trick**
+Category: Status
+Type: Normal
+Description: Caprim rapidly spins, creating a dizzying display with its head-brim, then attempts to snatch the opponent’s held item (if any)! If successful, the item is temporarily held by Caprim, lowering the opponent’s power for a few turns. If the opponent isn't holding an item, it has a chance to confuse them with the spinning.
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Gusting Gift**
+Category: Special
+Type: Flying
+Description: Caprim creates a small, focused gust of wind and delivers a berry (that it conveniently had stored!) to the opponent at high speed. The berry itself doesn't do much damage, but the force of the gust adds to the impact. May have a chance to restore a small amount of HP to the opponent, reflecting Caprim's playful nature.
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Style Shift**
+Category: Status
+Type: Normal
+Description: Caprim performs a quick series of agile maneuvers, subtly altering its appearance – fluffing its feathers, adjusting its brim. This boosts Caprim’s Speed and Evasion for a few turns, making it harder to hit and faster in battle. It's all about looking good *and* feeling good!
+
+[End Attack 4]
+
+
+
+I tried to make the attacks feel fitting for the Pokemon's description, leaning into the playful and slightly mischievous aspects. I also considered how the brim could be used offensively and defensively. Let me know if you'd like any adjustments or further ideas!
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Llamplush
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Llamplush is a surprisingly resilient Pokémon despite its fluffy exterior. It is often found being carried around by trainers who appreciate its calming presence. When threatened, Llamplush can emit a high-pitched bleat that disorients opponents. It loves being cuddled and will often nuzzle its trainer for affection. The bell around its neck is said to bring good luck.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Normal/Fairy
+
+HP: 85
+
+Attack: 40
+
+Defence: 90
+
+Special Attack: 60
+
+Special Defence: 100
+
+Speed: 50
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Llamplush, taking into account its Normal/Fairy typing, fluffy resilience, disorienting bleat, and generally calming/lucky nature. I've included the requested formatting.
+
+[Start Attack 1]
+
+Name: **Fluff Bomb**
+Category: Physical
+Type: Fairy
+Description: Llamplush gathers a massive ball of its incredibly soft fluff and launches it at the opponent. While not incredibly strong, the sheer volume of fluff can obscure vision and slightly slow the target down. Has a small chance to lower the opponent's Accuracy.
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Lucky Chime**
+Category: Status
+Type: Normal
+Description: Llamplush vigorously shakes the bell around its neck, creating a resonating chime. This chime boosts the luck of the user *and* its allies, raising their evasion for a few turns. (Raises Evasion for 3 turns for both user and all allied Pokemon).
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Disorienting Bleat**
+Category: Special
+Type: Normal
+Description: Llamplush lets out a piercing, high-pitched bleat that vibrates through the opponent's head. This attack doesn't deal much damage, but has a high chance to confuse the target. (High chance to Confuse).
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Cozy Embrace**
+Category: Status
+Type: Fairy
+Description: Llamplush rushes forward and attempts to nuzzle and cuddle the opponent. While seemingly harmless, this attack restores a small amount of HP to Llamplush and has a chance to lower the opponent's Attack stat due to their discomfort. (Restores 1/8 of Llamplush's max HP, 30% chance to lower opponent's Attack by one stage).
+
+[End Attack 4]
+
+
+
+
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Giftgiver
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Giftgiver is a benevolent Pokemon that appears during the winter months. It is said to bring joy and presents to those who are kind. The presents it carries are not merely decorations; they can be launched as surprisingly powerful projectiles. It is often found near pine trees, and its presence is considered a sign of good luck. It is a very generous Pokemon, but can become distressed if its gifts are not appreciated.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Normal/Fairy
+
+HP: 110
+
+Attack: 85
+
+Defence: 70
+
+Special Attack: 100
+
+Special Defence: 90
+
+Speed: 65
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Giftgiver, the Normal/Fairy type Pokemon, keeping its benevolent, gift-giving nature and potential distress at unappreciated gifts in mind. I'll include Category (Status, Physical, or Special) and a description for each.
+
+[Start Attack 1]
+
+Name: **Wrapped Present**
+Category: Physical
+Type: Normal
+Description: Giftgiver hurls a beautifully wrapped present at the opponent! The impact isn't *just* from the weight; the wrapping paper is surprisingly durable and causes a stinging, confusing sensation. Has a chance to lower the target's Accuracy.
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Holiday Cheer**
+Category: Status
+Type: Fairy
+Description: Giftgiver radiates a wave of joyful energy. This sharply raises the Attack and Special Attack of all allied Pokemon, but slightly lowers the opponent's Speed – they're too busy feeling good to react quickly! (Multi-turn, affects the whole party).
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Ribbon Bind**
+Category: Physical
+Type: Fairy
+Description: Giftgiver rapidly unravels a long, strong ribbon from its gift bag, attempting to wrap around and restrain the opponent. May inflict the Binded status condition, preventing movement. More effective against larger Pokemon.
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Unappreciated Gift**
+Category: Special
+Type: Normal
+Description: Giftgiver, visibly distressed, throws a gift at the opponent with a surge of negative energy. The power of this attack *increases* the lower the opponent's current HP. Giftgiver feels better after using this attack, slightly raising its Special Defense. (This reflects its distress being channeled into power).
+
+[End Attack 4]
+
+
+
+I tried to make the attacks feel thematic to the Pokemon's description, with a mix of direct attacks and support/status moves. The "Unappreciated Gift" attack is a bit unique, playing on the Pokemon's lore and potentially becoming very powerful in a pinch.
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Glacielle
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Glacielle are born from the purest glacial ice and are said to embody the tranquility of the arctic. They drift serenely on the water, absorbing sunlight to create dazzling displays of light. Despite their calm demeanor, they can unleash powerful blasts of freezing air when threatened. Locals believe seeing a Glacielle is a sign of good fortune, promising a long and peaceful winter. They are often found near areas of natural beauty, and are very sensitive to pollution.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Ice/Fairy
+
+HP: 110
+
+Attack: 50
+
+Defence: 120
+
+Special Attack: 90
+
+Special Defence: 100
+
+Speed: 65
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Glacielle, the Ice/Fairy type Pokemon, keeping in mind its description (tranquil, light-based, freezing air, sensitive to pollution) and aiming for entertaining moves. I'll include Category (Status, Physical, or Special) as requested.
+
+[Start Attack 1]
+
+Name: Aurora Veil
+Category: Status
+Type: Fairy
+Description: Glacielle creates a shimmering veil of aurora borealis around itself and its allies. This drastically raises the Evasion of all Pokemon on the field for five turns, and reduces damage taken from Physical attacks. The beauty of the aurora is said to disorient opponents.
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: Frost Bloom
+Category: Special
+Type: Ice
+Description: Glacielle exhales a concentrated blast of freezing air, forming delicate, yet incredibly sharp, ice crystals that bloom outwards. This attack has a chance to Freeze the target, and its power increases in harsh sunlight (reflecting Glacielle's absorption of sunlight).
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: Purifying Gale
+Category: Physical
+Type: Fairy
+Description: Glacielle summons a swirling gale of purified air. This attack deals damage and has a high chance of curing the target of any status conditions. It's particularly effective against Pokemon affected by Poison or Smog, representing Glacielle's sensitivity to pollution.
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: Diamond Dust Barrage
+Category: Special
+Type: Ice
+Description: Glacielle rapidly fires a volley of microscopic diamond dust particles, created from the intense pressure within its icy body. While individually weak, the sheer number of particles causes significant damage and has a chance to lower the target's Special Defense. The attack sparkles brilliantly, momentarily blinding the opponent.
+
+[End Attack 4]
+
+
+
+I tried to make the attacks feel thematic to Glacielle's lore and typing. Aurora Veil plays on the light displays, Frost Bloom on the freezing air and sunlight absorption, Purifying Gale on its sensitivity to pollution, and Diamond Dust Barrage on the icy body and dazzling appearance. I also varied the categories to give it a balanced moveset potential.
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Fluctuate
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Fluctuate is a peculiar Pokémon born from the volatile energies of financial markets. It constantly shifts its form, mirroring the ups and downs of exchange rates. Trainers report that its mood, and even its type, can change rapidly. It is said that observing Fluctuate can predict short-term market trends, though its predictions are often cryptic and require expert interpretation. It feeds on the anxiety of traders and thrives in periods of high volatility.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Psychic/Ghost
+
+HP: 80
+
+Attack: 40
+
+Defence: 50
+
+Special Attack: 150
+
+Special Defence: 120
+
+Speed: 100
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Fluctuate, the Psychic/Ghost type Pokémon born from financial market volatility, keeping its shifting nature and thematic elements in mind. I'll include the requested format (Name, Category, Type, Description).
+
+[Start Attack 1]
+
+Name: **Bear Market Blitz**
+Category: Physical
+Type: Ghost
+Description: Fluctuate rapidly shifts into a bearish form, becoming heavy and aggressive. It charges with surprising force, slamming into the opponent. This attack has a chance to lower the target’s Speed, representing a decline in their ‘market performance’. The power of this attack increases if the opponent is already afflicted with a status condition (representing a weakened position).
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Volatility Surge**
+Category: Special
+Type: Psychic
+Description: Fluctuate unleashes a chaotic burst of psychic energy, mirroring a sudden market spike. The attack’s power is *randomly* determined within a range (e.g., 60-120 base power) each time it’s used. There's a small chance it will also inflict Confusion, representing the disorienting effect of market swings. The description in battle would reflect the power fluctuation: "Fluctuate unleashed a surge of energy! It hit with surprising [strength/weakness]!"
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Insider Trading**
+Category: Status
+Type: Ghost
+Description: Fluctuate subtly manipulates the opponent’s perceptions, causing them to miscalculate their next move. This sharply lowers the opponent’s Accuracy and raises Fluctuate’s Evasion for a few turns. The attack’s animation would show shadowy figures whispering around the opponent. It's a bit of a 'dirty' trick, fitting the theme.
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Bubble Burst**
+Category: Special
+Type: Psychic
+Description: Fluctuate creates a shimmering psychic bubble around the opponent, representing an inflated asset. The bubble then violently pops, dealing damage and having a chance to lower the target’s Special Defense. The animation would show the bubble expanding, becoming unstable, and then exploding in a shower of psychic energy. This attack is particularly effective against Pokémon that rely on Special Defense.
+
+[End Attack 4]
+
+
+
+I tried to make the attacks feel unique to Fluctuate's concept, incorporating the financial market theme into both the mechanics and descriptions. The randomness of "Volatility Surge" and the debuffs of "Bear Market Blitz" and "Insider Trading" reflect the unpredictable nature of the markets. "Bubble Burst" represents the dangers of overvalued assets.
+
+
+
+
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here's a Pokemon based on the image provided, formatted as requested.
+
+[Start Output Name]
+
+Name: Fryling
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Fryling, the Pastry Pokemon. This Pokemon is born from the residual heat and energy of freshly baked goods. It's often found near kitchens, absorbing warmth and occasionally causing minor electrical disturbances with its static charge. Fryling are known to be quite shy, but will offer a small piece of their pastry body to those they trust. The golden-brown crust is surprisingly durable, offering some protection. They are particularly fond of air fryers, and will often nest inside when not in use.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Fire/Fairy
+
+HP: 75
+
+Attack: 40
+
+Defence: 80
+
+Special Attack: 90
+
+Special Defence: 65
+
+Speed: 50
+
+[End Output Stats]
+
+
+
+
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Fryling, the Pastry Pokemon, keeping its Fire/Fairy typing, shy nature, and pastry-based attributes in mind. I've included Category (Status, Physical, or Special) and a description for each.
+
+[Start Attack 1]
+
+Name: **Warm Embrace**
+Category: Status
+Type: Fairy
+Description: Fryling curls up and emits a comforting warmth. This raises the target’s Special Defense, but also slightly lowers their Speed – feeling too cozy makes them sluggish! Has a chance to also heal a small amount of HP. (Reflects Fryling's tendency to offer pieces of itself and its comforting warmth).
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Crispy Crust**
+Category: Physical
+Type: Fire
+Description: Fryling hardens its golden-brown crust and charges forward with a headbutt. The attack has a chance to inflict a minor burn due to the heat retained within the crust. (Utilizes the durable crust mentioned in the description, and its Fire typing).
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Static Sprinkle**
+Category: Special
+Type: Electric
+Description: Fryling releases a burst of static electricity, manifesting as shimmering sprinkles. This attack has a moderate chance to paralyze the target. The sprinkles themselves aren't damaging, but the electrical charge is! (Reflects the minor electrical disturbances Fryling causes).
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Air Fryer Fury**
+Category: Special
+Type: Fire
+Description: Fryling channels the intense heat of its beloved air fryer, unleashing a concentrated blast of hot air. This attack has increased power if Fryling has been hit by a Physical attack in the previous turn – representing it getting "heated up" by a challenge. (Plays on Fryling's fondness for air fryers and adds a strategic element).
+
+[End Attack 4]
+
+
+
+
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Audiosaur
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Audiosaur are often found near sources of electronic noise, absorbing the energy to fuel their sonic attacks. They are surprisingly shy, and will quickly cover their 'ears' if startled. The red cable trailing from their head is highly sensitive and can detect even the faintest vibrations. Trainers report that Audiosaur are excellent at discerning the emotional state of others through subtle changes in sound. They are often used in therapy settings to help people process their feelings.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Electric/Psychic
+
+HP: 80
+
+Attack: 65
+
+Defence: 90
+
+Special Attack: 120
+
+Special Defence: 100
+
+Speed: 75
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Audiosaur, keeping in mind its Electric/Psychic typing, its sensitivity to sound, and its empathetic nature. I've included the requested formatting.
+
+[Start Attack 1]
+
+Name: **Static Symphony**
+Category: Special
+Type: Electric
+Description: Audiosaur releases a wave of chaotic electrical energy, manifesting as a distorted, jarring symphony. This attack doesn't just deal damage, it *confuses* the target with overwhelming sensory input. Has a chance to inflict Confusion. (Power: 80, Accuracy: 90%, Chance to Confuse: 30%)
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Echoing Insight**
+Category: Status
+Type: Psychic
+Description: Audiosaur focuses its sensitive 'ears' on the opponent, analyzing their emotional state and projecting a psychic wave that exploits their inner turmoil. Lowers the target's Special Defense and Attack. The more distressed the opponent, the stronger the effect. (Effect: Lowers Sp. Def & Atk by one stage, Accuracy: 100%)
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Resonant Pulse**
+Category: Physical
+Type: Electric
+Description: Audiosaur channels energy through the cable on its head, delivering a focused, concussive blast of sound and electricity. This attack prioritizes hitting quickly, and has a higher critical hit ratio. (Power: 65, Accuracy: 100%, Crit Rate: 1.5x)
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Harmonic Shield**
+Category: Status
+Type: Psychic
+Description: Audiosaur creates a protective barrier of resonating psychic energy. This shield absorbs incoming Special attacks and converts a portion of the damage into healing for Audiosaur. (Effect: Raises Sp. Def by 2 stages for 3 turns, heals 1/8 of damage taken from Special attacks during shield duration, Accuracy: 95%)
+
+[End Attack 4]
+
+
+
+I tried to make the attacks feel unique to Audiosaur's lore and typing, leaning into the sound/energy theme and its empathetic abilities. I also varied the categories to give it a balanced moveset. Let me know if you'd like any adjustments or further ideas!
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Reflekt
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Reflekt is a peculiar Pokemon that dwells within reflective surfaces. It is said to be born from the lingering energy of light and observation. Reflekt are shy and will often disappear if directly observed for too long, preferring to mimic the surroundings. They are known to cause minor electrical disturbances when startled. Some trainers believe that a Reflekt's power is directly related to the quality of the surface it inhabits – the clearer the reflection, the stronger the Pokemon.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Electric/Ghost
+
+HP: 60
+
+Attack: 30
+
+Defence: 45
+
+Special Attack: 95
+
+Special Defence: 80
+
+Speed: 120
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Reflekt, the Electric/Ghost type Pokemon, keeping its lore and attributes in mind. I've aimed for entertaining and fitting moves.
+
+[Start Attack 1]
+
+Name: **Mirror Static**
+Category: Special
+Type: Electric
+Description: Reflekt charges a shimmering reflection with static electricity. It fires this distorted image at the opponent. The attack has a chance to paralyze, representing the disruptive electrical field Reflekt generates when startled. The power increases slightly if the opponent is using a status move, as Reflekt "reflects" the energy back with added static.
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Vanishing Act**
+Category: Status
+Type: Ghost
+Description: Reflekt momentarily phases *into* its reflection, becoming intangible. This sharply raises Reflekt’s Evasion for a turn, making it incredibly difficult to hit. There's a small chance it will completely disappear and switch out with another Pokemon in the party, embodying its shy nature and preference for avoiding direct observation.
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Glass Shard Barrage**
+Category: Physical
+Type: Ghost
+Description: Reflekt rapidly creates and launches tiny, razor-sharp shards of glass from nearby reflective surfaces. These shards are imbued with ghostly energy, causing damage and potentially lowering the opponent’s Defense. The attack’s power is boosted if the battle is taking place in an area with many reflective surfaces (like a city or a polished cave).
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Distorted Reality**
+Category: Special
+Type: Electric/Ghost
+Description: Reflekt creates a localized distortion in the opponent’s perception, using its control over light and energy. This attack has a high chance to confuse the target. The visual effect is a flickering, warped image of the battlefield, disorienting the foe. The power of this attack is slightly higher if the opponent has high Special Attack, as Reflekt is "reflecting" their own power back at them in a confusing way.
+
+[End Attack 4]
+
+
+
+I tried to make the attacks feel unique to Reflekt, tying into its reflective nature, shyness, and electrical abilities. I also included elements that could be strategically interesting in battle, like the boosts based on environment or opponent stats.
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Gluglass
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Gluglass are often found in cafes and restaurants, quietly observing the world. They are composed of a liquid core contained within a sturdy glass shell. They absorb ambient sounds and convert them into a sweet, bubbly energy. When threatened, they can release a concentrated burst of this energy, often tasting like the beverage they resemble. They are surprisingly fragile, and a strong impact can shatter their glass form, causing them to dissipate into a harmless puddle. They are often seen in pairs, enjoying each other's company and the gentle hum of conversation.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Water/Psychic
+
+HP: 60
+
+Attack: 30
+
+Defence: 45
+
+Special Attack: 90
+
+Special Defence: 75
+
+Speed: 50
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Gluglass, a Water/Psychic type Pokemon, keeping its description in mind (fragile glass shell, sound absorption, bubbly energy, beverage-like bursts). I've included the Name, Category (Status, Physical, or Special), Type, and a Description for each.
+
+[Start Attack 1]
+
+Name: **Sonic Fizz**
+Category: **Special**
+Type: **Psychic**
+Description: Gluglass focuses the ambient sounds it has absorbed, compressing them into a concentrated psychic blast of bubbly energy. The attack manifests as a shimmering, effervescent wave that deals damage and has a chance to confuse the target with a disorienting cacophony of noises. *Power: 60, Accuracy: 100%, May Confuse.*
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Glass Shard Spray**
+Category: **Physical**
+Type: **Water**
+Description: In a desperate defense, Gluglass rapidly vibrates its glass shell, causing small, sharp shards to break off and launch towards the opponent. While not incredibly powerful, the shards are surprisingly quick and can inflict minor cuts. This attack slightly damages Gluglass as well, reflecting its fragility. *Power: 40, Accuracy: 95%, User loses 1/8 HP.*
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Sweet Resonance**
+Category: **Status**
+Type: **Psychic**
+Description: Gluglass emits a soothing psychic wave, mimicking the comforting sounds of a bustling cafe. This attack doesn't directly damage the opponent, but it sharply raises Gluglass's Special Defense and lowers the opponent's Attack, lulling them into a relaxed state. *Effect: Raises User's Sp. Def by 2 stages, Lowers Opponent's Attack by 1 stage.*
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Beverage Burst**
+Category: **Special**
+Type: **Water**
+Description: Gluglass unleashes a concentrated burst of its liquid core, resembling a splash of the beverage it most closely embodies (coffee, tea, soda, etc.). The attack deals Water-type damage and has a chance to inflict a minor status condition based on the "flavor" - a slight burn from hot coffee, a paralyzing fizz from soda, or a sleepy haze from chamomile tea. *Power: 70, Accuracy: 85%, 20% chance to Burn/Paralyze/Sleep.*
+
+[End Attack 4]
+
+
+
+I tried to make the attacks feel unique to Gluglass's concept, playing on its sound absorption, glass fragility, and liquid core. I also included some drawbacks (like self-damage for Glass Shard Spray) to emphasize its vulnerability. Let me know if you'd like any adjustments or further ideas!
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Voltail
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Voltail is a Pokemon born from the static energy of modern technology. It is often found near charging stations or electronic devices, absorbing excess power. The lights on its 'face' indicate its current charge level, and it can unleash powerful electric shocks when threatened. Despite its reliance on energy, Voltail is surprisingly lazy and prefers to conserve power by remaining still for long periods. It is said that a fully charged Voltail can power an entire city for a short time.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Electric/Steel
+
+HP: 80
+
+Attack: 65
+
+Defence: 120
+
+Special Attack: 100
+
+Special Defence: 90
+
+Speed: 50
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Gluggle
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Gluggle is a Water/Grass type Pokemon that is often found in cafes and restaurants. It is formed from discarded drinks and is said to be happiest when being sipped from. The straw acts as a sensory organ, allowing it to detect the moods of those drinking from it. A Gluggle will become agitated if its drink is left unfinished, and may splash the offender with its liquid body. They are surprisingly resilient, able to reform even after being mostly consumed.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Water/Grass
+
+HP: 80
+
+Attack: 40
+
+Defence: 60
+
+Special Attack: 90
+
+Special Defence: 70
+
+Speed: 50
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Voltail, the Electric/Steel type Pokemon, keeping its lore and attributes (lazy, energy-absorbing, tech-based) in mind. I'll include the requested formatting.
+
+[Start Attack 1]
+
+Name: **Static Nap**
+Category: Status
+Type: Electric
+Description: Voltail curls up and enters a low-power state, generating a field of static electricity around itself. This sharply raises Voltail’s Defense and Special Defense, but lowers its Speed. The opponent may become Paralyzed if they make physical contact during this time. (Essentially a defensive stat boost with a paralysis risk – plays on the lazy aspect and static charge).
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Overload Pulse**
+Category: Special
+Type: Electric
+Description: Voltail rapidly discharges a massive amount of stored energy in a concentrated pulse. This attack has a high base power, but significantly lowers Voltail’s Special Attack stat afterward, representing the strain of releasing so much power at once. (Reflects the 'fully charged city power' potential, but with a drawback – it's exhausting!).
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Tech-Scrap Barrage**
+Category: Physical
+Type: Steel
+Description: Voltail magnetically attracts nearby metallic debris – screws, wires, even small appliances – and launches them at the opponent in a rapid-fire barrage. The power of this attack increases if the opponent is holding an item. (Utilizes the Steel typing and the Pokemon's connection to technology. The item bonus represents Voltail 'scavenging' for more powerful scrap).
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Power Siphon**
+Category: Status
+Type: Electric
+Description: Voltail extends a conductive cable-like appendage and attempts to drain energy from the target. This doesn’t deal direct damage, but sharply lowers the opponent’s Special Attack and Speed, while simultaneously raising Voltail’s own Special Attack. Has a chance to fail if the target has no significant energy source (like a non-electric type). (Plays on the energy-absorbing nature of Voltail, and is a disruptive status move).
+
+[End Attack 4]
+
+
+
+
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Gluggle, the Water/Grass type Pokemon, keeping its cafe-dwelling, drink-based nature and mood-sensitive personality in mind. I'll include Category (Status, Physical, or Special) and a description for each.
+
+[Start Attack 1]
+
+Name: **Half-Finished Fury**
+Category: Physical
+Type: Water
+Description: Gluggle lashes out with a concentrated jet of its liquid body, fueled by the frustration of being partially consumed. The attack’s power increases if Gluggle is at low HP, representing its desperation when ‘incomplete’. It has a chance to lower the target’s Speed, as they’re momentarily startled by the sticky, unpleasant spray.
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Sweet Aroma**
+Category: Status
+Type: Grass
+Description: Gluggle releases a cloud of incredibly sweet, sugary aroma. This confuses the opponent, lowering their accuracy and potentially inflicting the Sleep status. The scent is based on the most popular drink currently being served in the area, making it more effective in bustling cafes.
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Straw Sense**
+Category: Special
+Type: Grass
+Description: Gluggle focuses its sensory straw, analyzing the opponent’s emotional state. It then unleashes a focused beam of energy that exploits their current weakness. If the target is feeling angry, the attack deals increased damage. If the target is feeling sad, it has a chance to inflict the Flinch status, representing a sympathetic, but disruptive, reaction.
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Refill Rush**
+Category: Physical
+Type: Water
+Description: Gluggle rapidly expands its liquid body, surging forward to slam into the opponent. This attack has increased priority if Gluggle has recently taken damage (representing it ‘reforming’ and needing to replenish itself). It also has a small chance to leave the target Wet, making them vulnerable to Electric-type attacks.
+
+
+
+
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Gluggle
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Gluggle is a Water/Grass type Pokemon that is often found in cafes and restaurants. It is formed from discarded drinks and is said to be happiest when being sipped from. The straw acts as a sensory organ, allowing it to detect the moods of those drinking from it. A Gluggle will become agitated if its drink is left unfinished, and may splash the offender with its liquid body. They are surprisingly resilient, the glass body being much tougher than it appears.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Water/Grass
+
+HP: 80
+
+Attack: 40
+
+Defence: 120
+
+Special Attack: 60
+
+Special Defence: 70
+
+Speed: 30
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Gluggle, the Water/Grass type Pokemon, keeping its cafe-dwelling, drink-based nature and resilient glass body in mind. I've included the requested format with Name, Category (Status, Physical, or Special), Type, and Description.
+
+[Start Attack 1]
+
+Name: **Half-Finished Fury**
+Category: Physical
+Type: Water
+Description: Gluggle violently splashes the target with the remaining contents of its "body," a mix of sugary liquids and plant matter. This attack has a chance to lower the target's Speed, representing them being momentarily sticky and slowed down. The power is boosted if Gluggle is at low HP, reflecting its agitation at being "partially consumed."
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Straw Sense**
+Category: Status
+Type: Grass
+Description: Gluggle extends its straw and delicately probes the target, reading their emotional state. This attack doesn't deal damage, but has a high chance to inflict one of several status conditions based on the target's perceived mood: Confusion if stressed, Burn if angry, or Paralysis if anxious. (The game mechanic would randomly select one of these).
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Glass Grit**
+Category: Physical
+Type: Rock (Despite being Water/Grass, its body *is* glass!)
+Description: Gluggle rapidly vibrates its glass body, shedding tiny, razor-sharp glass shards at the opponent. This attack has a low accuracy, representing the difficulty in controlling the shards, but has a chance to inflict a small amount of damage over time due to the lingering glass fragments.
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Sweet Sip Stream**
+Category: Special
+Type: Grass
+Description: Gluggle focuses its energy and projects a concentrated stream of sweet, syrupy liquid. This attack deals damage and has a chance to raise the target's Attack stat temporarily. The sweetness is surprisingly invigorating, but also slightly distracting, making it a risky boost. (Think a sugar rush!).
+
+[End Attack 4]
+
+
+
+I tried to make the attacks feel unique to Gluggle's concept and give them a bit of flavour beyond just "do damage." I also considered how its attributes (glass body, mood-sensing straw, drink-based form) could influence the attacks' mechanics.
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Remnantine
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Remnantine are born from the lingering energy of a satisfying meal. They are often found haunting kitchens and dining rooms, searching for scraps of forgotten flavour. While generally docile, Remnantine can become agitated if disturbed while "reminiscing" over a particularly delicious meal. The crumpled paper it carries is said to contain the last thoughts of the diner, and Remnantine will fiercely protect it. They are surprisingly strong for their size, able to manipulate cutlery with ease.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Ghost/Steel
+
+HP: 60
+
+Attack: 90
+
+Defence: 110
+
+Special Attack: 40
+
+Special Defence: 70
+
+Speed: 50
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Remnantine, the Ghost/Steel type Pokemon, keeping its lore and attributes in mind. I've focused on attacks that play with the themes of lingering flavour, forgotten memories, and surprising strength with cutlery.
+
+[Start Attack 1]
+
+Name: **Last Bite**
+Category: Physical
+Type: Ghost
+Description: Remnantine lunges forward, attempting to deliver a surprisingly powerful bite with its steel-reinforced jaw. The bite isn't meant to *harm* so much as to briefly overwhelm the target with the phantom sensation of a delicious, but long-forgotten meal. May lower the target's Attack stat as they are distracted by the pleasant memory.
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Papercut Phantom**
+Category: Special
+Type: Ghost
+Description: Remnantine rapidly shreds the crumpled paper it carries, launching a flurry of spectral papercuts at the opponent. These cuts aren't physically damaging, but inflict a chilling sensation, lowering the target's Speed and potentially causing flinching as they try to shake off the feeling.
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Silverware Spin**
+Category: Physical
+Type: Steel
+Description: Remnantine expertly manipulates nearby cutlery (forks, knives, spoons) with its ghostly energy, creating a whirling vortex of metallic blades. This attack has a chance to raise Remnantine's Defense stat as it focuses on protecting itself within the spinning cutlery.
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Lingering Aroma**
+Category: Status
+Type: Ghost
+Description: Remnantine releases a potent, spectral aroma of a beloved dish. This doesn't directly damage the opponent, but inflicts the "Confused" status. The overwhelming scent triggers a flood of nostalgic, disjointed memories in the target, disorienting them. The type of aroma (and therefore the flavour memory) is randomly determined each use. 
+
+[End Attack 4]
+
+
+
+I tried to make the attacks feel unique to Remnantine's concept, leaning into the Ghost/Steel typing and its backstory. Hopefully, these are entertaining and fitting! Let me know if you'd like any adjustments or further ideas.
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Matchaite
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Matchaite is a surprisingly cheerful Pokémon, often found near cafes and bakeries. It's said that the sweetness of the cake it's formed from directly influences its mood. A happy Matchaite will offer a small crumb of its body to those nearby, while a stressed one may crumble into a pile of frosting. It's surprisingly resilient, able to reform itself after minor damage. Matchaite are known to be quite popular with children, who enjoy the sweet aroma they emit.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Grass/Fairy
+
+HP: 85
+
+Attack: 40
+
+Defence: 60
+
+Special Attack: 110
+
+Special Defence: 90
+
+Speed: 55
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Matchaite, the Grass/Fairy Pokémon, keeping its description and attributes in mind. I've included names, categories (Status, Physical, Special), types, and descriptions.
+
+[Start Attack 1]
+
+Name: **Sweet Crumble**
+Category: Physical
+Type: Fairy
+Description: Matchaite launches a concentrated burst of sugary crumbs at the opponent. These crumbs aren't just sweet; they briefly harden upon impact, causing a surprisingly sharp, though not overly powerful, blow. Has a small chance to lower the target's Speed due to the stickiness.
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Bloom Burst**
+Category: Special
+Type: Grass
+Description: Matchaite rapidly expands its floral components, releasing a cloud of fragrant pollen. This pollen isn't harmful, but it overwhelms the opponent with a sweet scent, potentially confusing them. Has a chance to inflict the Confused status. The potency increases if Matchaite is at high happiness.
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Re-Form!**
+Category: Status
+Type: Fairy
+Description: Matchaite intentionally breaks apart into a pile of frosting and cake crumbs, then quickly reforms! This action heals a small amount of HP and removes one status condition. It's a defensive maneuver reflecting Matchaite's resilience. The healing is slightly increased if Matchaite is at low HP.
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Whipped Delight**
+Category: Special
+Type: Grass
+Description: Matchaite creates a swirling vortex of sweet, whipped cream infused with grassy energy. This attack is surprisingly strong and has a chance to lower the target's Special Defense, leaving them vulnerable to further Special attacks. The cream is so enticing, opponents may hesitate, reducing their defenses.
+
+[End Attack 4]
+
+
+
+I tried to make the attacks feel fitting for a sweet, resilient, and cheerful Pokémon like Matchaite, leaning into its cake/pastry theme and Grass/Fairy typing. I also included some elements that tie into its description (happiness affecting Bloom Burst, low HP affecting Re-Form!).
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Boxling
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Boxling is a curious Pokémon that evolves from discarded cardboard boxes. It is often found near cafes and restaurants, scavenging for scraps of food depicted on the box's artwork. Boxling is surprisingly agile, able to quickly unfold and re-form its body to dodge attacks. It has a playful nature, often attempting to "play" with unsuspecting trainers by nudging them with its corners. The artwork on its body changes depending on what it has recently "eaten" (seen).
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Normal/Paper
+
+HP: 60
+
+Attack: 45
+
+Defence: 50
+
+Special Attack: 30
+
+Special Defence: 65
+
+Speed: 85
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Boxling, taking into account its Normal/Paper typing, its backstory as a cardboard box Pokémon that "eats" images, and its agility. I've included the requested formatting.
+
+[Start Attack 1]
+
+Name: **Flap & Fluster**
+Category: Physical
+Type: Normal
+Description: Boxling rapidly unfolds and flaps its cardboard body, creating a disorienting whirlwind of paper. This attack has a chance to lower the opponent’s Accuracy due to the visual confusion. The artwork on Boxling briefly flashes images of birds during the attack.
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Digest & Deploy**
+Category: Special
+Type: Paper
+Description: Boxling "digests" the image currently displayed on its body, converting it into a focused beam of paper energy. The type of secondary effect (burn, freeze, paralysis) is *randomly* determined by the image it last "ate". (e.g., a picture of a chili pepper might cause a burn, an ice cream cone a freeze). The artwork on Boxling fades slightly after use.
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Corner Crush**
+Category: Physical
+Type: Normal
+Description: Boxling quickly folds itself into a sharp corner and charges at the opponent, attempting to ram them. This attack has a higher critical hit ratio due to the unexpected and forceful nature of the attack. It's a simple, direct attack reflecting its basic box form.
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Ad-Avoidance**
+Category: Status
+Type: Normal
+Description: Boxling expertly folds and contorts its body, mimicking the shapes and patterns of advertisements to blend into the background. This sharply raises Boxling’s Evasion stat for a few turns, making it incredibly difficult to hit. The artwork on Boxling shifts to resemble common advertising imagery during the effect.
+
+[End Attack 4]
+
+
+
+I tried to make the attacks feel unique to Boxling's concept and give them a bit of flavor beyond just damage numbers. The "Digest & Deploy" attack is particularly designed to be unpredictable and tie into its "eating" habit.
+
+
+
+
+
+=====RESPONSE END=====
+
