@@ -6,5 +6,5 @@ export const LayoutContainer = styled.div`
   height: 100dvh;
   width: 100%;
   overflow: hidden;
-  background-color: #f4f4f9;
+  background-color: #f4f9f5;
 `;

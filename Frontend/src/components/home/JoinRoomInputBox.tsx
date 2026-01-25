@@ -1,15 +1,22 @@
 import { useState } from "react";
 import { socket } from "../../socket";
-import Button from "@mui/material/Button";
-import Input from "@mui/material/Input";
 import { GiBattleAxe } from "react-icons/gi";
 import { PlayerJoinBattleData, Pokemon } from "../../sharedTypes";
-import { SxProps, Theme } from "@mui/material";
+import { LongButton } from "../LongButton";
+import { LongInput } from "../LongInput";
+import styled from "styled-components";
 
-export default function JoinRoomInputBox(
-  pokemon: Pokemon | null,
-  sx: SxProps<Theme>
-) {
+interface JoinRoomInputBoxProps {
+  pokemon: Pokemon | null;
+}
+
+const JoinRoomInputContainer = styled.div`
+  > * {
+    margin-top: 1rem;
+  }
+`;
+
+export default function JoinRoomInputBox({ pokemon }: JoinRoomInputBoxProps) {
   const [code, setCode] = useState<string>("");
 
   function joinBattle(pokemon: Pokemon | null, code: string) {
@@ -22,23 +29,20 @@ export default function JoinRoomInputBox(
   }
 
   return (
-    <>
-      <Button
+    <JoinRoomInputContainer>
+      <LongInput
         disabled={!pokemon}
-        sx={sx}
-        fullWidth={true}
+        onChange={(e) => setCode(e.target.value)}
+      />
+      <LongButton
+        disabled={!pokemon}
         color="error"
         startIcon={<GiBattleAxe size="1rem" />}
         endIcon={<GiBattleAxe size="1rem" />}
-        variant="contained"
-        size="large"
-        type="submit"
         onClick={() => joinBattle(pokemon, code)}
       >
         Join Battle
-      </Button>
-      <br />
-      <Input onChange={(e) => setCode(e.target.value)} />
-    </>
+      </LongButton>
+    </JoinRoomInputContainer>
   );
 }

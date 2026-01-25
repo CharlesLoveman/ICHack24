@@ -37,6 +37,14 @@ export function useTheme() {
       navigation: createColor("#FFFFFF"),
     },
     components: {
+      MuiOutlinedInput: {
+        styleOverrides: {
+          notchedOutline: {
+            borderRadius: "0rem",
+            borderWidth: "0.2rem",
+          },
+        },
+      },
       MuiButton: {
         defaultProps: {
           variant: "contained",

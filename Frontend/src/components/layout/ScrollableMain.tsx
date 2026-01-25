@@ -9,7 +9,6 @@ const MainContainer = styled.main`
   flex: 1 1 auto;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 1rem;
   min-height: 0;
 `;
 
