@@ -59,6 +59,7 @@ export function useTheme() {
             // margin: "0.5rem",
             padding: "0.5rem",
             borderRadius: "0rem",
+            minWidth: 0,
           },
         },
       },

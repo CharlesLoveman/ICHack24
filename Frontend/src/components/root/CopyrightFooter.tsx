@@ -9,6 +9,7 @@ const Copyright = styled.p`
 `;
 
 const CopyrightFooterContainer = styled(FooterContainer)`
+  padding: 1rem;
   background-color: ${darkGrey};
   height: 1rem;
 `;

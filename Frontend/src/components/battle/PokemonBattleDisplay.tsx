@@ -2,6 +2,7 @@ import PokemonDisplay from "../pokedex/PokemonDisplay";
 import { Paper } from "@mui/material";
 import { Pokemon } from "../../sharedTypes";
 import { assetsFolder } from "../../env";
+import styled from "styled-components";
 
 interface PokemonBattleDisplayProps {
   self_pokemon: Pokemon;
@@ -16,10 +17,10 @@ export default function PokemonBattleDisplay({
   self_hp: hp1,
   target_hp: hp2,
 }: PokemonBattleDisplayProps) {
-  const p1x = "300px";
-  const p1y = "300px";
-  const p2x = "650px";
-  const p2y = "200px";
+  const p1x = "5%";
+  const p1y = "50%";
+  const p2x = "5%";
+  const p2y = "20%";
 
   const sx1 = {
     position: "absolute",
@@ -39,18 +40,29 @@ export default function PokemonBattleDisplay({
 
   // Need to figure out which hp is which
 
+  const ImageContainer = styled.div`
+    margin: auto;
+    background-color: #356235;
+    height: 100%;
+    align-items: center;
+    align-content: center;
+  `;
+
   return (
     <>
-      <div>The whole battle!</div>
-      <img
-        src={assetsFolder + "/" + "background_temp_leeched.webp"}
-        height="50%"
-      ></img>
+      <ImageContainer>
+        <img
+          src={assetsFolder + "/" + "background_temp_leeched.webp"}
+          height="100%"
+          width="100%"
+        ></img>
+      </ImageContainer>
+
       <Paper sx={sx1}>
-        <div>{PokemonDisplay(self_pokemon, hp1)}</div>
+        <div>{PokemonDisplay(self_pokemon, hp1, true)}</div>
       </Paper>
       <Paper sx={sx2}>
-        <div>{PokemonDisplay(target_pokemon, hp2)}</div>
+        <div>{PokemonDisplay(target_pokemon, hp2, false)}</div>
       </Paper>
     </>
   );

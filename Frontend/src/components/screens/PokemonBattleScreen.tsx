@@ -11,11 +11,34 @@ import { Pokemon, Attack, AttackData } from "../../sharedTypes";
 import { BATTLE_RESULT } from "../../types";
 import { useGlobalData } from "../../hooks/useGlobalData";
 import BattleCommentary from "../BattleCommentary";
+import { Title } from "../layout/Title";
+import { FooterContainer } from "../layout/FooterContainer";
+import { LongButton } from "../LongButton";
+import { ScrollableMain } from "../layout/ScrollableMain";
+import { PokemonMoveDisplay } from "../PokemonMoveDisplay";
 
 interface BattleLocationState {
   self_pokemon: Pokemon;
   target_pokemon: Pokemon;
   game_id: string;
+}
+
+function SwitchView({
+  setShowBattle,
+}: {
+  setShowBattle: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const switchView = () => {
+    setShowBattle((showBattle: boolean) => !showBattle);
+  };
+
+  return (
+    <FooterContainer>
+      <LongButton onClick={switchView} noMaxWidth={true} color="warning">
+        Switch View
+      </LongButton>
+    </FooterContainer>
+  );
 }
 
 export default function PokemonBattleScreen() {
@@ -35,6 +58,8 @@ export default function PokemonBattleScreen() {
   const [chosenAttack, setChosenAttack] = useState<Attack | undefined>(
     undefined
   );
+
+  const [showBattle, setShowBattle] = useState(true);
 
   const getResultText = (battleResult: BATTLE_RESULT) => {
     switch (battleResult) {
@@ -88,45 +113,48 @@ export default function PokemonBattleScreen() {
 
   return (
     <>
-      <PokemonBattleDisplay
-        self_pokemon={state.self_pokemon}
-        target_pokemon={state.target_pokemon}
-        self_hp={battleHP?.self_hp ?? 0}
-        target_hp={battleHP?.target_hp ?? 0}
-      />
-
-      <>
-        {commentaryFinished || commentaryFinished === undefined ? (
-          <>
-            {battleResult === undefined && (
-              <>
-                <div style={{ textAlign: "center" }}>
-                  <Typography variant="h4">Select a move</Typography>
-                </div>
-                <PokemonAttacksDisplay
-                  pokemon={state.self_pokemon}
-                  onAttack={onAttack}
-                  chosenAttack={chosenAttack}
-                />
-              </>
-            )}
-            {battleData?.otherPlayerWaiting && (
-              <Typography>
-                The other player is now waiting for you to make a move.
-              </Typography>
-            )}
-            {battleData?.thisPlayerWaiting && (
-              <Typography>
-                The other player has not selected a move yet. You are ready to
-                use {chosenAttack?.name}!
-              </Typography>
-            )}
-            {showResult()}
-          </>
+      <ScrollableMain>
+        <Title>Battle</Title>
+        {showBattle ? (
+          <PokemonBattleDisplay
+            self_pokemon={state.self_pokemon}
+            target_pokemon={state.target_pokemon}
+            self_hp={battleHP?.self_hp ?? 0}
+            target_hp={battleHP?.target_hp ?? 0}
+          />
         ) : (
-          <BattleCommentary texts={texts} />
+          <>
+            {commentaryFinished || commentaryFinished === undefined ? (
+              <>
+                {battleResult === undefined && (
+                  <>
+                    <PokemonAttacksDisplay
+                      pokemon={state.self_pokemon}
+                      onAttack={onAttack}
+                      chosenAttack={chosenAttack}
+                    />
+                  </>
+                )}
+                {battleData?.otherPlayerWaiting && (
+                  <Typography>
+                    The other player is now waiting for you to make a move.
+                  </Typography>
+                )}
+                {battleData?.thisPlayerWaiting && (
+                  <Typography>
+                    The other player has not selected a move yet. You are ready
+                    to use {chosenAttack?.name}!
+                  </Typography>
+                )}
+                {showResult()}
+              </>
+            ) : (
+              <BattleCommentary texts={texts} />
+            )}
+          </>
         )}
-      </>
+      </ScrollableMain>
+      <SwitchView setShowBattle={setShowBattle}></SwitchView>
     </>
   );
 }

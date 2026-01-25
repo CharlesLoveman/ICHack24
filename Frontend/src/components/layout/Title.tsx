@@ -8,20 +8,24 @@ const TitleContainer = styled.h1`
   font-size: 1.25rem;
 `;
 
-const TitleHeaderContainer = styled(HeaderContainer)`
-  background-color: ${red};
+interface ColorProps {
+  color?: string;
+}
+
+const TitleHeaderContainer = styled(HeaderContainer)<ColorProps>`
+  background-color: ${(props) => (props.color ? props.color : red)};
   align-items: center;
   justify-content: center;
   padding: 1rem;
 `;
 
-interface TitleProps {
+interface TitleProps extends ColorProps {
   children: ReactNode;
 }
 
-export const Title: React.FC<TitleProps> = ({ children }) => {
+export const Title = ({ children, color }: TitleProps) => {
   return (
-    <TitleHeaderContainer>
+    <TitleHeaderContainer color={color}>
       <TitleContainer>{children}</TitleContainer>
     </TitleHeaderContainer>
   );

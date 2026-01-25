@@ -18,106 +18,17 @@ import {
 import { assetsFolder } from "../../env";
 import { useLoaderData, useParams } from "react-router-dom";
 import { DetailsCard } from "../DetailsCard";
-
-interface OptionalPokemonStats {
-  hp?: number;
-  attack?: number;
-  defence?: number;
-  special_attack?: number;
-  special_defence?: number;
-  speed?: number;
-}
-
-function StatDisplay(stats: OptionalPokemonStats | undefined) {
-  if (stats) {
-    return (
-      <>
-        {stats.hp ? <Typography>HP: {stats.hp}</Typography> : <></>}
-        {stats.attack ? <Typography>Attack: {stats.attack}</Typography> : <></>}
-        {stats.special_attack ? (
-          <Typography>Sp. Attack: {stats.special_attack}</Typography>
-        ) : (
-          <></>
-        )}
-        {stats.defence ? (
-          <Typography>Defence: {stats.defence}</Typography>
-        ) : (
-          <></>
-        )}
-        {stats.special_defence ? (
-          <Typography>Sp. Defence: {stats.special_defence}</Typography>
-        ) : (
-          <></>
-        )}
-        {stats.speed ? <Typography>Speed: {stats.speed}</Typography> : <></>}
-      </>
-    );
-  } else {
-    return <></>;
-  }
-}
-
-function statsAreEmpty(stats: OptionalPokemonStats | undefined) {
-  return (
-    stats === undefined ||
-    !(
-      stats.attack ||
-      stats.defence ||
-      stats.hp ||
-      stats.special_attack ||
-      stats.special_defence ||
-      stats.speed
-    )
-  );
-}
-
-function MoveStatDisplay(stats: OptionalPokemonStats | undefined) {
-  return (
-    <>
-      {StatDisplay(stats)}
-      {statsAreEmpty(stats) ? <Typography>Nothing</Typography> : <></>}
-    </>
-  );
-}
+import { PokemonMoveCard } from "../PokemonMoveCard";
+import { StatDisplay } from "../StatsDisplay";
 
 function MovesDisplay(attacks: Attack[] | undefined) {
   if (attacks) {
-    return attacks.map((move) => MoveDisplay(move));
+    return attacks.map((move) => (
+      <PokemonMoveCard attack={move}></PokemonMoveCard>
+    ));
   } else {
     return <></>;
   }
-}
-
-function MoveDisplay(attack: Attack) {
-  return (
-    <DetailsCard>
-      <CardHeader
-        title={<PokemonNameContainer>{attack.name}</PokemonNameContainer>}
-        subheader={
-          <PokemonTypeContainer style={{ backgroundColor: "#9c9c9c" }}>
-            {attack.element}
-          </PokemonTypeContainer>
-        }
-      ></CardHeader>
-      <CardContent>
-        <Typography>{attack.description}</Typography>
-        <Typography>Power: {attack.power}</Typography>
-        {attack.special ? (
-          <Typography>Special: {attack.special}</Typography>
-        ) : (
-          <></>
-        )}
-        <CardHeader title="Effect on self"></CardHeader>
-        <CardContent>
-          <Typography>{MoveStatDisplay(attack.self_status_id)}</Typography>
-        </CardContent>
-        <CardHeader title="Effect on enemy"></CardHeader>
-        <CardContent>
-          <Typography>{MoveStatDisplay(attack.target_status_id)}</Typography>
-        </CardContent>
-      </CardContent>
-    </DetailsCard>
-  );
 }
 
 export default function PokemonFullCardScreen() {

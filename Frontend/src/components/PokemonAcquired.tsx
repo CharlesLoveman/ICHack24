@@ -11,7 +11,7 @@ export default function PokemonAcquired({ pokemon }: PokemonAcquiredProps) {
   return (
     <>
       Wow, you did it! OOOOOOOOOOOOOOOOOOOOOOOH
-      {PokemonDisplay(pokemon, 100)}
+      {PokemonDisplay(pokemon, 100, true)}
     </>
   );
 }

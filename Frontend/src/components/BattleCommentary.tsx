@@ -2,6 +2,7 @@ import { Button, Card, CardContent } from "@mui/material";
 import { useGlobalData } from "../hooks/useGlobalData";
 import { useEffect, useState } from "react";
 import { TiArrowSortedDown } from "react-icons/ti";
+import { RightAlignedContainer } from "./PokemonMoveDisplay";
 
 export default function BattleCommentary({ texts }: { texts: string[] }) {
   const [index, setIndex] = useState<number>(0);
@@ -27,7 +28,7 @@ export default function BattleCommentary({ texts }: { texts: string[] }) {
                 marginLeft: "auto",
               }}
             >
-              <Button
+              <RightAlignedContainer
                 onClick={() => {
                   if (index === texts.length - 1) {
                     setCommentaryFinished(true);
@@ -35,10 +36,11 @@ export default function BattleCommentary({ texts }: { texts: string[] }) {
                     setIndex((index) => index + 1);
                   }
                 }}
+                variant="text"
                 style={{ margin: 0, padding: 0, color: "black" }}
               >
                 <TiArrowSortedDown size={50} />
-              </Button>
+              </RightAlignedContainer>
             </div>
           ) : (
             <></>
