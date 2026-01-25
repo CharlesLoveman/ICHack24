@@ -1,7 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Root from "../Root";
 import axios from "axios";
-import MainScreen from "./screens/MainScreen";
+import HomeScreen from "./screens/HomeScreen";
 import WaitingRoomScreen from "./screens/WaitingRoomScreen";
 import PokemonBattleScreen from "./screens/PokemonBattleScreen";
 import PokemonListScreen from "./screens/PokemonListScreen";
@@ -22,7 +22,7 @@ export const getBrowserRouter = () =>
         },
         {
           path: "MainScreen/",
-          element: <MainScreen />,
+          element: <HomeScreen />,
         },
         {
           path: "WaitingRoomScreen/:game_id/",

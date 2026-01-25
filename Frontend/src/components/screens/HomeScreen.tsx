@@ -9,7 +9,7 @@ import { socket } from "../../socket";
 import LoginInputBox from "../home/LoginInputBox";
 import { TbPokeball } from "react-icons/tb";
 import { GiPokecog } from "react-icons/gi";
-import "./MainScreen.css";
+import "./HomeScreen.css";
 import { CreateBattleData, Pokemon } from "../../sharedTypes";
 import { POKEMON_HAS_RETURNED } from "../../types";
 import { useGlobalData } from "../../hooks/useGlobalData";
@@ -19,7 +19,7 @@ import { LongButton } from "../LongButton";
 import { LinkButton } from "../LinkButton";
 import { ScrollableMain } from "../layout/ScrollableMain";
 
-const MainScreenContainer = styled.div`
+const HomeScreenContainer = styled.div`
   text-align: center;
   padding: 1rem;
   > * {
@@ -27,7 +27,7 @@ const MainScreenContainer = styled.div`
   }
 `;
 
-export default function MainScreen() {
+export default function HomeScreen() {
   const { username, pokemon, pokemonReturned, noNewPokemon } = useGlobalData();
 
   const [display, setDisplay] = useState("notReady");
@@ -59,7 +59,7 @@ export default function MainScreen() {
 
   return (
     <ScrollableMain>
-      <MainScreenContainer>
+      <HomeScreenContainer>
         <Typography>
           {username ? (
             <>Hello Pokemon Trainer {username}, what would you like to do?</>
@@ -107,7 +107,7 @@ export default function MainScreen() {
         >
           Capture Pokemon!
         </LinkButton>
-      </MainScreenContainer>
+      </HomeScreenContainer>
     </ScrollableMain>
   );
 }
