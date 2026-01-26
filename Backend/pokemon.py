@@ -14,6 +14,7 @@ from sharedTypes import PokemonStats, Attack, AttackData
 from typing import List, Dict
 from .db import pokemon_collection, attacks_collection, attack_stats_collection
 from enum import Enum
+from .store import users_to_sockets
 
 element_options = [
     "Normal",
@@ -535,6 +536,8 @@ class Battle:
     attack2: Attack
     p1: Pokemon
     p2: Pokemon
+    u1: str
+    u2: str
 
     def __init__(self, u1: str, p1_id: str):
         """Create a battle between two Pokemon.
@@ -542,7 +545,6 @@ class Battle:
         Args:
             u1 (str): user/ player 1 client id
             p1 (str): pokemon id for player 1
-            db (database): the MongoDB database
 
         Returns:
             self (Battle)
@@ -553,6 +555,15 @@ class Battle:
         self.p1 = Pokemon.load(self.p1_id)
         self.p1.stats["max_hp"] = self.p1.stats["hp"]
         self.state = WaitingForAttacks()
+
+    def s1(self):
+        return self.get_socket(self.u1)
+
+    def s2(self):
+        return self.get_socket(self.u2)
+
+    def get_socket(self, username: str):
+        return users_to_sockets[username]
 
     def add_player(self, u2: str, p2_id: str):
         """Add a second player to the battle.
@@ -590,11 +601,11 @@ class Battle:
 
     def broadcast_wins(self, winner: int):
         if winner == 1:
-            emit_win(self.u1)
-            emit_lose(self.u2)
+            emit_win(self.s1())
+            emit_lose(self.s2())
         else:
-            emit_win(self.u2)
-            emit_lose(self.u1)
+            emit_win(self.s2())
+            emit_lose(self.s1())
 
 
 class BattleState:
@@ -605,11 +616,11 @@ class BattleState:
 
     def player_has_chosen(self, battle: Battle, number: int):
         if number == 1:
-            chosen_user = battle.u1
-            not_yet_chosen_user = battle.u2
+            chosen_user = battle.s1()
+            not_yet_chosen_user = battle.s2()
         elif number == 2:
-            chosen_user = battle.u2
-            not_yet_chosen_user = battle.u1
+            chosen_user = battle.s2()
+            not_yet_chosen_user = battle.s1()
 
         emit_makeOtherPlayerWait(not_yet_chosen_user)
         emit_onWaitOnOtherPlayer(chosen_user)
@@ -620,14 +631,14 @@ class BattleState:
             target_hp=battle.p2.stats["hp"],
             self_attack_name=battle.attack1.name,
             target_attack_name=battle.attack2.name,
-            sid=battle.u1,
+            sid=battle.s1(),
         )
         emit_onTurnEnd(
             self_hp=battle.p2.stats["hp"],
             target_hp=battle.p1.stats["hp"],
             self_attack_name=battle.attack2.name,
             target_attack_name=battle.attack1.name,
-            sid=battle.u2,
+            sid=battle.s2(),
         )
 
 
@@ -639,13 +650,13 @@ class WaitingForAttacks(BattleState):
         self, battle: Battle, event: str, json: AttackData, socket_id: str
     ):
         if event == BattleEvent.attack:
-            if socket_id == battle.u1:
+            if socket_id == battle.s1():
                 battle.attack1 = Attack.load(json["attack_id"])
                 battle.state = WaitingForPlayer2Attack()
                 print("Waiting for player 2.")
                 print(battle.attack1)
                 self.player_has_chosen(battle, 1)
-            elif socket_id == battle.u2:
+            elif socket_id == battle.s2():
                 battle.attack2 = Attack.load(json["attack_id"])
                 print(battle.attack2)
                 battle.state = WaitingForPlayer1Attack()
@@ -661,7 +672,7 @@ class WaitingForPlayer1Attack(BattleState):
         self, battle: Battle, event: str, json: AttackData, socket_id: str
     ):
         if event == BattleEvent.attack:
-            if socket_id == battle.u1:
+            if socket_id == battle.s1():
                 battle.attack1 = Attack.load(json["attack_id"])
                 print(battle.attack1)
                 battle.execute()
@@ -677,7 +688,7 @@ class WaitingForPlayer2Attack(BattleState):
         self, battle: Battle, event: str, json: AttackData, socket_id: str
     ):
         if event == BattleEvent.attack:
-            if socket_id == battle.u2:
+            if socket_id == battle.s2():
                 battle.attack2 = Attack.load(json["attack_id"])
                 print(battle.attack2)
                 battle.execute()
