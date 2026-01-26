@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { socket } from "../../socket";
 
 import { Attack, AttackData } from "../../sharedTypes";
-import { BATTLE_RESULT } from "../../types";
+import { BATTLE_RESULT, BATTLE_STATE } from "../../types";
 import { useGlobalData } from "../../hooks/useGlobalData";
 import BattleCommentary from "../battle/BattleCommentary";
 import { Title } from "../layout/Title";
@@ -41,10 +41,10 @@ export default function PokemonBattleScreen() {
     setNewTurn,
     battleResult,
     battleHP,
-    commentaryFinished,
     currentBattleMoves,
-    setCommentaryFinished,
     setCurrentBattleMoves,
+    battleState,
+    setBattleState,
   } = useGlobalData();
   const params = useParams<{ game_id: string }>();
   const [chosenAttack, setChosenAttack] = useState<Attack | undefined>(
@@ -83,16 +83,16 @@ export default function PokemonBattleScreen() {
   }
 
   useEffect(() => {
-    if (!commentaryFinished) {
+    if (battleState === BATTLE_STATE.RESOLVING_ATTACKS) {
       setIsChoosingMove(false);
     }
-  }, [commentaryFinished]);
+  }, [battleState]);
 
   useEffect(() => {
     if (newTurn) {
       setNewTurn(false);
       setChosenAttack(undefined);
-      setCommentaryFinished(undefined);
+      setBattleState(BATTLE_STATE.IDLING);
       setCurrentBattleMoves(undefined);
     }
   }, [newTurn]);
@@ -103,13 +103,13 @@ export default function PokemonBattleScreen() {
   if (battleData?.thisPlayerWaiting)
     preMoveCommentary = `The other player has not selected a move yet. You are ready to use ${chosenAttack?.name}! `;
 
-  console.log(commentaryFinished);
-
   return !(selfPokemon && targetPokemon) ? (
     <></>
   ) : (
     <>
-      <Title>Battle {commentaryFinished ? "YES" : "NO"}</Title>
+      <Title>
+        Battle {battleState === BATTLE_STATE.RESOLVING_ATTACKS ? "YES" : "NO"}
+      </Title>
       {!isChoosingMove ? (
         <PokemonBattleScreenContainer
           path={assetsFolder + "/" + "background_temp_leeched.webp"}
@@ -123,7 +123,7 @@ export default function PokemonBattleScreen() {
             />
           </ScrollableMain>
           <PokemonActionArea>
-            {commentaryFinished || commentaryFinished === undefined ? (
+            {battleState === BATTLE_STATE.IDLING ? (
               <>
                 {battleResult === undefined ? (
                   <>
@@ -141,8 +141,7 @@ export default function PokemonBattleScreen() {
               <BattleCommentary
                 texts={[...texts]}
                 onCommentaryEnd={() => {
-                  console.log("we're here");
-                  setCommentaryFinished(true);
+                  setBattleState(BATTLE_STATE.IDLING);
                 }}
                 hideArrowOnLast={false}
               />
@@ -164,7 +163,7 @@ export default function PokemonBattleScreen() {
         <FightButton
           isChoosingMove={isChoosingMove}
           setIsChoosingMove={setIsChoosingMove}
-          disabled={commentaryFinished !== undefined}
+          disabled={battleState === BATTLE_STATE.RESOLVING_ATTACKS}
         ></FightButton>
       )}
     </>

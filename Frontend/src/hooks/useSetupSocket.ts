@@ -7,7 +7,7 @@ import {
   MoveData,
   OnTurnEndData,
 } from "../sharedTypes";
-import { BATTLE_RESULT } from "../types";
+import { BATTLE_RESULT, BATTLE_STATE } from "../types";
 import { useSocket } from "./useSocket";
 import { useGlobalData } from "./useGlobalData";
 import { baseBattleData, clearBattleStates } from "./useSetupGlobalData";
@@ -22,10 +22,10 @@ export function useSetupSocket() {
     setBattleHP,
     setBattleResult,
     setCurrentBattleMoves,
-    setCommentaryFinished,
     setJoinBattleData,
-    commentaryFinished,
     username,
+    battleState,
+    setBattleState,
   } = globalData;
 
   const navigate = useNavigate();
@@ -47,15 +47,13 @@ export function useSetupSocket() {
     useState<() => void>(emptyStateFunction);
 
   useEffect(() => {
-    if (commentaryFinished) {
+    if (battleState === BATTLE_STATE.IDLING) {
       doTurnEndTransition();
       setDoTurnEndTransition(emptyStateFunction);
-      console.log(doBattleResultTransition);
       doBattleResultTransition();
       setDoBattleResultTransition(emptyStateFunction);
-      setCommentaryFinished(undefined);
     }
-  }, [commentaryFinished]);
+  }, [battleState]);
 
   useEffect(() => {
     if (username !== undefined && isConnected) {
@@ -75,6 +73,7 @@ export function useSetupSocket() {
       target_hp: data.target_pokemon.stats.hp,
     });
     setJoinBattleData(data);
+    setBattleState(BATTLE_STATE.IDLING);
     navigate(`/PokemonBattleScreen/${data.game_id}`);
   }
 
@@ -86,6 +85,7 @@ export function useSetupSocket() {
       target_hp: data.target_pokemon.stats.hp,
     });
     setJoinBattleData(data);
+    setBattleState(BATTLE_STATE.IDLING);
     navigate(`/PokemonBattleScreen/${data.game_id}`);
   }
 
@@ -113,10 +113,8 @@ export function useSetupSocket() {
       setNewTurn(true);
     };
 
-    // setTimeout(() => {
-    setCommentaryFinished(false);
+    setBattleState(BATTLE_STATE.RESOLVING_ATTACKS);
     setDoTurnEndTransition(() => _doTurnEndTransition);
-    // }, 1000);
   }
 
   function win() {

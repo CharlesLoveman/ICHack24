@@ -9,6 +9,7 @@ import {
 } from "../sharedTypes";
 import {
   BATTLE_RESULT,
+  BATTLE_STATE,
   GlobalContextType,
   GlobalStates,
   POKEMON_HAS_RETURNED,
@@ -27,9 +28,9 @@ export function clearBattleStates(data: GlobalContextType) {
   data.setBattleResult(undefined);
   data.setBattleHP(undefined);
   data.setCurrentBattleMoves(undefined);
-  data.setCommentaryFinished(undefined);
   data.setJoinBattleData(undefined);
   data.setNewTurn(false);
+  data.setBattleState(undefined);
 }
 
 export const baseBattleData = {
@@ -65,12 +66,12 @@ export function useSetupGlobalData(initialOverrides: GlobalStates) {
   const [currentBattleMoves, setCurrentBattleMoves] = useState<
     MoveData | undefined
   >(initialOverrides.currentBattleMoves ?? undefined);
-  const [commentaryFinished, setCommentaryFinished] = useState<
-    boolean | undefined
-  >(initialOverrides.commentaryFinished ?? undefined);
   const [joinBattleData, setJoinBattleData] = useState<
     JoinBattleData | undefined
   >(initialOverrides.joinBattleData ?? undefined);
+  const [battleState, setBattleState] = useState<BATTLE_STATE | undefined>(
+    initialOverrides.battleState ?? undefined
+  );
 
   return {
     username,
@@ -91,9 +92,9 @@ export function useSetupGlobalData(initialOverrides: GlobalStates) {
     setBattleHP,
     currentBattleMoves,
     setCurrentBattleMoves,
-    commentaryFinished,
-    setCommentaryFinished,
     joinBattleData,
     setJoinBattleData,
+    battleState,
+    setBattleState,
   };
 }

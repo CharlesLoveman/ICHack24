@@ -16,6 +16,12 @@ export enum BATTLE_RESULT {
   LOSE,
 }
 
+export enum BATTLE_STATE {
+  IDLING,
+  RESOLVING_ATTACKS,
+  FINISHED,
+}
+
 export interface GlobalStates {
   username?: string;
   pokemon: Pokemon | null;
@@ -26,8 +32,8 @@ export interface GlobalStates {
   battleResult?: BATTLE_RESULT;
   battleHP?: BattleHP;
   currentBattleMoves: MoveData | undefined;
-  commentaryFinished?: boolean;
   joinBattleData?: JoinBattleData;
+  battleState?: BATTLE_STATE;
 }
 
 export interface GlobalSetters {
@@ -46,49 +52,12 @@ export interface GlobalSetters {
   setCurrentBattleMoves: React.Dispatch<
     React.SetStateAction<MoveData | undefined>
   >;
-  setCommentaryFinished: React.Dispatch<
-    React.SetStateAction<boolean | undefined>
-  >;
   setJoinBattleData: React.Dispatch<
     React.SetStateAction<JoinBattleData | undefined>
+  >;
+  setBattleState: React.Dispatch<
+    React.SetStateAction<BATTLE_STATE | undefined>
   >;
 }
 
 export type GlobalContextType = GlobalStates & GlobalSetters;
-
-// export interface GlobalContextType {
-//   username?: string;
-//   setUsername: React.Dispatch<React.SetStateAction<string | undefined>>;
-//   pokemon: Pokemon | null;
-//   setPokemon: React.Dispatch<React.SetStateAction<Pokemon | null>>;
-//   pokemonReturned: POKEMON_HAS_RETURNED;
-//   setPokemonReturned: React.Dispatch<
-//     React.SetStateAction<POKEMON_HAS_RETURNED>
-//   >;
-//   noNewPokemon: number;
-//   setNoNewPokemon: React.Dispatch<React.SetStateAction<number>>;
-//   viewPokemon?: Pokemon;
-//   setViewPokemon: React.Dispatch<React.SetStateAction<Pokemon | undefined>>;
-//   battleData?: BattleData;
-//   setBattleData: React.Dispatch<React.SetStateAction<BattleData | undefined>>;
-//   newTurn: boolean;
-//   setNewTurn: React.Dispatch<React.SetStateAction<boolean>>;
-//   battleResult?: BATTLE_RESULT;
-//   setBattleResult: React.Dispatch<
-//     React.SetStateAction<BATTLE_RESULT | undefined>
-//   >;
-//   battleHP?: BattleHP;
-//   setBattleHP: React.Dispatch<React.SetStateAction<BattleHP | undefined>>;
-//   currentBattleMoves: MoveData | undefined;
-//   setCurrentBattleMoves: React.Dispatch<
-//     React.SetStateAction<MoveData | undefined>
-//   >;
-//   commentaryFinished?: boolean;
-//   setCommentaryFinished: React.Dispatch<
-//     React.SetStateAction<boolean | undefined>
-//   >;
-//   joinBattleData?: JoinBattleData;
-//   setJoinBattleData: React.Dispatch<
-//     React.SetStateAction<JoinBattleData | undefined>
-//   >;
-// }
