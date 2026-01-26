@@ -46,6 +46,10 @@ export function useTheme() {
             borderRadius: "0rem",
             borderWidth: "0.2rem",
           },
+          input: {
+            padding: "0.3rem",
+            fontSize: "1.5rem",
+          },
         },
       },
       MuiButton: {

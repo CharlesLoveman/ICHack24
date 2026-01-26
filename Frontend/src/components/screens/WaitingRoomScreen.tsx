@@ -1,20 +1,35 @@
-import * as React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { useParams } from "react-router-dom";
+import { Title } from "../layout/Title";
+import styled from "styled-components";
+import { LongInput } from "../layout/LongInput";
 
 export default function WaitingRoomScreen() {
   const params = useParams();
 
+  const WaitingRoomContainer = styled.div`
+    text-align: center;
+    margin: auto;
+  `;
+
   return (
-    <Card sx={{ minWidth: 275 }}>
-      <CardContent style={{ textAlign: "center" }}>
-        <Typography variant="h2">Room Code:</Typography>
-        <Typography variant="h1" component="div">
-          {params.game_id}
+    <>
+      <Title>Waiting Room</Title>
+      <WaitingRoomContainer>
+        <Typography variant="h2" style={{ fontSize: "10vw" }}>
+          Room Code
         </Typography>
-      </CardContent>
-    </Card>
+        <br />
+        <br />
+        <>
+          <LongInput
+            value={params.game_id}
+            disabled={true}
+            style={{ fontSize: "300rem", maxWidth: "80%" }}
+            inputProps={{ style: { fontSize: "10vw", textAlign: "center" } }}
+          ></LongInput>
+        </>
+      </WaitingRoomContainer>
+    </>
   );
 }
