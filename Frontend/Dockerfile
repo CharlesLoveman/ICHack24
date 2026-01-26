@@ -15,4 +15,6 @@ RUN pnpm run build
 
 EXPOSE 5173
 
+# ARG NODE_OPTIONS=--dns-result-order=ipv4first vite
+
 CMD ["pnpm", "dev"]
