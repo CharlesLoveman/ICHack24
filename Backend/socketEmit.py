@@ -2,7 +2,7 @@ from enum import Enum
 
 from flask_socketio import emit
 
-from Backend.sharedTypes import (
+from sharedTypes import (
     JoinBattleData,
     JoinWaitingRoomData,
     OnTurnEndData,

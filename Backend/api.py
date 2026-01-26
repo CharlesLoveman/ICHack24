@@ -1,7 +1,7 @@
 """API for interfacing with the vision pipeline."""
 
-from Backend.gemini import RealGenerativeModel
-from Backend.gemini_mock import MockGenerativeModel
+from gemini import RealGenerativeModel
+from gemini_mock import MockGenerativeModel
 from .prompt_templates import (
     GEMINI_PROMPT_TEMPLATE,
     GEMINI_PROMPT_TEMPLATE_WITH_IMAGE,
@@ -12,7 +12,7 @@ from .pokemon import Pokemon, generate_attack, Attack
 
 import re
 from typing import Union, Tuple, List, Dict, Any
-from env import config
+from env import PATH_TO_PUBLIC, config
 from PIL import Image
 
 
@@ -31,7 +31,6 @@ STATS_KEYS = [
     "Special Defence",
     "Speed",
 ]
-PATH_TO_PUBLIC = "../Frontend/public/"
 
 
 class GeminiError(Exception):

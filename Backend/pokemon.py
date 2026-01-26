@@ -3,14 +3,14 @@
 import numpy as np
 from bson.objectid import ObjectId
 import random
-from Backend.socketEmit import (
+from socketEmit import (
     emit_lose,
     emit_makeOtherPlayerWait,
     emit_onTurnEnd,
     emit_onWaitOnOtherPlayer,
     emit_win,
 )
-from Backend.sharedTypes import PokemonStats, Attack, AttackData
+from sharedTypes import PokemonStats, Attack, AttackData
 from typing import List, Dict
 from .db import pokemon_collection, attacks_collection, attack_stats_collection
 from enum import Enum

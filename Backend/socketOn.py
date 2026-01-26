@@ -1,10 +1,10 @@
-from Backend.app import socketio, battles, users
-from Backend.socketEmit import (
+from .app import socketio, battles, users
+from .socketEmit import (
     emit_joinBattle,
     emit_joinBattleFromRoom,
     emit_joinWaitingRoom,
 )
-from Backend.sharedTypes import *
+from .sharedTypes import *
 from random import randrange
 
 from .pokemon import Battle, BattleEvent
@@ -13,7 +13,7 @@ from .db import (
     request,
 )
 
-from Backend.sharedTypes import *
+from sharedTypes import *
 
 
 @socketio.on("createBattle")

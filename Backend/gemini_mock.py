@@ -1,6 +1,6 @@
 from typing import Union, Tuple, List, Dict, Any, Optional
 
-from Backend.generative_model import GenerativeModel
+from generative_model import GenerativeModel
 
 """
 A mock which cycles through responses

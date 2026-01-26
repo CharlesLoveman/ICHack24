@@ -1,14 +1,15 @@
 from typing import Union
-from Backend.sharedTypes import *
+from sharedTypes import *
 from flask import request as _request, Request
 from pymongo.collection import Collection
 from pymongo import MongoClient
 
 from .sharedTypes import Pokemon
+from .env import DATABASE_HOST, config
 
 from bson.objectid import ObjectId
 
-from Backend.sharedTypes import *
+from sharedTypes import *
 
 
 class Request:
@@ -51,9 +52,9 @@ class DBStats(TypedDict):
     speed: int
 
 
-ip = "127.0.0.1"
-# Change this back
-mongodb_client = MongoClient(ip, 27017)
+
+
+mongodb_client = MongoClient(DATABASE_HOST, 27017)
 database = mongodb_client.db
 
 

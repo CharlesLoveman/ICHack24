@@ -1,11 +1,9 @@
 from google import genai
-from Backend.generative_model import GenerativeModel
-from Backend.response_recorder import ResponseRecorder
-from env import config
+from generative_model import GenerativeModel
+from response_recorder import ResponseRecorder
+from env import PATH_TO_PUBLIC, config
 from typing import Union, Tuple, Any, Optional
 
-
-PATH_TO_PUBLIC = "../Frontend/public/"
 
 RECORD_RESPONSES = True
 recorder = ResponseRecorder()
