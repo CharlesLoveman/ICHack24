@@ -5,7 +5,7 @@ from pymongo.collection import Collection
 from pymongo import MongoClient
 
 from .sharedTypes import Pokemon
-from .env import DATABASE_HOST, config
+from .env import DATABASE_HOST
 
 from bson.objectid import ObjectId
 
@@ -50,8 +50,6 @@ class DBStats(TypedDict):
     special_attack: int
     special_defence: int
     speed: int
-
-
 
 
 mongodb_client = MongoClient(DATABASE_HOST, 27017)

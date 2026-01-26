@@ -1,10 +1,12 @@
 from PIL import Image as PILImage
 import requests
 import io
-import os
-from env import config
 
-HF_KEY = config["HF_KEY"]
+"""
+Currently an archive for pokemon image generation capabilities
+"""
+
+HF_KEY = ""
 
 API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
 headers = {"Authorization": f"Bearer {HF_KEY}"}

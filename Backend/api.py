@@ -12,11 +12,11 @@ from .pokemon import Pokemon, generate_attack, Attack
 
 import re
 from typing import Union, Tuple, List, Dict, Any
-from env import PATH_TO_PUBLIC, config
+from env import PATH_TO_PUBLIC, USE_REAL_MODEL
 from PIL import Image
 
 
-if config["USE_REAL_MODEL"] == "True":
+if USE_REAL_MODEL == "True":
     new_model = RealGenerativeModel()
 else:
     new_model = MockGenerativeModel()

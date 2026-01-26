@@ -5,7 +5,7 @@ from sharedTypes import *
 from flask import Flask, make_response, jsonify, Response
 from flask_cors import CORS
 
-from env import config
+from env import FLASK_SECRET_KEY
 
 from .pokemon import Battle, Pokemon
 from .api import GeminiError, build_pokemon, PATH_TO_PUBLIC
@@ -36,7 +36,9 @@ sock_cors_or = "*"
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": py_cors_or}})
-app.config["SECRET_KEY"] = config["APP_SECRET"]
+app.config["SECRET_KEY"] = (
+    FLASK_SECRET_KEY  # This is required to access some sort of Flask debug thing
+)
 
 socketio = SocketIO(app, cors_credentials=True, cors_allowed_origins=py_cors_or)
 

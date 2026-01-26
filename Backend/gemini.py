@@ -1,7 +1,7 @@
 from google import genai
 from generative_model import GenerativeModel
 from response_recorder import ResponseRecorder
-from env import PATH_TO_PUBLIC, config
+from env import GEMINI_API_KEY, PATH_TO_PUBLIC
 from typing import Union, Tuple, Any, Optional
 
 
@@ -10,7 +10,7 @@ recorder = ResponseRecorder()
 
 
 class RealGenerativeModel(GenerativeModel):
-    client = genai.Client(api_key=config["GEMINI_API_KEY"])
+    client = genai.Client(api_key=GEMINI_API_KEY)
     MODEL_NAME = "gemma-3-27b-it"
     # MODEL_NAME = "gemini-2.5-flash-lite"
     # MODEL_NAME = "gemini-1.5-flash" # not this
