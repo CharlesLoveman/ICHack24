@@ -11,13 +11,13 @@ db = mongodb_client["ic-hack"]
 
 # Setup values
 stats = {
-        "hp": 1,
-        "attack": 1,
-        "defence": 1,
-        "special_attack": 1,
-        "special_defence": 1,
-        "speed": 1
-    }
+    "hp": 1,
+    "attack": 1,
+    "defence": 1,
+    "special_attack": 1,
+    "special_defence": 1,
+    "speed": 1,
+}
 
 glitch_attack = generate_attack("Glitch Cannon", "Ghost", "physical")
 bsod_attack = generate_attack("Blue Screen of Doom", "Electric", "special")
@@ -38,7 +38,7 @@ pokemon = Pokemon(
     "Bug",
     stats,
     attacks,
-    image
+    image,
 )
 
 # Save the Pokemon

@@ -9,11 +9,13 @@ services:
       - ./Frontend/.env
     environment:
       - FRONTEND_PORT=${FRONTEND_PORT}
-      - API_BASE_URL=${API_BASE_URL}
     ports:
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     depends_on:
       - backend
+    volumes:
+      - ${IMAGES_PATH}:/home/node/app/public
+
 
   backend:
     build:
@@ -25,26 +27,24 @@ services:
       - BACKEND_PORT=${BACKEND_PORT}
       - DATABASE_HOST=${DATABASE_HOST}
       - DATABASE_PORT=${DATABASE_PORT}
-      - DATABASE_USER=${DATABASE_USER}
-      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
-      - DATABASE_NAME=${DATABASE_NAME}
+      - IMAGES_PATH=${IMAGES_PATH}
+      - PATH_TO_PUBLIC=${PATH_TO_PUBLIC}
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
     depends_on:
       - database
+    volumes:
+      - ${IMAGES_PATH}:${PATH_TO_PUBLIC}
+
 
   database:
     build:
       context: ./Database
-    container_name: database
-    environment:
-      - POSTGRES_USER=${DATABASE_USER}
-      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
-      - POSTGRES_DB=${DATABASE_NAME}
+    container_name: ${DATABASE_HOST}
     ports:
-      - "${DATABASE_PORT}:5432"
+      - "${DATABASE_PORT}:27017"
     volumes:
-      - ${DB_DATA_LOCATION}:/data/db
+      - database_data:/data/db
 
 volumes:
   database_data:

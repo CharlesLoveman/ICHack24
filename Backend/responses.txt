@@ -1733,3 +1733,559 @@ I tried to make the attacks feel unique to Boxling's concept and give them a bit
 
 =====RESPONSE END=====
 
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Taskmon
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Taskmon are born from the endless lists of tasks assigned to programmers. They are generally docile, but become agitated when a task is marked as 'in progress' for too long without updates. The arrow pointing at the last task is a sign of its current focus. They are often found near computers and coffee machines. It is said that a Taskmon will attempt to 'resolve' issues by randomly changing code, sometimes with disastrous results.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Normal/Ghost
+
+HP: 60
+
+Attack: 45
+
+Defence: 50
+
+Special Attack: 75
+
+Special Defence: 80
+
+Speed: 95
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Taskmon, keeping in mind its Normal/Ghost typing and lore as a programmer-related Pokemon that gets agitated by stalled tasks. I've included names, categories (Status, Physical, Special), types, and descriptions.
+
+[Start Attack 1]
+
+Name: **Deadline Loom**
+Category: Status
+Type: Ghost
+Description: Taskmon projects an aura of impending doom, representing the stress of an approaching deadline. Lowers the target’s Speed and Accuracy, as they become overwhelmed with anxiety. Has a chance to inflict the "Procrastination" status condition (target has a reduced chance to attack on the next turn).
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Code Injection**
+Category: Special
+Type: Normal
+Description: Taskmon rapidly fires a stream of seemingly random code snippets at the opponent. While not inherently powerful, the chaotic nature of the attack has a chance to confuse the target, or inflict a minor damage-over-time effect representing bugs appearing in their system. (Small chance to inflict Confusion or a minor Poison effect).
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Merge Conflict**
+Category: Physical
+Type: Normal
+Description: Taskmon slams into the opponent, attempting a forceful "merge" of its ghostly form. This attack has a high critical hit ratio, representing the unpredictable nature of code merges. However, it also has a small chance to backfire, slightly damaging Taskmon itself due to conflicting data.
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Stack Overflow**
+Category: Special
+Type: Ghost
+Description: Taskmon unleashes a surge of ghostly energy, manifesting as an overwhelming cascade of error messages. This attack deals significant damage, but has a chance to lower Taskmon’s Special Attack afterwards, representing the exhaustion from processing too much information. (High damage, but has a chance to lower Taskmon's Sp. Atk).
+
+[End Attack 4]
+
+
+
+I tried to make the attacks feel thematic to the Pokemon's concept, using programming terminology and reflecting its personality. Hopefully, these are entertaining and fit well with the Taskmon's lore!
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Cannablast
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Cannablast is a Steel/Fire type Pokémon that resembles a miniature antique cannon. It is surprisingly mobile, rolling around on its small wheels to find optimal firing positions. Cannablast doesn't use traditional Pokémon moves; instead, it charges up energy and releases a concussive blast of hot air and metallic fragments. It is often found near historical sites or antique shops, and is said to be attracted to strong emotions, particularly those of excitement or anger, which it uses to fuel its blasts. Despite its intimidating appearance, Cannablast is generally docile unless provoked.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Steel/Fire
+
+HP: 80
+
+Attack: 120
+
+Defence: 100
+
+Special Attack: 90
+
+Special Defence: 60
+
+Speed: 40
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks designed for Cannablast, the Steel/Fire type cannon Pokémon, keeping its lore and attributes in mind. I've focused on attacks that feel like they'd come from a miniature cannon, utilizing concussive force, heat, and metallic shrapnel.
+
+[Start Attack 1]
+
+Name: **Historical Volley**
+Category: Physical
+Type: Steel
+Description: Cannablast rapidly fires a spread of small, rusted metal fragments – remnants of past eras it’s collected. While individually weak, the sheer number and unpredictable trajectory can overwhelm opponents. Has a chance to lower the target's Accuracy due to the erratic nature of the shrapnel. (Accuracy -1 stage, 30% chance)
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Emotive Overcharge**
+Category: Special
+Type: Fire
+Description: Cannablast draws upon nearby emotional energy (or its own stored excitement/anger) to superheat its internal chamber. It then releases a focused blast of intensely hot air. Power increases slightly if the user has recently been damaged (1.2x power if HP below 50%).
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Rolling Barrage**
+Category: Physical
+Type: Steel
+Description: Cannablast rapidly rolls forward, gaining momentum, and unleashes a series of short, powerful concussive blasts while moving. Hits 2-5 times in succession. Each hit has a chance to flinch the target. (2-5 hits, 20% chance to flinch per hit)
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Antique Echo**
+Category: Status
+Type: Steel
+Description: Cannablast emits a resonating pulse of energy that mimics the sounds of historical battles and events. This disorients the opponent, lowering their Special Defense and potentially causing confusion. (Lowers Special Defense by 1 stage, 20% chance to Confuse)
+
+[End Attack 4]
+
+
+
+I tried to make the attacks feel unique to Cannablast's concept, leaning into its antique nature, emotional connection, and cannon-like abilities. I also included some secondary effects to make them more interesting strategically.
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Cannobloom
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Cannobloom are surprisingly gentle Pokemon, despite their origins as miniature cannons. They are often found in antique shops or near historical sites, absorbing residual energy from past battles. Instead of firing projectiles, Cannobloom release bursts of pollen that can either soothe or stun opponents. The pollen's effect depends on the Cannobloom's mood – a happy Cannobloom will release calming pollen, while a startled one will unleash a paralyzing cloud. They are very sensitive to vibrations and will often recoil if approached too quickly.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Steel/Grass
+
+HP: 80
+
+Attack: 120
+
+Defence: 150
+
+Special Attack: 60
+
+Special Defence: 70
+
+Speed: 35
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Cannobloom, taking into account its Steel/Grass typing, gentle nature, pollen-based abilities, and sensitivity to vibrations. I've included the requested format with Name, Category (Status, Physical, or Special), Type, and Description.
+
+[Start Attack 1]
+
+Name: **Rustling Reprieve**
+Category: Status
+Type: Grass
+Description: Cannobloom releases a cloud of incredibly fine, soothing pollen. This pollen gently coats the target, easing aches and pains. Heals the target for 50% of their maximum HP, but also lowers their Attack and Special Attack by one stage due to the relaxing effect. (Reflects Cannobloom's gentle nature and Grass typing).
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Static Bloom**
+Category: Special
+Type: Steel
+Description: Cannobloom rapidly vibrates its metallic body, creating a localized electromagnetic field. This field is then discharged as a burst of static-infused pollen. Deals moderate Steel-type damage and has a 30% chance to Paralyze the target. (Combines Steel typing with the pollen release and vibration sensitivity).
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Historical Echo**
+Category: Physical
+Type: Steel
+Description: Cannobloom focuses on residual energy from the surrounding area, channeling it into a powerful, short-range blast. The attack manifests as a concentrated burst of metallic pollen, striking with surprising force. Power increases by 20% if used near a historical landmark or in a location with a strong "past" feeling. (Plays on the lore of absorbing energy from historical sites and uses Steel typing for a physical attack).
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Pollen Panic**
+Category: Status
+Type: Grass
+Description: Cannobloom, startled by a sudden noise or movement, releases a dense cloud of paralyzing pollen. This pollen induces a state of confusion and immobility. Has a 60% chance to Paralyze the target and a 20% chance to also inflict Confusion. (Reflects the Pokemon's sensitivity to vibrations and its ability to release paralyzing pollen when startled).
+
+[End Attack 4]
+
+
+
+I tried to make the attacks feel unique to Cannobloom and its backstory, while also being strategically viable within a Pokemon battle context. Let me know if you'd like any adjustments or further ideas!
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Stickosaur
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Stickosaur is a playful Pokemon often found adorning everyday objects. It's believed they are born from the joy of decoration, and are particularly fond of festive occasions. They are surprisingly resilient, able to withstand being peeled and re-stuck multiple times. Despite their small size, they possess a surprisingly strong adhesive grip, and can cling to almost any surface. They communicate through subtle shifts in their colour and the arrangement of their decorative 'crown'.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Normal/Fairy
+
+HP: 60
+
+Attack: 45
+
+Defence: 70
+
+Special Attack: 55
+
+Special Defence: 80
+
+Speed: 95
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Stickosaur, taking into account its playful, decorative, resilient, and adhesive nature, and its Normal/Fairy typing. I've included the requested formatting.
+
+[Start Attack 1]
+
+Name: Confetti Cannon
+Category: Special
+Type: Fairy
+Description: Stickosaur rapidly shifts its colours, creating a dazzling burst of shimmering confetti that explodes towards the opponent. This attack doesn't deal massive damage, but has a high chance to lower the target's Accuracy due to the distracting spectacle. (Accuracy -1 stage chance: 60%)
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: Sticky Situation
+Category: Status
+Type: Normal
+Description: Stickosaur launches a concentrated blob of incredibly strong adhesive at the opponent. This doesn't inflict damage directly, but drastically reduces the target's Speed, making it harder for them to move. (Speed -2 stage chance: 75%)
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: Festive Fortitude
+Category: Physical
+Type: Fairy
+Description: Stickosaur rapidly adheres itself to its own body, creating a surprisingly durable, decorative shield. It then charges forward, ramming into the opponent. This attack prioritizes defense, significantly boosting Stickosaur's Defense for the next turn while dealing moderate damage. (Defense +1 stage guaranteed next turn)
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: Decorative Decoy
+Category: Status
+Type: Normal
+Description: Stickosaur quickly creates a perfect, shimmering duplicate of itself using its adhesive and colour-shifting abilities. This confuses the opponent, potentially causing them to target the decoy instead. (Confusion chance: 50%. Decoy has 1 HP and disappears after one hit.)
+
+[End Attack 4]
+
+
+
+
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Monitoad
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Monitoad is a curious Pokémon that appears to be a fusion of technology and amphibian life. It is often found near electronic devices, seemingly absorbing energy from their screens. The pink 'head' is actually a highly sensitive sensor used to detect changes in electromagnetic fields. It communicates through a series of beeps and static-like noises. Despite its somewhat clumsy appearance, Monitoad is surprisingly agile when navigating the digital world. It is said that prolonged exposure to Monitoad can cause minor glitches in nearby electronics.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Electric/Water
+
+HP: 80
+
+Attack: 45
+
+Defence: 60
+
+Special Attack: 110
+
+Special Defence: 75
+
+Speed: 95
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Monitoad, keeping in mind its Electric/Water typing, tech-amphibian nature, and the description provided. I've included names, categories (Status, Physical, Special), types, and descriptions.
+
+[Start Attack 1]
+
+Name: **Static Splash**
+Category: Special
+Type: Electric
+Description: Monitoad charges a bubble of water with static electricity, then launches it at the opponent. The water doesn't cause much impact damage, but the electrical charge has a chance to paralyze. *“Monitoad gathers energy, then *bzzt*! A shocking splash!”*
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Data Drain**
+Category: Status
+Type: Electric
+Description: Monitoad extends its sensor 'head' and attempts to siphon energy from the target. This doesn't inflict direct damage, but sharply lowers the opponent’s Special Attack and Speed, representing a disruption of their internal 'processing'. *“Monitoad’s sensor glows, attempting to leech away the opponent’s power!”*
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Amphibious Circuit**
+Category: Physical
+Type: Water
+Description: Monitoad rapidly vibrates its body, creating a localized electromagnetic field that superheats the water around it. It then slams into the opponent with a powerful, scalding water-enhanced tackle. *“Monitoad’s body hums with energy, then launches forward in a steaming rush!”*
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Glitch Field**
+Category: Status
+Type: Electric
+Description: Monitoad emits a wave of disruptive electromagnetic energy. This attack doesn’t directly harm the opponent, but has a chance to inflict various status conditions – confusion, burn, or paralysis – representing the unpredictable effects of a digital glitch. The chance of each condition is random. *“Monitoad unleashes a chaotic burst of static, scrambling the opponent’s senses!”*
+
+[End Attack 4]
+
+
+
+I tried to make the attacks feel unique to Monitoad's concept, leaning into the blend of water and electricity, and the idea of it interacting with and disrupting technology. I also varied the categories to give it a balanced moveset.
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Fluffalo
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Fluffalo are incredibly shy Pokémon, often hiding their faces in their own fluff when startled. They are known to be incredibly soft and comforting, and trainers often report feeling a sense of calm when near one. Despite their gentle nature, Fluffalo can unleash surprisingly powerful headbutts when provoked, using their dense fluff as cushioning. They are often found near children, offering silent companionship. It is said that a Fluffalo's fluff grows denser with the amount of love it receives.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Normal/Fairy
+
+HP: 110
+
+Attack: 65
+
+Defence: 90
+
+Special Attack: 50
+
+Special Defence: 100
+
+Speed: 30
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Fluffalo, taking into account its description as a shy, fluffy, comforting, yet surprisingly strong Pokémon. I've included names, categories (Status, Physical, Special), types, and descriptions.
+
+[Start Attack 1]
+
+Name: **Fluff Embrace**
+Category: Status
+Type: Fairy
+Description: Fluffalo nuzzles the opponent with its incredibly soft fluff. This attack sharply raises the target’s Special Defense, representing a feeling of comfort and security, but also has a 30% chance to confuse the target with overwhelming softness, leaving them dazed and unable to focus.
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Cotton Headbutt**
+Category: Physical
+Type: Normal
+Description: Fluffalo lowers its head and charges, using its dense fluff as a protective cushion. The impact is surprisingly strong, and the fluff softens the blow for Fluffalo, reducing recoil damage. Has a chance to flinch the opponent due to the unexpected impact.
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Soothing Aura**
+Category: Status
+Type: Fairy
+Description: Fluffalo emits a gentle, calming aura. This attack heals all allied Pokémon on the field for a small amount of HP and has a chance to cure any status conditions. The healing is more potent the more affection Fluffalo has for its trainer (represented by a hidden stat).
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Fluff Storm**
+Category: Special
+Type: Normal
+Description: Fluffalo violently shakes its body, releasing a swirling vortex of fluff. This attack deals damage and has a high chance to lower the opponent’s Accuracy, as the fluff obscures their vision. The power of this attack increases the denser Fluffalo’s fluff is (based on a hidden stat representing love received).
+
+
+
+
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+[Start Output Name]
+
+Name: Fluffalo
+
+[End Output Name]
+
+[Start Output Pokedex]
+
+Fluffalo are incredibly shy Pokémon, often hiding their faces in their own fluff when startled. They are known to be incredibly soft and comforting, and trainers often report feeling a sense of calm when near one. Despite their gentle nature, Fluffalo can unleash surprisingly powerful headbutts when provoked, using their dense fluff as cushioning. They are often found near children, offering silent companionship. It is said that a Fluffalo's fluff grows denser with the amount of love it receives.
+
+[End Output Pokedex]
+
+[Start Output Stats]
+
+Type: Normal/Fairy
+
+HP: 110
+
+Attack: 65
+
+Defence: 90
+
+Special Attack: 50
+
+Special Defence: 100
+
+Speed: 30
+
+[End Output Stats]
+
+=====RESPONSE END=====
+
+=====RESPONSE START=====
+
+Okay, here are four attacks for Fluffalo, taking into account its description as a shy, soft, comforting, but surprisingly strong Pokémon. I've included names, categories (Status, Physical, Special), types, and descriptions.
+
+[Start Attack 1]
+
+Name: **Fluff Embrace**
+Category: Status
+Type: Fairy
+Description: Fluffalo nuzzles the opponent with its incredibly soft fluff. This attack sharply raises the target’s Special Defense, representing a feeling of comfort and security, but also has a 30% chance to confuse the target with overwhelming softness, leaving them dazed and unable to focus.
+
+[End Attack 1]
+
+[Start Attack 2]
+
+Name: **Cotton Headbutt**
+Category: Physical
+Type: Normal
+Description: Fluffalo lowers its head and charges, using its dense fluff as a protective cushion. The impact is surprisingly strong, and the fluff softens the blow for Fluffalo, reducing recoil damage. Has a chance to flinch the opponent due to the unexpected impact.
+
+[End Attack 2]
+
+[Start Attack 3]
+
+Name: **Soothing Aura**
+Category: Status
+Type: Fairy
+Description: Fluffalo emits a gentle, calming aura. This attack heals all allied Pokémon on the field by a small amount each turn for 5 turns. The healing is more potent the lower the user’s HP is, representing Fluffalo drawing on its inner reserves of comfort to help others.
+
+[End Attack 3]
+
+[Start Attack 4]
+
+Name: **Fluff Storm**
+Category: Special
+Type: Normal
+Description: Fluffalo violently shakes its body, releasing a swirling cloud of fluff. This attack deals damage and has a high chance to lower the opponent’s Accuracy, as the fluff obscures their vision. The power of this attack increases the more affection Fluffalo has for its trainer, representing a surge of protective energy.
+
+
+
+
+
+=====RESPONSE END=====
+

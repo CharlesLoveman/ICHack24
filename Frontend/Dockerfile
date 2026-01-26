@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:22
 
 WORKDIR /home/node/app
 
@@ -8,13 +8,10 @@ ARG CI=true
 
 COPY . .
 
-RUN pnpm install --quiet
+RUN pnpm install --quiet --frozen-lockfile
 
-COPY . .
 
 RUN pnpm run build
-
-ENV NODE_ENV="production"
 
 EXPOSE 5173
 

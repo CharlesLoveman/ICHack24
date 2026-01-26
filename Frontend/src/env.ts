@@ -10,4 +10,4 @@ function getBackendAddress() {
 }
 
 export const backendAddress = getBackendAddress();
-export const assetsFolder = clientURL.fullString();
+export const assetsFolder = clientURL.fullString() + "/public";
