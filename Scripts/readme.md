@@ -16,4 +16,4 @@ Open multiple terminal sessions, running one script in each:
 
 1) Backend: `run_backend.bat`
 2) Frontend: `run_frontend.bat`
-3) (MongoDB: `m_run.bat`)
+3) (MongoDB: `run_database.bat`)
