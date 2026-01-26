@@ -10,10 +10,12 @@ import {
 import { BATTLE_RESULT } from "../types";
 import { useSocket } from "./useSocket";
 import { useGlobalData } from "./useGlobalData";
+import { baseBattleData, clearBattleStates } from "./useSetupGlobalData";
 
 export function useSetupSocket() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isConnected, setIsConnected] = useState(socket.connected);
+  const globalData = useGlobalData();
   const {
     setNewTurn,
     setBattleData,
@@ -21,15 +23,12 @@ export function useSetupSocket() {
     setBattleResult,
     setCurrentBattleMoves,
     setCommentaryFinished,
+    setJoinBattleData,
     commentaryFinished,
     currentBattleMoves,
-  } = useGlobalData();
-  //const [pokemonCards, setPokemonCards] = useState([]);
+  } = globalData;
+
   const navigate = useNavigate();
-  const baseBattleData = {
-    otherPlayerWaiting: false,
-    thisPlayerWaiting: false,
-  };
 
   function onConnect() {
     setIsConnected(true);
@@ -72,40 +71,32 @@ export function useSetupSocket() {
   }
 
   function onJoinBattleFromRoom(data: JoinBattleData) {
-    setBattleData(baseBattleData);
-    setBattleResult(undefined);
+    clearBattleStates(globalData);
     setBattleHP({
       self_hp: data.self_pokemon.stats.hp,
       target_hp: data.target_pokemon.stats.hp,
     });
-    navigate(`/PokemonBattleScreen/${data.game_id}`, {
-      state: data,
-    });
+    setJoinBattleData(data);
+    navigate(`/PokemonBattleScreen/${data.game_id}`);
   }
 
   function onJoinBattle(data: JoinBattleData) {
     console.log(data);
-    setBattleData(baseBattleData);
-    setBattleResult(undefined);
+    clearBattleStates(globalData);
     setBattleHP({
       self_hp: data.self_pokemon.stats.hp,
       target_hp: data.target_pokemon.stats.hp,
     });
-    navigate(`/PokemonBattleScreen/${data.game_id}`, {
-      state: data,
-    });
+    setJoinBattleData(data);
+    navigate(`/PokemonBattleScreen/${data.game_id}`);
   }
 
   function onWaitOnOtherPlayer() {
-    const battleData = { ...baseBattleData };
-    battleData.thisPlayerWaiting = true;
-    setBattleData({ ...battleData });
+    setBattleData({ ...baseBattleData, thisPlayerWaiting: true });
   }
 
   function onMakeOtherPlayerWait() {
-    const battleData = { ...baseBattleData };
-    battleData.otherPlayerWaiting = true;
-    setBattleData({ ...battleData });
+    setBattleData({ ...baseBattleData, otherPlayerWaiting: true });
   }
 
   function onTurnEnd(data: OnTurnEndData) {
@@ -122,13 +113,12 @@ export function useSetupSocket() {
         target_hp: data.target_hp,
       });
       setNewTurn(true);
-      setCurrentBattleMoves(undefined);
     };
 
-    setTimeout(() => {
-      setCommentaryFinished(false);
-      setDoTurnEndTransition(() => _doTurnEndTransition);
-    }, 1000);
+    // setTimeout(() => {
+    setCommentaryFinished(false);
+    setDoTurnEndTransition(() => _doTurnEndTransition);
+    // }, 1000);
   }
 
   function win() {

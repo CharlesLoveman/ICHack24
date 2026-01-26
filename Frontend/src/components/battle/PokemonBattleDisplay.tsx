@@ -9,26 +9,26 @@ interface PokemonBattleDisplayProps {
   target_hp: number;
 }
 
+const SelfPokemonContainer = styled.div`
+  position: fixed;
+  float: left;
+  bottom: 33%;
+  left: 5%;
+`;
+
+const TargetPokemoneContainer = styled.div`
+  position: fixed;
+  float: right;
+  top: 20%;
+  right: 5%;
+`;
+
 export default function PokemonBattleDisplay({
   self_pokemon,
   target_pokemon,
   self_hp: hp1,
   target_hp: hp2,
 }: PokemonBattleDisplayProps) {
-  const SelfPokemonContainer = styled.div`
-    position: fixed;
-    float: left;
-    bottom: 33%;
-    left: 5%;
-  `;
-
-  const TargetPokemoneContainer = styled.div`
-    position: fixed;
-    float: right;
-    top: 20%;
-    right: 5%;
-  `;
-
   return (
     <>
       <SelfPokemonContainer>

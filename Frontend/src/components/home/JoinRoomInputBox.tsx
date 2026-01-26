@@ -2,8 +2,8 @@ import { useState } from "react";
 import { socket } from "../../socket";
 import { GiBattleAxe } from "react-icons/gi";
 import { PlayerJoinBattleData, Pokemon } from "../../sharedTypes";
-import { LongButton } from "../LongButton";
-import { LongInput } from "../LongInput";
+import { LongButton } from "../layout/LongButton";
+import { LongInput } from "../layout/LongInput";
 import styled from "styled-components";
 
 interface JoinRoomInputBoxProps {

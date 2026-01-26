@@ -41,6 +41,29 @@ const uploadFile = async function (selectedFile?: File, id?: string) {
   }
 };
 
+const CaptureContainer = styled.div`
+  margin: auto;
+  display: grid;
+  place-items: center;
+  grid-template-areas: "inner-div";
+`;
+
+const Absolute = styled.div`
+  grid-area: inner-div;
+  position: relative;
+`;
+
+const Circle = styled.div`
+  background-color: white;
+  border-radius: 100rem;
+  padding: 0.9rem;
+  height: 2rem;
+  width: 2rem;
+  z-index: 100;
+  position: relative;
+  bottom: -0.9rem;
+`;
+
 export default function PokemonCaptureScreen() {
   const { setPokemonReturned, setNoNewPokemon, noNewPokemon } = useGlobalData();
   const params = useParams<{ id: string }>();
@@ -60,29 +83,6 @@ export default function PokemonCaptureScreen() {
       onFileUpload(event.target.files[0]);
     }
   };
-
-  const CaptureContainer = styled.div`
-    margin: auto;
-    display: grid;
-    place-items: center;
-    grid-template-areas: "inner-div";
-  `;
-
-  const Absolute = styled.div`
-    grid-area: inner-div;
-    position: relative;
-  `;
-
-  const Circle = styled.div`
-    background-color: white;
-    border-radius: 100rem;
-    padding: 0.9rem;
-    height: 2rem;
-    width: 2rem;
-    z-index: 100;
-    position: relative;
-    bottom: -0.9rem;
-  `;
 
   return (
     <>

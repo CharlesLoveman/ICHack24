@@ -3,9 +3,9 @@ import axios from "axios";
 import { backendAddress } from "../../env";
 import { useGlobalData } from "../../hooks/useGlobalData";
 import { generate } from "random-words";
-import { LongButton } from "../LongButton";
+import { LongButton } from "../layout/LongButton";
 import styled from "styled-components";
-import { LongInput } from "../LongInput";
+import { LongInput } from "../layout/LongInput";
 
 const generateRandomUserName = () => generate({ exactly: 3, join: "-" });
 
@@ -20,12 +20,6 @@ export default function LoginInputBox() {
     generateRandomUserName()
   );
   const { username, setUsername, setPokemon } = useGlobalData();
-
-  const storedUsername = localStorage.getItem("username");
-
-  if (storedUsername != null) {
-    initialiseUser(storedUsername);
-  }
 
   interface LoginResponse {
     pid: string;
@@ -56,7 +50,7 @@ export default function LoginInputBox() {
   function logout() {
     setUsername(undefined);
     setFormUsername(generateRandomUserName());
-    localStorage.removeItem("username");
+    // localStorage.removeItem("username");
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {

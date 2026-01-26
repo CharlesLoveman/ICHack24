@@ -5,51 +5,57 @@ import styled from "styled-components";
 import { darkGrey } from "../../utils/colors";
 import { PokemonTypeContainer } from "./PokemonCard";
 
+const Bar = styled.div`
+  background-color: ${darkGrey};
+  height: 0.5rem;
+  padding: 0.3rem;
+  width: 15rem;
+  z-index: 100;
+  position: relative;
+`;
+
+interface HealthProps {
+  hp: number;
+  maxHp: number;
+}
+
+const Health = styled.div<HealthProps>`
+  background-color: #59b859;
+  height: 0.5rem;
+  width: ${(props) => (props.hp / props.maxHp) * 15}rem;
+  z-index: 100;
+  position: relative;
+`;
+
+const RightPokemonTypeContainer = styled(PokemonTypeContainer)`
+  text-align: right;
+  align-items: flex-end;
+  position: relative;
+  float: right;
+  margin-top: 0.5rem;
+  margin-right: 0.5rem;
+`;
+
+interface OnLeftProps {
+  onLeft: boolean;
+}
+
+const ImageContainer = styled.div<OnLeftProps>`
+  position: relative;
+  float: ${(props) => (props.onLeft ? "left" : "right")};
+`;
+
+const PokemonDisplayContainer = styled.div<OnLeftProps>`
+  display: flex;
+  flex-direction: column;
+  align-items: ${(props) => (props.onLeft ? "flex-start" : "flex-end")};
+`;
+
 export default function PokemonDisplay(
   pokemon: Pokemon,
   hp: number,
   onLeft: boolean
 ) {
-  const Bar = styled.div`
-    background-color: ${darkGrey};
-    height: 0.5rem;
-    padding: 0.3rem;
-    width: 15rem;
-    z-index: 100;
-    position: relative;
-  `;
-
-  interface HealthProps {
-    hp: number;
-    maxHp: number;
-  }
-
-  const Health = styled.div<HealthProps>`
-    background-color: #59b859;
-    height: 0.5rem;
-    width: ${(props) => (props.hp / props.maxHp) * 15}rem;
-    z-index: 100;
-    position: relative;
-  `;
-
-  const RightPokemonTypeContainer = styled(PokemonTypeContainer)`
-    text-align: right;
-    align-items: flex-end;
-    position: relative;
-    float: right;
-    margin-top: 0.5rem;
-    margin-right: 0.5rem;
-  `;
-
-  interface OnLeftProps {
-    onLeft: boolean;
-  }
-
-  const ImageContainer = styled.div<OnLeftProps>`
-    position: relative;
-    float: ${(props) => (props.onLeft ? "left" : "right")};
-  `;
-
   const translateStyles = onLeft ? { translate: "-10%" } : { translate: "10%" };
 
   const pokemonInfo = (
@@ -84,12 +90,6 @@ export default function PokemonDisplay(
       <img src={assetsFolder + "/" + pokemon.image_id} width="100"></img>
     </ImageContainer>
   );
-
-  const PokemonDisplayContainer = styled.div<OnLeftProps>`
-    display: flex;
-    flex-direction: column;
-    align-items: ${(props) => (props.onLeft ? "flex-start" : "flex-end")};
-  `;
 
   return (
     <PokemonDisplayContainer onLeft={onLeft}>

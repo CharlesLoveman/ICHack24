@@ -1,5 +1,5 @@
 import { Card, CardProps } from "@mui/material";
-import { lightGrey } from "../utils/colors";
+import { lightGrey } from "../../utils/colors";
 
 export function DetailsCard(props: CardProps) {
   return (

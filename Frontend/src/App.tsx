@@ -5,11 +5,13 @@ import { RouterProvider } from "react-router-dom";
 import { GlobalData, useSetupGlobalData } from "./hooks/useSetupGlobalData";
 import { getBrowserRouter } from "./components/BrowserRouter";
 import { useTheme } from "./hooks/useTheme";
+import { loadLocalStorage } from "./hooks/useLocalStorage";
 
 const router = getBrowserRouter();
 
 export default function App() {
-  const data = useSetupGlobalData();
+  const localStorageData = loadLocalStorage();
+  const data = useSetupGlobalData(localStorageData);
   const theme = useTheme();
 
   return (

@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import PokemonBattleDisplay from "../battle/PokemonBattleDisplay";
 import PokemonAttacksDisplay from "../battle/PokemonAttacksDisplay";
-import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { socket } from "../../socket";
 
-import { Pokemon, Attack, AttackData } from "../../sharedTypes";
+import { Attack, AttackData } from "../../sharedTypes";
 import { BATTLE_RESULT } from "../../types";
 import { useGlobalData } from "../../hooks/useGlobalData";
 import BattleCommentary from "../battle/BattleCommentary";
@@ -16,11 +15,6 @@ import { assetsFolder } from "../../env";
 import { FightButton } from "../battle/FightButton";
 import { ReturnToHomeButton } from "../battle/ReturnToHomeButton";
 
-interface BattleLocationState {
-  self_pokemon: Pokemon;
-  target_pokemon: Pokemon;
-  game_id: string;
-}
 interface ImageContainerProps {
   path: string;
 }
@@ -41,6 +35,7 @@ const PokemonActionArea = styled.div`
 
 export default function PokemonBattleScreen() {
   const {
+    joinBattleData,
     battleData,
     newTurn,
     setNewTurn,
@@ -51,7 +46,6 @@ export default function PokemonBattleScreen() {
     setCommentaryFinished,
     setCurrentBattleMoves,
   } = useGlobalData();
-  const { state } = useLocation() as { state: BattleLocationState };
   const params = useParams<{ game_id: string }>();
   const [chosenAttack, setChosenAttack] = useState<Attack | undefined>(
     undefined
@@ -59,12 +53,17 @@ export default function PokemonBattleScreen() {
 
   const [isChoosingMove, setIsChoosingMove] = useState(false);
 
+  const { self_pokemon: selfPokemon, target_pokemon: targetPokemon } =
+    joinBattleData ?? {};
+
   const getResultText = (battleResult: BATTLE_RESULT) => {
     switch (battleResult) {
       case BATTLE_RESULT.WIN:
         return "You have won through sheer skill!";
       case BATTLE_RESULT.LOSE:
         return "Your pokemon has fainted and you have lost...";
+      default:
+        return "There ought to be a result..";
     }
   };
 
@@ -85,7 +84,7 @@ export default function PokemonBattleScreen() {
 
   useEffect(() => {
     if (!commentaryFinished) {
-      setIsChoosingMove(true);
+      setIsChoosingMove(false);
     }
   }, [commentaryFinished]);
 
@@ -98,23 +97,27 @@ export default function PokemonBattleScreen() {
     }
   }, [newTurn]);
 
-  let preMoveCommentary = `What will ${state.self_pokemon.name} do? `;
+  let preMoveCommentary = `What will ${joinBattleData?.self_pokemon.name} do? `;
   if (battleData?.otherPlayerWaiting)
     preMoveCommentary += `The other player is now waiting for you to make a move. `;
   if (battleData?.thisPlayerWaiting)
     preMoveCommentary = `The other player has not selected a move yet. You are ready to use ${chosenAttack?.name}! `;
 
-  return (
+  console.log(commentaryFinished);
+
+  return !(selfPokemon && targetPokemon) ? (
+    <></>
+  ) : (
     <>
-      <Title>Battle</Title>
+      <Title>Battle {commentaryFinished ? "YES" : "NO"}</Title>
       {!isChoosingMove ? (
         <PokemonBattleScreenContainer
           path={assetsFolder + "/" + "background_temp_leeched.webp"}
         >
           <ScrollableMain>
             <PokemonBattleDisplay
-              self_pokemon={state.self_pokemon}
-              target_pokemon={state.target_pokemon}
+              self_pokemon={selfPokemon}
+              target_pokemon={targetPokemon}
               self_hp={battleHP?.self_hp ?? 0}
               target_hp={battleHP?.target_hp ?? 0}
             />
@@ -123,22 +126,33 @@ export default function PokemonBattleScreen() {
             {commentaryFinished || commentaryFinished === undefined ? (
               <>
                 {battleResult === undefined ? (
-                  <BattleCommentary texts={[preMoveCommentary]} />
+                  <>
+                    <BattleCommentary texts={[preMoveCommentary]} />
+                  </>
                 ) : (
-                  <BattleCommentary
-                    texts={[getResultText(battleResult)]}
-                  ></BattleCommentary>
+                  <>
+                    <BattleCommentary
+                      texts={[getResultText(battleResult)]}
+                    ></BattleCommentary>
+                  </>
                 )}
               </>
             ) : (
-              <BattleCommentary texts={texts} />
+              <BattleCommentary
+                texts={[...texts]}
+                onCommentaryEnd={() => {
+                  console.log("we're here");
+                  setCommentaryFinished(true);
+                }}
+                hideArrowOnLast={false}
+              />
             )}
           </PokemonActionArea>
         </PokemonBattleScreenContainer>
       ) : (
         <ScrollableMain>
           <PokemonAttacksDisplay
-            pokemon={state.self_pokemon}
+            pokemon={selfPokemon}
             onAttack={onAttack}
             chosenAttack={chosenAttack}
           />
@@ -150,6 +164,7 @@ export default function PokemonBattleScreen() {
         <FightButton
           isChoosingMove={isChoosingMove}
           setIsChoosingMove={setIsChoosingMove}
+          disabled={commentaryFinished !== undefined}
         ></FightButton>
       )}
     </>

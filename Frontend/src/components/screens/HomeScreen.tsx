@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import JoinRoomInputBox from "../home/JoinRoomInputBox";
 import { GiBattleGear } from "react-icons/gi";
 import { MdCatchingPokemon } from "react-icons/md";
-import "./styles.css";
 
 import { socket } from "../../socket";
 
@@ -15,8 +14,8 @@ import { POKEMON_HAS_RETURNED } from "../../types";
 import { useGlobalData } from "../../hooks/useGlobalData";
 import styled from "styled-components";
 import { Typography } from "@mui/material";
-import { LongButton } from "../LongButton";
-import { LinkButton } from "../LinkButton";
+import { LongButton } from "../layout/LongButton";
+import { LinkButton } from "../layout/LinkButton";
 import { ScrollableMain } from "../layout/ScrollableMain";
 
 const HomeScreenContainer = styled.div`

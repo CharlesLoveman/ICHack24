@@ -3,7 +3,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { TbPokeball } from "react-icons/tb";
 import { Button, CardActions, CardHeader } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Pokemon, Attack } from "../../sharedTypes";
 import { useGlobalData } from "../../hooks/useGlobalData";
 import { Title } from "../layout/Title";
@@ -17,7 +17,7 @@ import {
 } from "../pokedex/PokemonCard";
 import { assetsFolder } from "../../env";
 import { useLoaderData, useParams } from "react-router-dom";
-import { DetailsCard } from "../DetailsCard";
+import { DetailsCard } from "../pokedex/DetailsCard";
 import { PokemonMoveCard } from "../pokedex/PokemonMoveCard";
 import { StatDisplay } from "../pokedex/StatsDisplay";
 
@@ -32,7 +32,11 @@ function MovesDisplay(attacks: Attack[] | undefined) {
 }
 
 export default function PokemonFullCardScreen() {
-  const { pokemon, setPokemon, viewPokemon, setViewPokemon } = useGlobalData();
+  const { pokemon, setPokemon } = useGlobalData();
+
+  const [viewPokemon, setViewPokemon] = useState<Pokemon | undefined>(
+    undefined
+  );
 
   const isSelected = viewPokemon?.id === pokemon?.id;
 

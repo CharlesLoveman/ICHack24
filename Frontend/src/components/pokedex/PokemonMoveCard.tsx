@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import { CardHeader } from "@mui/material";
 import { Attack } from "../../sharedTypes";
 import { PokemonNameContainer, PokemonTypeContainer } from "./PokemonCard";
-import { DetailsCard } from "../DetailsCard";
+import { DetailsCard } from "./DetailsCard";
 import { OptionalPokemonStats, StatDisplay } from "./StatsDisplay";
 
 function statsAreEmpty(stats: OptionalPokemonStats | undefined) {
