@@ -22,7 +22,7 @@ import base64
 
 from sharedTypes import *
 
-users = {}
+usersToSockets: Dict[str, str] = {}
 battles: Dict[str, Battle] = {}
 
 ERRORMON_ID = None  # Run create_errormon.py and set this!

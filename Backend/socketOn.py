@@ -1,4 +1,4 @@
-from .app import socketio, battles, users
+from .app import socketio, battles, usersToSockets
 from .socketEmit import (
     emit_joinBattle,
     emit_joinBattleFromRoom,
@@ -16,6 +16,14 @@ from .db import (
 from sharedTypes import *
 
 
+@socketio.on("associateUsernameWithSocket")
+def handle_associateUsernameWithSocket(json: AssociateUsernameWithSocketData):
+    """Associate a username with a socket."""
+    if usersToSockets[json["username"]] is not None:
+        print("Overwriting the sid for user ${}")
+    usersToSockets[json["username"]] = request.sid
+
+
 @socketio.on("createBattle")
 def handle_createBattle(json: CreateBattleData):
     """Create a new battle."""
@@ -27,13 +35,12 @@ def handle_createBattle(json: CreateBattleData):
 
     # pokemon = Pokemon.load(database, pokemon_id)
     battles[game_id] = Battle(request.sid, pokemon_id)
-    users[request.sid] = request.sid
 
     emit_joinWaitingRoom(game_id=game_id)
 
 
 @socketio.on("joinBattle")
-def handle_joinBattle(json: JoinBattleData):
+def handle_joinBattle(json: PlayerJoinBattleData):
     """Join a new player to a battle."""
     game_id = json["game_id"]
     pokemon_id = json["pokemon_id"]

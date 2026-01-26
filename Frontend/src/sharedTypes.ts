@@ -25,6 +25,7 @@ export interface CreateBattleData {
 }
 
 export interface PlayerJoinBattleData {
+  username: string;
   pokemon_id: string;
   game_id: string;
 }
@@ -72,3 +73,7 @@ export interface MoveData {
 }
 
 export type OnTurnEndData = BattleHP & MoveData;
+
+export interface AssociateUsernameWithSocketData {
+  username: string;
+}

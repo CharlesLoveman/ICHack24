@@ -51,6 +51,7 @@ class CreateBattleData(TypedDict):
 
 
 class PlayerJoinBattleData(TypedDict):
+    username: str
     pokemon_id: str
     game_id: str
 
@@ -80,3 +81,7 @@ class JoinBattleData(TypedDict):
 class AttackData(TypedDict):
     attack_id: Pokemon
     game_id: str
+
+
+class AssociateUsernameWithSocketData(TypedDict):
+    username: str

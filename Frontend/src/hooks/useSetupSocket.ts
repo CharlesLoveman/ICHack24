@@ -25,7 +25,7 @@ export function useSetupSocket() {
     setCommentaryFinished,
     setJoinBattleData,
     commentaryFinished,
-    currentBattleMoves,
+    username,
   } = globalData;
 
   const navigate = useNavigate();
@@ -58,12 +58,10 @@ export function useSetupSocket() {
   }, [commentaryFinished]);
 
   useEffect(() => {
-    console.log(currentBattleMoves);
-  });
-
-  //function onCreatePokemonCardEvent(pokemon) {
-  //  setPokemonCards([...pokemonCards, pokemon]);
-  //}
+    if (username !== undefined && isConnected) {
+      socket.emit("associateUsernameWithSocket", { username });
+    }
+  }, [username, isConnected]);
 
   function onJoinWaitingRoom(data: JoinWaitingRoomData) {
     console.log(data);

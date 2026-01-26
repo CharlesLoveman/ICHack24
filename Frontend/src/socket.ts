@@ -1,6 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import { backendAddress } from "./env";
 import {
+  AssociateUsernameWithSocketData,
   AttackData,
   CreateBattleData,
   JoinBattleData,
@@ -26,6 +27,7 @@ export interface ClientToServerEvents {
   attack: (data: AttackData) => void;
   joinBattle: (data: PlayerJoinBattleData) => void;
   createBattle: (data: CreateBattleData) => void;
+  associateUsernameWithSocket: (data: AssociateUsernameWithSocketData) => void;
 }
 
 export interface ServerToClientEvents {
