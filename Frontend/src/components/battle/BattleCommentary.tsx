@@ -31,7 +31,6 @@ export default function BattleCommentary({
               <RightAlignedContainer>
                 <Button
                   onClick={() => {
-                    console.log(index);
                     if (index === texts.length - 1) {
                       onCommentaryEnd?.();
                     } else {

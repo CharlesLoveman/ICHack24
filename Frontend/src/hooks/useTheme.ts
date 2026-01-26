@@ -35,6 +35,9 @@ export function useTheme() {
     },
     palette: {
       navigation: createColor("#FFFFFF"),
+      action: {
+        disabledBackground: "#969696",
+      },
     },
     components: {
       MuiCardHeader: {

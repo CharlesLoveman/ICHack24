@@ -211,6 +211,12 @@ class Pokemon:
                     1, target.stats[key] + attack.target_status[key]
                 )
 
+        if target.stats["hp"] < 0:
+            target.stats["hp"] = 0
+
+        if self.stats["hp"] < 0:
+            self.stats["hp"] = 0
+
     def save(self) -> str:
         """Save a Pokemon object to the database.
 

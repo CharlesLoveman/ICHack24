@@ -22,8 +22,6 @@ export default function PokemonAttacksDisplay({
 
   const viewAttack = (index: number) => {
     setViewingAttack(index);
-    console.log(index);
-    console.log(pokemon.attacks[index].name);
   };
 
   return (

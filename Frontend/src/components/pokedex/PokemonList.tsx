@@ -13,8 +13,6 @@ export default function PokemonList({ pokemons }: { pokemons: Pokemon[] }) {
 
   useEffect(() => {
     setter(constructPokemonMarkers(noNewPokemon, newPokemonMarkers));
-    console.log(noNewPokemon);
-    console.log(newPokemonMarkers);
   }, []);
 
   function constructPokemonMarkers(

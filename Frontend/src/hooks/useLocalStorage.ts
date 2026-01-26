@@ -6,9 +6,7 @@ export function useLocalStorage() {
   const data = useGlobalData();
 
   useEffect(() => {
-    // console.log(data?.username);
     const stringifiedData = JSON.stringify(data);
-    // console.log(stringifiedData);
     localStorage.setItem("data", stringifiedData);
   }, [data]);
 }

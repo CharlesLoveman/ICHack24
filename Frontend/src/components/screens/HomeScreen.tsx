@@ -39,8 +39,6 @@ export default function HomeScreen() {
     }
   }, [pokemon]);
 
-  // fetchPokemon()
-
   function createBattle(pokemon: Pokemon | null) {
     if (pokemon) {
       socket.emit("createBattle", {
@@ -59,7 +57,7 @@ export default function HomeScreen() {
   return (
     <ScrollableMain>
       <HomeScreenContainer>
-        <Typography>
+        <Typography variant="h6">
           {username ? (
             <>Hello Pokemon Trainer {username}, what would you like to do?</>
           ) : (
@@ -91,7 +89,7 @@ export default function HomeScreen() {
         <JoinRoomInputBox pokemon={pokemon} />
         <LinkButton
           linkProps={{ to: `../PokemonListScreen/${username}` }}
-          buttonProps={{ fullWidth: true }}
+          buttonProps={{ fullWidth: true, disabled: !username }}
         >
           View Pokemon ({noNewPokemon}) {getPokemonWaitingIcon()}
         </LinkButton>
@@ -102,6 +100,7 @@ export default function HomeScreen() {
             fullWidth: true,
             startIcon: <MdCatchingPokemon size="1rem" />,
             endIcon: <MdCatchingPokemon size="1rem" />,
+            disabled: !username,
           }}
         >
           Capture Pokemon!

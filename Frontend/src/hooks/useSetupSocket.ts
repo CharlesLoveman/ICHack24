@@ -62,7 +62,6 @@ export function useSetupSocket() {
   }, [username, isConnected]);
 
   function onJoinWaitingRoom(data: JoinWaitingRoomData) {
-    console.log(data);
     navigate(`/WaitingRoomScreen/${data.game_id}`);
   }
 
@@ -78,7 +77,6 @@ export function useSetupSocket() {
   }
 
   function onJoinBattle(data: JoinBattleData) {
-    console.log(data);
     clearBattleStates(globalData);
     setBattleHP({
       self_hp: data.self_pokemon.stats.hp,

@@ -31,18 +31,28 @@ export default function JoinRoomInputBox({ pokemon }: JoinRoomInputBoxProps) {
     }
   }
 
+  const doJoinBattle = () =>
+    username ? joinBattle(pokemon, username, code) : null;
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "Enter") {
+      doJoinBattle();
+    }
+  }
+
   return (
     <JoinRoomInputContainer>
       <LongInput
         disabled={!pokemon}
         onChange={(e) => setCode(e.target.value)}
+        onKeyDown={(e) => handleKeyDown(e)}
       />
       <LongButton
         disabled={!pokemon}
         color="error"
         startIcon={<GiBattleAxe size="1rem" />}
         endIcon={<GiBattleAxe size="1rem" />}
-        onClick={() => (username ? joinBattle(pokemon, username, code) : null)}
+        onClick={doJoinBattle}
       >
         Join Battle
       </LongButton>

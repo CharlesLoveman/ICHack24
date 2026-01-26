@@ -17,7 +17,7 @@ const CopyrightFooterContainer = styled(FooterContainer)`
 export const CopyrightFooter: React.FC = () => {
   return (
     <CopyrightFooterContainer>
-      <Copyright>&copy; 2024 ICHack24 Pokedex</Copyright>
+      <Copyright>&copy; 2026 AR Pokemon</Copyright>
     </CopyrightFooterContainer>
   );
 };

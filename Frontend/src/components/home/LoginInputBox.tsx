@@ -49,8 +49,8 @@ export default function LoginInputBox() {
 
   function logout() {
     setUsername(undefined);
+    setPokemon(null);
     setFormUsername(generateRandomUserName());
-    // localStorage.removeItem("username");
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
