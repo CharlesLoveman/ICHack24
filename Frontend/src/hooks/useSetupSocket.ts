@@ -154,7 +154,6 @@ export function useSetupSocket() {
   }
 
   function onGetPokemonCreatedResponse(data: PokemonCreatedResponse) {
-    console.log("here2");
     setPokemonReturned(POKEMON_HAS_RETURNED.RETURNED);
 
     if (data.succeeded) {

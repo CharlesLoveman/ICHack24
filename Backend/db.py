@@ -143,3 +143,21 @@ def get_attack_from_id(attack_id: str) -> Attack:
 def get_status_from_id(status_id: str) -> PokemonStats:
     """Return a status as a dict."""
     return get_stats_from_id(status_id, flag="status")
+
+
+def get_pokemons_from_user(username: str):
+    """
+        Return a list of Pokemon stats as a JSON object.
+
+    Args:
+        username (str): the username
+
+    Returns:
+        pokemon_list (json): a list of Pokemon as a JSON object
+    """
+    print(f"Generating Pokemon list for user: {username}")
+
+    pokemon_ids = get_pokemon_ids_from_player(username)
+    pokemon_list = [get_pokemon_from_id(pokemon_id) for pokemon_id in pokemon_ids]
+
+    return pokemon_list

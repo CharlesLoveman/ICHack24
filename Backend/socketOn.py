@@ -16,11 +16,19 @@ from random import randrange
 from .pokemon import Battle, BattleEvent
 from .db import (
     get_pokemon_from_id,
+    get_pokemons_from_user,
     initialise_user,
     request,
 )
 
 from sharedTypes import *
+
+
+@socketio.on("requestUserPokemons")
+def handle_requestUserPokemons(json: AssociateUsernameWithSocketData):
+    username = json["username"]
+    pokemons = get_pokemons_from_user(username)
+    return pokemons
 
 
 @socketio.on("createPokemon")

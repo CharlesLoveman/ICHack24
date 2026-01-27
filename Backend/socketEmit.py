@@ -10,6 +10,7 @@ from sharedTypes import (
     OnTurnEndData,
     Pokemon,
     PokemonCreatedResponse,
+    PokemonsData,
 )
 
 

@@ -107,3 +107,7 @@ class CreatePokemonData(TypedDict):
 
 class PokemonCreatedResponse(TypedDict):
     succeeded: bool
+
+
+class PokemonsData(TypedDict):
+    pokemons: List[Pokemon]

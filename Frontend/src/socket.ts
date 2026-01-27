@@ -12,6 +12,7 @@ import {
   OnTurnEndData,
   PlayerJoinBattleData,
   PokemonCreatedResponse,
+  PokemonsData,
 } from "./sharedTypes";
 
 export enum SocketEventsTo {
@@ -37,6 +38,10 @@ export interface ClientToServerEvents {
   associateUsernameWithSocket: (data: AssociateUsernameWithSocketData) => void;
   login: (data: AssociateUsernameWithSocketData) => void;
   createPokemon: (data: CreatePokemonData) => void;
+  requestUserPokemons: (
+    data: AssociateUsernameWithSocketData,
+    ack: (data: PokemonsData) => void
+  ) => void;
 }
 
 export interface ServerToClientEvents {

@@ -100,3 +100,7 @@ export type NetworkBytes = Uint8Array;
 export interface PokemonCreatedResponse {
   succeeded: boolean;
 }
+
+export interface PokemonsData {
+  pokemons: Pokemon[];
+}
