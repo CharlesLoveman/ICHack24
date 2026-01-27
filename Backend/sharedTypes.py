@@ -111,3 +111,7 @@ class PokemonCreatedResponse(TypedDict):
 
 class PokemonsData(TypedDict):
     pokemons: List[Pokemon]
+
+
+class OnePokemonData(TypedDict):
+    pokemon_id: str

@@ -3,14 +3,32 @@ import Root from "../Root";
 import HomeScreen from "./screens/HomeScreen";
 import WaitingRoomScreen from "./screens/WaitingRoomScreen";
 import PokemonBattleScreen from "./screens/PokemonBattleScreen";
-import PokemonListScreen from "./screens/PokemonListScreen";
+import UserPokedexScreen from "./screens/UserPokedexScreen";
 import PokemonCaptureScreen from "./screens/PokemonCaptureScreen";
 import PokemonFullCardScreen from "./screens/PokemonFullCardScreen";
 import { PokemonLayoutPage } from "./screens/PokemonLayoutPage";
 import { socket } from "../socket";
-import { PokemonsData } from "../sharedTypes";
+import { Pokemon, PokemonsData } from "../sharedTypes";
+import GlobalPokedexScreen from "./screens/GlobalPokedexScreen";
 
-const pokemonLoader = async ({ params }: { params: Params<string> }) => {
+const onePokemonLoader = async ({ params }: { params: Params<string> }) => {
+  return await new Promise<Pokemon>((resolve, reject) => {
+    if (!params.id) {
+      reject("No id provided");
+      return;
+    }
+
+    socket.emit(
+      "requestOnePokemon",
+      { pokemon_id: params.id },
+      (data: Pokemon) => {
+        resolve(data);
+      }
+    );
+  });
+};
+
+const userPokemonLoader = async ({ params }: { params: Params<string> }) => {
   return await new Promise<PokemonsData>((resolve, reject) => {
     if (!params.id) {
       reject("No id provided");
@@ -26,6 +44,15 @@ const pokemonLoader = async ({ params }: { params: Params<string> }) => {
   });
 };
 
+const allPokemonLoader = async () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  return await new Promise<PokemonsData>((resolve, _) => {
+    socket.emit("requestAllPokemons", (data: PokemonsData) => {
+      resolve(data);
+    });
+  });
+};
+
 export const getBrowserRouter = () =>
   createBrowserRouter([
     {
@@ -34,14 +61,14 @@ export const getBrowserRouter = () =>
       children: [
         {
           path: "",
-          element: <Navigate to="MainScreen" replace />,
+          element: <Navigate to="home" replace />,
         },
         {
-          path: "MainScreen/",
+          path: "home/",
           element: <HomeScreen />,
         },
         {
-          path: "WaitingRoomScreen/:game_id/",
+          path: "waiting-room/:game_id/",
           element: <WaitingRoomScreen />,
         },
         {
@@ -49,22 +76,27 @@ export const getBrowserRouter = () =>
           element: <PokemonLayoutPage />,
         },
         {
-          path: "PokemonBattleScreen/:game_id/",
+          path: "battle/:game_id/",
           element: <PokemonBattleScreen />,
         },
         {
-          path: "PokemonListScreen/:id/",
-          element: <PokemonListScreen />,
-          loader: pokemonLoader,
+          path: "pokedex/:id/",
+          element: <UserPokedexScreen />,
+          loader: userPokemonLoader,
         },
         {
-          path: "PokemonCaptureScreen/:id/",
+          path: "global-pokedex/",
+          element: <GlobalPokedexScreen />,
+          loader: allPokemonLoader,
+        },
+        {
+          path: "capture/:id/",
           element: <PokemonCaptureScreen />,
         },
         {
-          path: "PokemonFullCardScreen/:id/:pokemon_id/",
+          path: "pokemon/:id/",
           element: <PokemonFullCardScreen />,
-          loader: pokemonLoader,
+          loader: onePokemonLoader,
         },
       ],
     },

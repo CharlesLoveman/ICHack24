@@ -9,8 +9,10 @@ import {
   JoinWaitingRoomData,
   LoginAckData,
   NotificationData,
+  OnePokemonData,
   OnTurnEndData,
   PlayerJoinBattleData,
+  Pokemon,
   PokemonCreatedResponse,
   PokemonsData,
 } from "./sharedTypes";
@@ -41,6 +43,11 @@ export interface ClientToServerEvents {
   requestUserPokemons: (
     data: AssociateUsernameWithSocketData,
     ack: (data: PokemonsData) => void
+  ) => void;
+  requestAllPokemons: (ack: (data: PokemonsData) => void) => void;
+  requestOnePokemon: (
+    data: OnePokemonData,
+    ack: (data: Pokemon) => void
   ) => void;
 }
 

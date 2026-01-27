@@ -107,9 +107,7 @@ export default function PokemonBattleScreen() {
     <></>
   ) : (
     <>
-      <Title>
-        Battle {battleState === BATTLE_STATE.RESOLVING_ATTACKS ? "YES" : "NO"}
-      </Title>
+      <Title>Battle</Title>
       {!isChoosingMove ? (
         <PokemonBattleScreenContainer
           path={assetsFolder + "/" + "background_temp_leeched.webp"}

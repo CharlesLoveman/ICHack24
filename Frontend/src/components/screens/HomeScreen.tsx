@@ -88,14 +88,14 @@ export default function HomeScreen() {
         </LongButton>
         <JoinRoomInputBox pokemon={pokemon} />
         <LinkButton
-          linkProps={{ to: `../PokemonListScreen/${username}` }}
+          linkProps={{ to: `../pokedex/${username}` }}
           buttonProps={{ fullWidth: true, disabled: !username }}
         >
           View Pokemon ({noNewPokemon}) {getPokemonWaitingIcon()}
         </LinkButton>
 
         <LinkButton
-          linkProps={{ to: `../PokemonCaptureScreen/${username}` }}
+          linkProps={{ to: `../capture/${username}` }}
           buttonProps={{
             fullWidth: true,
             startIcon: <MdCatchingPokemon size="1rem" />,
@@ -104,6 +104,13 @@ export default function HomeScreen() {
           }}
         >
           Capture Pokemon!
+        </LinkButton>
+
+        <LinkButton
+          linkProps={{ to: `../global-pokedex` }}
+          buttonProps={{ fullWidth: true, disabled: !username }}
+        >
+          View Global Pokedex
         </LinkButton>
       </HomeScreenContainer>
     </ScrollableMain>

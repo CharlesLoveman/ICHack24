@@ -12,7 +12,7 @@ import { lightGrey } from "../../utils/colors";
 
 interface PokemonCardProps {
   pokemon: Pokemon;
-  isNew: boolean;
+  isNew?: boolean;
 }
 
 export const PokemonCardContainer = styled.div`
@@ -102,9 +102,7 @@ export default function PokemonCard({ pokemon, isNew }: PokemonCardProps) {
             >
               Select
             </Button>
-            <Link
-              to={`../PokemonFullCardScreen/${data.username}/${pokemon.id}`}
-            >
+            <Link to={`../pokemon/${pokemon.id}`}>
               <Button color="info">View Details</Button>
             </Link>
           </CardActions>

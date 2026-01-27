@@ -5,7 +5,7 @@ import { useGlobalData } from "../../hooks/useGlobalData";
 import { Title } from "../layout/Title";
 import { ScrollableMain } from "../layout/ScrollableMain";
 
-export default function PokemonList({ pokemons }: { pokemons: Pokemon[] }) {
+export default function UserPokedex({ pokemons }: { pokemons: Pokemon[] }) {
   const { noNewPokemon, setNoNewPokemon } = useGlobalData();
   const [newPokemonMarkers, setter] = useState<boolean[]>(
     new Array(Object.keys(pokemons).length)

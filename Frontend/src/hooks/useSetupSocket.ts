@@ -71,7 +71,7 @@ export function useSetupSocket() {
   }, [username, isConnected]);
 
   function onJoinWaitingRoom(data: JoinWaitingRoomData) {
-    navigate(`/WaitingRoomScreen/${data.game_id}`);
+    navigate(`/waiting-room/${data.game_id}`);
   }
 
   function onJoinBattleFromRoom(data: JoinBattleData) {
@@ -82,7 +82,7 @@ export function useSetupSocket() {
     });
     setJoinBattleData(data);
     setBattleState(BATTLE_STATE.IDLING);
-    navigate(`/PokemonBattleScreen/${data.game_id}`);
+    navigate(`/battle/${data.game_id}`);
   }
 
   function onJoinBattle(data: JoinBattleData) {
@@ -93,7 +93,7 @@ export function useSetupSocket() {
     });
     setJoinBattleData(data);
     setBattleState(BATTLE_STATE.IDLING);
-    navigate(`/PokemonBattleScreen/${data.game_id}`);
+    navigate(`/battle/${data.game_id}`);
   }
 
   function onWaitOnOtherPlayer() {

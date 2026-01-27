@@ -16,7 +16,7 @@ import {
   PokemonTypeContainer,
 } from "../pokedex/PokemonCard";
 import { assetsFolder } from "../../env";
-import { useLoaderData, useParams } from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
 import { DetailsCard } from "../pokedex/DetailsCard";
 import { PokemonMoveCard } from "../pokedex/PokemonMoveCard";
 import { StatDisplay } from "../pokedex/StatsDisplay";
@@ -42,15 +42,11 @@ export default function PokemonFullCardScreen() {
 
   const backgroundColor = isSelected ? "lightblue" : "white";
 
-  const pokemons = useLoaderData() as Pokemon[];
-  const params = useParams<{ pokemon_id: string }>();
+  const loadedPokemon = useLoaderData() as Pokemon;
 
   useEffect(() => {
-    const pokemon = pokemons.find(
-      (pokemon) => pokemon.id === params.pokemon_id
-    );
-    if (pokemon) {
-      setViewPokemon(pokemon);
+    if (loadedPokemon) {
+      setViewPokemon(loadedPokemon);
     }
   }, []);
 

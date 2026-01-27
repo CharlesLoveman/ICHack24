@@ -5,7 +5,7 @@ export function ReturnToHomeButton() {
   return (
     <FooterContainer>
       <LinkButton
-        linkProps={{ to: `../MainScreen` }}
+        linkProps={{ to: `../home` }}
         buttonProps={{ color: "info", noMaxWidth: true }}
       >
         Return to home

@@ -15,6 +15,7 @@ from random import randrange
 
 from .pokemon import Battle, BattleEvent
 from .db import (
+    get_all_pokemons,
     get_pokemon_from_id,
     get_pokemons_from_user,
     initialise_user,
@@ -22,6 +23,16 @@ from .db import (
 )
 
 from sharedTypes import *
+
+
+@socketio.on("requestOnePokemon")
+def handle_requestOnePokemon(json: OnePokemonData):
+    return get_pokemon_from_id(json["pokemon_id"])
+
+
+@socketio.on("requestAllPokemons")
+def handle_requestAllPokemons():
+    return get_all_pokemons()
 
 
 @socketio.on("requestUserPokemons")

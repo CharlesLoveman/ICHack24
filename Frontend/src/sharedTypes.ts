@@ -104,3 +104,7 @@ export interface PokemonCreatedResponse {
 export interface PokemonsData {
   pokemons: Pokemon[];
 }
+
+export interface OnePokemonData {
+  pokemon_id: string;
+}

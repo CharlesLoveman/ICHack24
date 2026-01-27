@@ -161,3 +161,11 @@ def get_pokemons_from_user(username: str):
     pokemon_list = [get_pokemon_from_id(pokemon_id) for pokemon_id in pokemon_ids]
 
     return pokemon_list
+
+
+def get_all_pokemons():
+    object_ids_docs = pokemon_collection.find({}, {"_id": 1})
+
+    str_object_ids = [str(doc["_id"]) for doc in object_ids_docs]
+
+    return [get_pokemon_from_id(object_id) for object_id in str_object_ids]
