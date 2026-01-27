@@ -9,6 +9,7 @@ from .socketEmit import (
     emit_loginAck,
     emit_notification,
     emit_getPokemonCreatedResponse,
+    emit_rejoinBattle,
 )
 from .sharedTypes import *
 from random import randrange
@@ -111,29 +112,41 @@ def handle_joinBattle(json: PlayerJoinBattleData):
     pokemon_id = json["pokemon_id"]
     username = json["username"]
 
-    print(f"User {username} with client id {request.sid} joining battle: {game_id}")
     if game_id in battles:
         battle = battles[game_id]
     else:
-        emit_notification("Failed to find a battle with that id", "error", request.sid)
         print(f"No battle with id {game_id} exists")
+        emit_notification("That battle doesn't exist", "error", request.sid)
         return
 
-    battle.add_player(username, pokemon_id)
+    print(f"User {username} with client id {request.sid} joining battle: {game_id}")
 
-    emit_joinBattle(
-        self_pokemon=get_pokemon_from_id(battle.p2_id),
-        target_pokemon=get_pokemon_from_id(battle.p1_id),
-        game_id=game_id,
-        sid=battle.s2(),
-    )
+    if battle.is_full():
+        # Then consider if the player is trying to rejoin a game they accidentally left
+        if battle.is_player_supposed_to_be_in_game(username):
+            print(f"User {username} rejoining battle: {game_id}")
+            emit_rejoinBattle(game_id=game_id, sid=request.sid)
+            emit_notification("Rejoining the battle", "success", request.sid)
+        else:
+            print(f"The battle with id {game_id} is already full")
+            emit_notification("That battle is already full!", "error", request.sid)
 
-    emit_joinBattleFromRoom(
-        self_pokemon=get_pokemon_from_id(battle.p1_id),
-        target_pokemon=get_pokemon_from_id(battle.p2_id),
-        game_id=game_id,
-        sid=battle.s1(),
-    )
+    else:
+        battle.add_player(username, pokemon_id)
+
+        emit_joinBattle(
+            self_pokemon=get_pokemon_from_id(battle.p2_id),
+            target_pokemon=get_pokemon_from_id(battle.p1_id),
+            game_id=game_id,
+            sid=battle.s2(),
+        )
+
+        emit_joinBattleFromRoom(
+            self_pokemon=get_pokemon_from_id(battle.p1_id),
+            target_pokemon=get_pokemon_from_id(battle.p2_id),
+            game_id=game_id,
+            sid=battle.s1(),
+        )
 
 
 @socketio.on("attack")

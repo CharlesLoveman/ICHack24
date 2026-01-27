@@ -24,8 +24,8 @@ class Battle:
     attack2: Attack
     p1: Pokemon
     p2: Pokemon
-    u1: str
-    u2: str
+    u1: str | None
+    u2: str | None
 
     def __init__(self, u1: str, p1_id: str):
         """Create a battle between two Pokemon.
@@ -86,6 +86,12 @@ class Battle:
             self.broadcast_wins(2)
         elif self.p2.stats["hp"] <= 0:
             self.broadcast_wins(1)
+
+    def is_full(self):
+        return hasattr(self, "u2") and hasattr(self, "u2")
+
+    def is_player_supposed_to_be_in_game(self, username: str):
+        return self.u1 == username or self.u2 == username
 
     def broadcast_wins(self, winner: int):
         if winner == 1:

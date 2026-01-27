@@ -96,6 +96,10 @@ export function useSetupSocket() {
     navigate(`/battle/${data.game_id}`);
   }
 
+  function onRejoinBattle(data: JoinWaitingRoomData) {
+    navigate(`/battle/${data.game_id}`);
+  }
+
   function onWaitOnOtherPlayer() {
     setBattleData({ ...baseBattleData, thisPlayerWaiting: true });
   }
@@ -177,6 +181,7 @@ export function useSetupSocket() {
     SocketEventsTo.getPokemonCreatedResponse,
     onGetPokemonCreatedResponse
   );
+  useSocket(SocketEventsTo.rejoinBattle, onRejoinBattle);
 
   return { isConnected };
 }
