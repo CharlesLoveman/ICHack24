@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import {
   JoinBattleData,
   JoinWaitingRoomData,
+  LoginAckData,
   MoveData,
   NotificationData,
   OnTurnEndData,
@@ -29,6 +30,7 @@ export function useSetupSocket() {
     setBattleState,
     notifications,
     setNotifications,
+    setUsername,
   } = globalData;
 
   const navigate = useNavigate();
@@ -118,7 +120,7 @@ export function useSetupSocket() {
     setDoTurnEndTransition(() => _doTurnEndTransition);
   }
 
-  function win() {
+  function onWin() {
     setBattleData({ ...baseBattleData });
 
     const _doBattleResultTransition = () => {
@@ -127,7 +129,7 @@ export function useSetupSocket() {
     setDoBattleResultTransition(() => _doBattleResultTransition);
   }
 
-  function lose() {
+  function onLose() {
     setBattleData({ ...baseBattleData });
 
     const _doBattleResultTransition = () => {
@@ -136,8 +138,15 @@ export function useSetupSocket() {
     setDoBattleResultTransition(() => _doBattleResultTransition);
   }
 
-  function notification(data: NotificationData) {
+  function onNotification(data: NotificationData) {
     setNotifications([...notifications, data]);
+  }
+
+  function onLoginAck(data: LoginAckData) {
+    // Plausible TODO: use the pid in the frontend and backend as a unique id
+    // For now, we assume usernames are unique, plus let you log in as the same user again
+    console.log(data.pid);
+    setUsername(data.username);
   }
 
   useSocket(SocketEventTo.connect, onConnect);
@@ -148,9 +157,10 @@ export function useSetupSocket() {
   useSocket(SocketEventTo.makeOtherPlayerWait, onMakeOtherPlayerWait);
   useSocket(SocketEventTo.onWaitOnOtherPlayer, onWaitOnOtherPlayer);
   useSocket(SocketEventTo.onTurnEnd, onTurnEnd);
-  useSocket(SocketEventTo.win, win);
-  useSocket(SocketEventTo.lose, lose);
-  useSocket(SocketEventTo.notification, notification);
+  useSocket(SocketEventTo.win, onWin);
+  useSocket(SocketEventTo.lose, onLose);
+  useSocket(SocketEventTo.notification, onNotification);
+  useSocket(SocketEventTo.loginAck, onLoginAck)
 
   return { isConnected };
 }

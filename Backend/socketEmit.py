@@ -5,6 +5,7 @@ from flask_socketio import emit
 from sharedTypes import (
     JoinBattleData,
     JoinWaitingRoomData,
+    LoginAckData,
     NotificationData,
     OnTurnEndData,
     Pokemon,
@@ -23,11 +24,12 @@ class SocketEventsTo(Enum):
     win = "win"
     lose = "lose"
     notification = "notification"
+    loginAck = "loginAck"
 
 
-def emit_joinWaitingRoom(game_id: str):
+def emit_joinWaitingRoom(game_id: str, sid: str):
     data: JoinWaitingRoomData = {"game_id": game_id}
-    emit(SocketEventsTo.joinWaitingRoom.value, data)
+    emit(SocketEventsTo.joinWaitingRoom.value, data, to=sid)
 
 
 def emit_joinBattle(
@@ -86,4 +88,9 @@ def emit_lose(sid: str):
 
 def emit_notification(message: str, sid: str):
     data: NotificationData = {"message": message}
-    emit(SocketEventsTo.notification.value, data, to=sid, namespace="/")
+    emit(SocketEventsTo.notification.value, data, to=sid)
+
+
+def emit_loginAck(username: str, pid: str, sid: str):
+    data: LoginAckData = {"pid": pid, "username": username}
+    emit(SocketEventsTo.loginAck.value, data, to=sid)

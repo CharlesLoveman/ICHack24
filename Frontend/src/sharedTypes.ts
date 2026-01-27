@@ -84,3 +84,8 @@ export interface NotificationData {
   message: string;
   severity: AlertColor;
 }
+
+export interface LoginAckData {
+  username: string;
+  pid: string;
+}

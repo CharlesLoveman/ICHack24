@@ -89,3 +89,8 @@ class AssociateUsernameWithSocketData(TypedDict):
 
 class NotificationData(TypedDict):
     message: str
+
+
+class LoginAckData(TypedDict):
+    username: str
+    pid: str

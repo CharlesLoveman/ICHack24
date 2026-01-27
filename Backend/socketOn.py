@@ -4,6 +4,7 @@ from .socketEmit import (
     emit_joinBattle,
     emit_joinBattleFromRoom,
     emit_joinWaitingRoom,
+    emit_loginAck,
 )
 from .sharedTypes import *
 from random import randrange
@@ -11,18 +12,29 @@ from random import randrange
 from .pokemon import Battle, BattleEvent
 from .db import (
     get_pokemon_from_id,
+    initialise_user,
     request,
 )
 
 from sharedTypes import *
 
 
+@socketio.on("login")
+def handle_login(json: AssociateUsernameWithSocketData):
+    username = json["username"]
+    pid = initialise_user(username)
+
+    emit_loginAck(pid=pid, username=username, sid=request.sid)
+
+
 @socketio.on("associateUsernameWithSocket")
 def handle_associateUsernameWithSocket(json: AssociateUsernameWithSocketData):
     """Associate a username with a socket."""
-    if json["username"] not in users_to_sockets:
-        print(f"Overwriting the sid for user {json['username']}")
-    users_to_sockets[json["username"]] = request.sid
+    username = json["username"]
+
+    if username not in users_to_sockets:
+        print(f"Overwriting the sid for user {username}")
+    users_to_sockets[username] = request.sid
 
 
 @socketio.on("createBattle")
@@ -40,7 +52,7 @@ def handle_createBattle(json: CreateBattleData):
     # pokemon = Pokemon.load(database, pokemon_id)
     battles[game_id] = Battle(username, pokemon_id)
 
-    emit_joinWaitingRoom(game_id=game_id)
+    emit_joinWaitingRoom(game_id=game_id, sid=request.sid)
 
 
 @socketio.on("joinBattle")

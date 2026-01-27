@@ -6,6 +6,7 @@ import {
   CreateBattleData,
   JoinBattleData,
   JoinWaitingRoomData,
+  LoginAckData,
   NotificationData,
   OnTurnEndData,
   PlayerJoinBattleData,
@@ -14,7 +15,6 @@ import {
 export enum SocketEventTo {
   connect = "connect",
   disconnect = "disconnect",
-  // createPokemonCard = "createPokemonCard",
   joinWaitingRoom = "joinWaitingRoom",
   joinBattle = "joinBattle",
   joinBattleFromRoom = "joinBattleFromRoom",
@@ -24,12 +24,15 @@ export enum SocketEventTo {
   win = "win",
   lose = "lose",
   notification = "notification",
+  login = "login",
+  loginAck = "loginAck",
 }
 export interface ClientToServerEvents {
   attack: (data: AttackData) => void;
   joinBattle: (data: PlayerJoinBattleData) => void;
   createBattle: (data: CreateBattleData) => void;
   associateUsernameWithSocket: (data: AssociateUsernameWithSocketData) => void;
+  login: (data: AssociateUsernameWithSocketData) => void;
 }
 
 export interface ServerToClientEvents {
@@ -44,6 +47,7 @@ export interface ServerToClientEvents {
   win: () => void;
   lose: () => void;
   notification: (data: NotificationData) => void;
+  loginAck: (data: LoginAckData) => void;
 }
 
 export const socket = io(backendAddress, {

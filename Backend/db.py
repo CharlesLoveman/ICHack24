@@ -62,6 +62,25 @@ attacks_collection: Collection[DBAttack] = database.attacks
 attack_stats_collection: Collection[DBStats] = database.attack_stats
 
 
+def initialise_user(username: str):
+    """Initialise a user using a username."""
+    print(f"Attempting to log in user: {username}")
+    player = get_player_by_username(username)
+
+    if player is None:
+        # Create a new user id
+        print(f"User: {username} not found. Creating new user.")
+        new_user: Player = {"pokemon_ids": [], "username": username}
+        pid = str(players_collection.insert_one(new_user).inserted_id)
+    else:
+        # Return existing user id
+        pid = str(player["_id"])
+
+    print(f"Login successful. pid: {pid}")
+
+    return pid
+
+
 def get_player_by_username(username: str) -> Union[Player, None]:
     """Return a player object from the database using a username."""
     player = players_collection.find_one({"username": username})

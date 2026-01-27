@@ -61,30 +61,6 @@ def bytes_to_json(bytes: bytes) -> str:
     return json.dumps(strbytes)
 
 
-@app.route("/InitialiseUser/<username>", methods=["POST"])
-def InitialiseUser(username: str) -> Response:
-    """Initialise a user using a username."""
-    print(f"Attempting to log in user: {username}")
-    player = get_player_by_username(username)
-
-    if player is None:
-        # Create a new user id
-        print(f"User: {username} not found. Creating new user.")
-        new_user: Player = {"pokemon_ids": [], "username": username}
-        pid = str(players_collection.insert_one(new_user).inserted_id)
-    else:
-        # Return existing user id
-        pid = str(player["_id"])
-
-    print(f"Login successful. pid: {pid}")
-
-    resp = jsonify(success=True, pid=pid)
-    resp = make_response(resp)
-    resp.set_cookie("pid", pid)
-
-    return resp
-
-
 @app.route("/ListPokemon/<username>", methods=["GET"])
 def ListPokemon(username: str) -> List[Pokemon]:
     """Return a list of Pokemon stats as a JSON object.
