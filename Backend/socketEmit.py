@@ -8,9 +8,8 @@ from sharedTypes import (
     LoginAckData,
     NotificationData,
     OnTurnEndData,
-    Pokemon,
+    IPokemon,
     PokemonCreatedResponse,
-    PokemonsData,
 )
 
 
@@ -36,7 +35,7 @@ def emit_joinWaitingRoom(game_id: str, sid: str):
 
 
 def emit_joinBattle(
-    self_pokemon: Pokemon, target_pokemon: Pokemon, game_id: str, sid: str
+    self_pokemon: IPokemon, target_pokemon: IPokemon, game_id: str, sid: str
 ):
     data: JoinBattleData = {
         "self_pokemon": self_pokemon,
@@ -47,7 +46,7 @@ def emit_joinBattle(
 
 
 def emit_joinBattleFromRoom(
-    self_pokemon: Pokemon, target_pokemon: Pokemon, game_id: str, sid: str
+    self_pokemon: IPokemon, target_pokemon: IPokemon, game_id: str, sid: str
 ):
     data: JoinBattleData = {
         "self_pokemon": self_pokemon,

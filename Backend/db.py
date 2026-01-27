@@ -3,10 +3,8 @@ from sharedTypes import *
 from flask import request as _request, Request
 from pymongo.collection import Collection
 from pymongo import MongoClient
-
-from .sharedTypes import Pokemon
+from .sharedTypes import IPokemon
 from .env import DATABASE_HOST
-
 from bson.objectid import ObjectId
 
 from sharedTypes import *
@@ -99,7 +97,7 @@ def get_pokemon_ids_from_player(username: str) -> List[str]:
         return []
 
 
-def get_pokemon_from_id(pokemon_id: str) -> Pokemon:
+def get_pokemon_from_id(pokemon_id: str) -> IPokemon:
     """Return a Pokemon as a dict."""
     # print(f"Attempting to load data on Pokemon: {pokemon_id}")
     pokemon = pokemon_collection.find_one({"_id": ObjectId(pokemon_id)})
@@ -124,7 +122,7 @@ def get_stats_from_id(stats_id: str, flag: str = "stats") -> PokemonStats:
     return stats
 
 
-def get_attack_from_id(attack_id: str) -> Attack:
+def get_attack_from_id(attack_id: str) -> IAttack:
     """Return an attack as a dict."""
     # print(f"Attempting to load data on Attack: {attack_id}")
     attack = attacks_collection.find_one({"_id": ObjectId(attack_id)})

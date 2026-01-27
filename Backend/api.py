@@ -1,5 +1,6 @@
 """API for interfacing with the vision pipeline."""
 
+from .sharedTypes import ExtendedPokemonStats
 from gemini import RealGenerativeModel
 from gemini_mock import MockGenerativeModel
 from .prompt_templates import (
@@ -8,10 +9,11 @@ from .prompt_templates import (
     GEMINI_PROMPT_TEMPLATE_ATTACKS,
 )
 from .image_processing import generate_image
-from .pokemon import Pokemon, generate_attack, Attack
+from .pokemon import Pokemon
+from .attack import Attack, generate_attack
 
 import re
-from typing import Union, Tuple, List, Dict, Any
+from typing import Union, Tuple, List
 from env import PATH_TO_PUBLIC, USE_REAL_MODEL
 from PIL import Image
 
@@ -54,9 +56,9 @@ def load_image_from_file(file_path: str) -> Image:
 def create_pokemon(
     img_path: str, create_image: bool = False, return_prompt: bool = False
 ) -> Union[
-    Tuple[str, str, Dict[str, Any]],
-    Tuple[str, str, Dict[str, Any], str],
-    Tuple[str, str, Dict[str, Any], str, str],
+    Tuple[str, str, ExtendedPokemonStats],
+    Tuple[str, str, ExtendedPokemonStats, str],
+    Tuple[str, str, ExtendedPokemonStats, str, str],
 ]:
     """Create a new pokemon from an image.
 
@@ -95,7 +97,7 @@ def create_pokemon(
     pokedex = sections[1]
 
     # Extract the stats
-    stats = dict()
+    stats: ExtendedPokemonStats = dict()
     for key in STATS_KEYS:
         value = re.search(rf"{key}:(.*)", sections[2]).group(1).strip()
 
@@ -181,7 +183,7 @@ def build_pokemon(original_img_path: str, create_image=False) -> Pokemon:
     else:
         name, pokedex, stats = create_pokemon(img_path, create_image)
 
-    element = stats.pop("type")
+    element: str = stats.pop("type")
 
     attacks = create_attacks(name, pokedex, element)
     try:

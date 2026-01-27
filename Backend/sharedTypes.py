@@ -10,7 +10,11 @@ class PokemonStats(TypedDict):
     speed: float
 
 
-class Attack(TypedDict):
+class ExtendedPokemonStats(PokemonStats):
+    type: str
+
+
+class IAttack(TypedDict):
     id: str
     name: str
     element: str
@@ -22,13 +26,13 @@ class Attack(TypedDict):
     target_status_id: NotRequired[PokemonStats]
 
 
-class Pokemon(TypedDict):
+class IPokemon(TypedDict):
     id: str
     name: str
     element: str
     description: NotRequired[str]
     stats: PokemonStats
-    attacks: List[Attack]
+    attacks: List[IAttack]
     image_id: NotRequired[str]
     img_path: NotRequired[str]
     original_img_path: NotRequired[str]
@@ -73,13 +77,13 @@ class JoinWaitingRoomData(TypedDict):
 
 
 class JoinBattleData(TypedDict):
-    self_pokemon: Pokemon
-    target_pokemon: Pokemon
+    self_pokemon: IPokemon
+    target_pokemon: IPokemon
     game_id: str
 
 
 class AttackData(TypedDict):
-    attack_id: Pokemon
+    attack_id: IPokemon
     game_id: str
 
 
@@ -110,7 +114,7 @@ class PokemonCreatedResponse(TypedDict):
 
 
 class PokemonsData(TypedDict):
-    pokemons: List[Pokemon]
+    pokemons: List[IPokemon]
 
 
 class OnePokemonData(TypedDict):

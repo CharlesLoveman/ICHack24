@@ -1,5 +1,5 @@
-from Backend.api import GeminiError, build_pokemon
-from Backend.pokemon import Pokemon
+from .api import GeminiError, build_pokemon
+from .pokemon import Pokemon
 from .db import (
     players_collection,
 )

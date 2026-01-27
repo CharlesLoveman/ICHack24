@@ -1,4 +1,4 @@
-from Backend.pokemon_utils import generate_pokemon
+from .pokemon_utils import generate_pokemon
 from .env import PATH_TO_PUBLIC
 from .app import socketio, battles
 from .store import users_to_sockets
@@ -13,7 +13,7 @@ from .socketEmit import (
 from .sharedTypes import *
 from random import randrange
 
-from .pokemon import Battle, BattleEvent
+from .battle import Battle, BattleEvent
 from .db import (
     get_all_pokemons,
     get_pokemon_from_id,
@@ -91,7 +91,6 @@ def handle_associateUsernameWithSocket(json: AssociateUsernameWithSocketData):
 @socketio.on("createBattle")
 def handle_createBattle(json: CreateBattleData):
     """Create a new battle."""
-    # game_id = createGame(json.id)
     game_id = str(randrange(0, 1000000))
     pokemon_id = json["pokemon_id"]
     username = json["username"]
@@ -100,7 +99,6 @@ def handle_createBattle(json: CreateBattleData):
         f"Creating battle (id: {game_id}) for user {username} with client id: {request.sid}"
     )
 
-    # pokemon = Pokemon.load(database, pokemon_id)
     battles[game_id] = Battle(username, pokemon_id)
 
     emit_joinWaitingRoom(game_id=game_id, sid=request.sid)
@@ -117,6 +115,8 @@ def handle_joinBattle(json: PlayerJoinBattleData):
     if game_id in battles:
         battle = battles[game_id]
     else:
+        emit_notification("Failed to find a battle with that id", "error", request.sid)
+        print(f"No battle with id {game_id} exists")
         return
 
     battle.add_player(username, pokemon_id)

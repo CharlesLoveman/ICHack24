@@ -7,7 +7,7 @@ from flask_cors import CORS
 
 from env import FLASK_SECRET_KEY
 
-from .pokemon import Battle
+from .battle import Battle
 from flask_socketio import SocketIO
 
 from sharedTypes import *
