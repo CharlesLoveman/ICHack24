@@ -13,6 +13,7 @@ import { Box, Typography } from "@mui/material";
 import styled from "styled-components";
 import { darkGrey, red } from "../../utils/colors";
 import { socket } from "../../socket";
+import { ScrollableMain } from "../layout/ScrollableMain";
 
 const uploadFile = async function (selectedFile?: File, username?: string) {
   if (!username || !selectedFile) return;
@@ -30,7 +31,10 @@ const uploadFile = async function (selectedFile?: File, username?: string) {
 };
 
 const CaptureContainer = styled.div`
-  margin: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
   display: grid;
   place-items: center;
   grid-template-areas: "inner-div";
@@ -71,7 +75,7 @@ export default function PokemonCaptureScreen() {
   };
 
   return (
-    <>
+    <ScrollableMain>
       <Title>
         Capture a new Pokemon!
         <GiForest />
@@ -108,6 +112,6 @@ export default function PokemonCaptureScreen() {
         style={{ display: "none" }}
         inputProps={{ accept: "image/*;capture=camera" }}
       />
-    </>
+    </ScrollableMain>
   );
 }
