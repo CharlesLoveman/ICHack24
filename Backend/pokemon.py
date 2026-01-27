@@ -12,7 +12,11 @@ from socketEmit import (
 )
 from sharedTypes import PokemonStats, Attack, AttackData
 from typing import List, Dict
-from .db import pokemon_collection, attacks_collection, attack_stats_collection
+from .db import (
+    pokemon_collection,
+    attacks_collection,
+    attack_stats_collection,
+)
 from enum import Enum
 from .store import users_to_sockets
 

@@ -8,13 +8,15 @@ export function Notifications() {
   const { notifications } = useGlobalData();
 
   useEffect(() => {
-    setNotification(notifications[-1]);
+    if (notifications.length === 0) return;
+    setNotification(notifications[notifications.length - 1]);
+    setOpen(true);
   }, [notifications]);
 
   const [notification, setNotification] = useState<
     NotificationData | undefined
   >(undefined);
-  const [open, setOpen] = useState<boolean>(true);
+  const [open, setOpen] = useState<boolean>(false);
 
   return (
     <FooterContainer>
@@ -22,7 +24,7 @@ export function Notifications() {
         open={open}
         onClose={() => setOpen(false)}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        autoHideDuration={1200}
+        autoHideDuration={3000}
       >
         <Alert severity={notification?.severity ?? "info"} variant="filled">
           {notification?.message ?? "An error has occurred"}

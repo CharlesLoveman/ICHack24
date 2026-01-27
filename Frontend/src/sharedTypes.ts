@@ -89,3 +89,14 @@ export interface LoginAckData {
   username: string;
   pid: string;
 }
+
+export interface CreatePokemonData {
+  username: string;
+  image_bytes: NetworkBytes;
+}
+
+export type NetworkBytes = Uint8Array;
+
+export interface PokemonCreatedResponse {
+  succeeded: boolean;
+}

@@ -1,5 +1,4 @@
 import { ChangeEvent } from "react";
-import axios from "axios";
 
 import Input from "@mui/material/Input";
 import { FaCameraRetro } from "react-icons/fa6";
@@ -8,37 +7,26 @@ import { GiForest, GiSpikyExplosion } from "react-icons/gi";
 import { FaDog } from "react-icons/fa";
 import { FaBottleWater } from "react-icons/fa6";
 import { POKEMON_HAS_RETURNED } from "../../types";
-import { backendAddress } from "../../env";
 import { useGlobalData } from "../../hooks/useGlobalData";
 import { Title } from "../layout/Title";
 import { Box, Typography } from "@mui/material";
 import styled from "styled-components";
 import { darkGrey, red } from "../../utils/colors";
+import { socket } from "../../socket";
 
-// On file upload (click the upload button)
-const uploadFile = async function (selectedFile?: File, id?: string) {
-  // Create an object of formData
-
-  const formData = new FormData();
-
-  // Update the formData object
-  if (selectedFile) {
-    formData.append("img", selectedFile);
-    try {
-      const res = await axios.post(
-        `${backendAddress}/CreatePokemon/${id}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      return res.data.message;
-    } catch (err) {
-      console.log(err);
+const uploadFile = async function (selectedFile?: File, username?: string) {
+  if (!username || !selectedFile) return;
+  const reader = new FileReader();
+  reader.onload = function () {
+    if (this.result) {
+      const networkBytes = new Uint8Array(this.result as ArrayBuffer);
+      socket.emit("createPokemon", {
+        image_bytes: networkBytes,
+        username: username,
+      });
     }
-  }
+  };
+  reader.readAsArrayBuffer(selectedFile);
 };
 
 const CaptureContainer = styled.div`
@@ -65,16 +53,14 @@ const Circle = styled.div`
 `;
 
 export default function PokemonCaptureScreen() {
-  const { setPokemonReturned, setNoNewPokemon, noNewPokemon } = useGlobalData();
+  const { setPokemonReturned } = useGlobalData();
   const params = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const onFileUpload = async function (file?: File) {
     setPokemonReturned(POKEMON_HAS_RETURNED.WAITING);
     navigate(-1);
-    await uploadFile(file, params.id);
-    setPokemonReturned(POKEMON_HAS_RETURNED.RETURNED);
-    setNoNewPokemon(noNewPokemon + 1);
+    uploadFile(file, params.id);
   };
 
   // On file select (from the pop up)

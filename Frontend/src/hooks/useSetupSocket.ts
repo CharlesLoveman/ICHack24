@@ -1,4 +1,4 @@
-import { socket, SocketEventTo } from "../socket";
+import { socket, SocketEventsTo } from "../socket";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
@@ -8,8 +8,9 @@ import {
   MoveData,
   NotificationData,
   OnTurnEndData,
+  PokemonCreatedResponse,
 } from "../sharedTypes";
-import { BATTLE_RESULT, BATTLE_STATE } from "../types";
+import { BATTLE_RESULT, BATTLE_STATE, POKEMON_HAS_RETURNED } from "../types";
 import { useSocket } from "./useSocket";
 import { useGlobalData } from "./useGlobalData";
 import { baseBattleData, clearBattleStates } from "./useSetupGlobalData";
@@ -31,6 +32,9 @@ export function useSetupSocket() {
     notifications,
     setNotifications,
     setUsername,
+    setPokemonReturned,
+    setNoNewPokemon,
+    noNewPokemon,
   } = globalData;
 
   const navigate = useNavigate();
@@ -149,18 +153,31 @@ export function useSetupSocket() {
     setUsername(data.username);
   }
 
-  useSocket(SocketEventTo.connect, onConnect);
-  useSocket(SocketEventTo.disconnect, onDisconnect);
-  useSocket(SocketEventTo.joinWaitingRoom, onJoinWaitingRoom);
-  useSocket(SocketEventTo.joinBattle, onJoinBattle);
-  useSocket(SocketEventTo.joinBattleFromRoom, onJoinBattleFromRoom);
-  useSocket(SocketEventTo.makeOtherPlayerWait, onMakeOtherPlayerWait);
-  useSocket(SocketEventTo.onWaitOnOtherPlayer, onWaitOnOtherPlayer);
-  useSocket(SocketEventTo.onTurnEnd, onTurnEnd);
-  useSocket(SocketEventTo.win, onWin);
-  useSocket(SocketEventTo.lose, onLose);
-  useSocket(SocketEventTo.notification, onNotification);
-  useSocket(SocketEventTo.loginAck, onLoginAck)
+  function onGetPokemonCreatedResponse(data: PokemonCreatedResponse) {
+    console.log("here2");
+    setPokemonReturned(POKEMON_HAS_RETURNED.RETURNED);
+
+    if (data.succeeded) {
+      setNoNewPokemon(noNewPokemon + 1);
+    }
+  }
+
+  useSocket(SocketEventsTo.connect, onConnect);
+  useSocket(SocketEventsTo.disconnect, onDisconnect);
+  useSocket(SocketEventsTo.joinWaitingRoom, onJoinWaitingRoom);
+  useSocket(SocketEventsTo.joinBattle, onJoinBattle);
+  useSocket(SocketEventsTo.joinBattleFromRoom, onJoinBattleFromRoom);
+  useSocket(SocketEventsTo.makeOtherPlayerWait, onMakeOtherPlayerWait);
+  useSocket(SocketEventsTo.onWaitOnOtherPlayer, onWaitOnOtherPlayer);
+  useSocket(SocketEventsTo.onTurnEnd, onTurnEnd);
+  useSocket(SocketEventsTo.win, onWin);
+  useSocket(SocketEventsTo.lose, onLose);
+  useSocket(SocketEventsTo.notification, onNotification);
+  useSocket(SocketEventsTo.loginAck, onLoginAck);
+  useSocket(
+    SocketEventsTo.getPokemonCreatedResponse,
+    onGetPokemonCreatedResponse
+  );
 
   return { isConnected };
 }

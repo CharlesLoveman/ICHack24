@@ -1,3 +1,5 @@
+from Backend.pokemon_utils import generate_pokemon
+from .env import PATH_TO_PUBLIC
 from .app import socketio, battles
 from .store import users_to_sockets
 from .socketEmit import (
@@ -5,6 +7,8 @@ from .socketEmit import (
     emit_joinBattleFromRoom,
     emit_joinWaitingRoom,
     emit_loginAck,
+    emit_notification,
+    emit_getPokemonCreatedResponse,
 )
 from .sharedTypes import *
 from random import randrange
@@ -17,6 +21,34 @@ from .db import (
 )
 
 from sharedTypes import *
+
+
+@socketio.on("createPokemon")
+def handle_createPokemon(data: CreatePokemonData):
+    """Create a new Pokemon."""
+    emit_notification(message="Pokemon being created", severity="info", sid=request.sid)
+    img_raw = bytes(data["image_bytes"])
+
+    img_name = hash(img_raw)
+    img_path = (
+        f"images/pokemon/uploaded_images/{img_name}.jpg"  # Path from the public folder
+    )
+    with open(PATH_TO_PUBLIC + img_path, "wb") as file:
+        file.write(img_raw)
+
+    try:
+        generate_pokemon(data["username"], img_path)
+        emit_getPokemonCreatedResponse(succeeded=True, sid=request.sid)
+        emit_notification(
+            message="Pokemon successfully created", severity="success", sid=request.sid
+        )
+    except:
+        emit_getPokemonCreatedResponse(succeeded=False, sid=request.sid)
+        emit_notification(
+            message="An error occurred when trying to generate your Pokemon..",
+            severity="error",
+            sid=request.sid,
+        )
 
 
 @socketio.on("login")

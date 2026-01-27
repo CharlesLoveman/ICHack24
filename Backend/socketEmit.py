@@ -9,6 +9,7 @@ from sharedTypes import (
     NotificationData,
     OnTurnEndData,
     Pokemon,
+    PokemonCreatedResponse,
 )
 
 
@@ -25,6 +26,7 @@ class SocketEventsTo(Enum):
     lose = "lose"
     notification = "notification"
     loginAck = "loginAck"
+    getPokemonCreatedResponse = "getPokemonCreatedResponse"
 
 
 def emit_joinWaitingRoom(game_id: str, sid: str):
@@ -86,11 +88,16 @@ def emit_lose(sid: str):
     emit(SocketEventsTo.lose.value, to=sid)
 
 
-def emit_notification(message: str, sid: str):
-    data: NotificationData = {"message": message}
+def emit_notification(message: str, severity: str, sid: str):
+    data: NotificationData = {"message": message, "severity": severity}
     emit(SocketEventsTo.notification.value, data, to=sid)
 
 
 def emit_loginAck(username: str, pid: str, sid: str):
     data: LoginAckData = {"pid": pid, "username": username}
     emit(SocketEventsTo.loginAck.value, data, to=sid)
+
+
+def emit_getPokemonCreatedResponse(succeeded: bool, sid: str):
+    data: PokemonCreatedResponse = {"succeeded": succeeded}
+    emit(SocketEventsTo.getPokemonCreatedResponse.value, data, to=sid)

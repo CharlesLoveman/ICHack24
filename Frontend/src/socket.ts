@@ -4,15 +4,17 @@ import {
   AssociateUsernameWithSocketData,
   AttackData,
   CreateBattleData,
+  CreatePokemonData,
   JoinBattleData,
   JoinWaitingRoomData,
   LoginAckData,
   NotificationData,
   OnTurnEndData,
   PlayerJoinBattleData,
+  PokemonCreatedResponse,
 } from "./sharedTypes";
 
-export enum SocketEventTo {
+export enum SocketEventsTo {
   connect = "connect",
   disconnect = "disconnect",
   joinWaitingRoom = "joinWaitingRoom",
@@ -26,6 +28,7 @@ export enum SocketEventTo {
   notification = "notification",
   login = "login",
   loginAck = "loginAck",
+  getPokemonCreatedResponse = "getPokemonCreatedResponse",
 }
 export interface ClientToServerEvents {
   attack: (data: AttackData) => void;
@@ -33,6 +36,7 @@ export interface ClientToServerEvents {
   createBattle: (data: CreateBattleData) => void;
   associateUsernameWithSocket: (data: AssociateUsernameWithSocketData) => void;
   login: (data: AssociateUsernameWithSocketData) => void;
+  createPokemon: (data: CreatePokemonData) => void;
 }
 
 export interface ServerToClientEvents {
@@ -48,6 +52,7 @@ export interface ServerToClientEvents {
   lose: () => void;
   notification: (data: NotificationData) => void;
   loginAck: (data: LoginAckData) => void;
+  getPokemonCreatedResponse: (data: PokemonCreatedResponse) => void;
 }
 
 export const socket = io(backendAddress, {

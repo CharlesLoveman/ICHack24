@@ -89,8 +89,21 @@ class AssociateUsernameWithSocketData(TypedDict):
 
 class NotificationData(TypedDict):
     message: str
+    severity: str
 
 
 class LoginAckData(TypedDict):
     username: str
     pid: str
+
+
+type NetworkBytes = List[int]
+
+
+class CreatePokemonData(TypedDict):
+    username: str
+    image_bytes: NetworkBytes
+
+
+class PokemonCreatedResponse(TypedDict):
+    succeeded: bool
