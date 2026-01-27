@@ -3,6 +3,7 @@ import {
   BattleHP,
   JoinBattleData,
   MoveData,
+  NotificationData,
   Pokemon,
 } from "./sharedTypes";
 
@@ -34,6 +35,7 @@ export interface GlobalStates {
   currentBattleMoves: MoveData | undefined;
   joinBattleData?: JoinBattleData;
   battleState?: BATTLE_STATE;
+  notifications: NotificationData[];
 }
 
 export interface GlobalSetters {
@@ -58,6 +60,7 @@ export interface GlobalSetters {
   setBattleState: React.Dispatch<
     React.SetStateAction<BATTLE_STATE | undefined>
   >;
+  setNotifications: React.Dispatch<React.SetStateAction<NotificationData[]>>;
 }
 
 export type GlobalContextType = GlobalStates & GlobalSetters;

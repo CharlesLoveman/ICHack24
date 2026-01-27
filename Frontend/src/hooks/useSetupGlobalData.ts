@@ -6,6 +6,7 @@ import {
   BattleHP,
   MoveData,
   JoinBattleData,
+  NotificationData,
 } from "../sharedTypes";
 import {
   BATTLE_RESULT,
@@ -72,6 +73,9 @@ export function useSetupGlobalData(initialOverrides: GlobalStates) {
   const [battleState, setBattleState] = useState<BATTLE_STATE | undefined>(
     initialOverrides.battleState ?? undefined
   );
+  const [notifications, setNotifications] = useState<NotificationData[]>(
+    initialOverrides.notifications ?? []
+  );
 
   return {
     username,
@@ -96,5 +100,7 @@ export function useSetupGlobalData(initialOverrides: GlobalStates) {
     setJoinBattleData,
     battleState,
     setBattleState,
+    notifications,
+    setNotifications,
   };
 }

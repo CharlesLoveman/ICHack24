@@ -6,6 +6,7 @@ import {
   CreateBattleData,
   JoinBattleData,
   JoinWaitingRoomData,
+  NotificationData,
   OnTurnEndData,
   PlayerJoinBattleData,
 } from "./sharedTypes";
@@ -22,6 +23,7 @@ export enum SocketEventTo {
   onTurnEnd = "onTurnEnd",
   win = "win",
   lose = "lose",
+  notification = "notification",
 }
 export interface ClientToServerEvents {
   attack: (data: AttackData) => void;
@@ -41,6 +43,7 @@ export interface ServerToClientEvents {
   onTurnEnd: (data: OnTurnEndData) => void;
   win: () => void;
   lose: () => void;
+  notification: (data: NotificationData) => void;
 }
 
 export const socket = io(backendAddress, {

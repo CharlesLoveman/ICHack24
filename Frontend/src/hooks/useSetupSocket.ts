@@ -5,6 +5,7 @@ import {
   JoinBattleData,
   JoinWaitingRoomData,
   MoveData,
+  NotificationData,
   OnTurnEndData,
 } from "../sharedTypes";
 import { BATTLE_RESULT, BATTLE_STATE } from "../types";
@@ -26,6 +27,8 @@ export function useSetupSocket() {
     username,
     battleState,
     setBattleState,
+    notifications,
+    setNotifications,
   } = globalData;
 
   const navigate = useNavigate();
@@ -133,6 +136,10 @@ export function useSetupSocket() {
     setDoBattleResultTransition(() => _doBattleResultTransition);
   }
 
+  function notification(data: NotificationData) {
+    setNotifications([...notifications, data]);
+  }
+
   useSocket(SocketEventTo.connect, onConnect);
   useSocket(SocketEventTo.disconnect, onDisconnect);
   useSocket(SocketEventTo.joinWaitingRoom, onJoinWaitingRoom);
@@ -143,6 +150,7 @@ export function useSetupSocket() {
   useSocket(SocketEventTo.onTurnEnd, onTurnEnd);
   useSocket(SocketEventTo.win, win);
   useSocket(SocketEventTo.lose, lose);
+  useSocket(SocketEventTo.notification, notification);
 
   return { isConnected };
 }

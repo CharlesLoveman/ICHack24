@@ -80,6 +80,21 @@ export function useTheme() {
           },
         },
       },
+      MuiSnackbar: {
+        styleOverrides: {
+          anchorOriginBottomCenter: {
+            marginBottom: "2%",
+            color: "black",
+          },
+        },
+      },
+      MuiSnackbarContent: {
+        styleOverrides: {
+          message: {
+            margin: "auto",
+          },
+        },
+      },
     },
   });
   return theme;

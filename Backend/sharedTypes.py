@@ -85,3 +85,7 @@ class AttackData(TypedDict):
 
 class AssociateUsernameWithSocketData(TypedDict):
     username: str
+
+
+class NotificationData(TypedDict):
+    message: str

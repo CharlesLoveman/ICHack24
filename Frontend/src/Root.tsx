@@ -4,6 +4,7 @@ import { LayoutContainer } from "./components/layout/Layout";
 import { CopyrightFooter } from "./components/root/CopyrightFooter";
 import NavBar from "./components/root/NavBar";
 import { useLocalStorage } from "./hooks/useLocalStorage";
+import { Notifications } from "./components/Notifications";
 
 export default function Root() {
   useLocalStorage();
@@ -12,6 +13,7 @@ export default function Root() {
       <DebugHeader></DebugHeader>
       <NavBar />
       <Outlet />
+      <Notifications></Notifications>
       <CopyrightFooter />
     </LayoutContainer>
   );

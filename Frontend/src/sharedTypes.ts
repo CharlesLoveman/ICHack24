@@ -1,3 +1,5 @@
+import { AlertColor } from "@mui/material";
+
 export interface PokemonStats {
   hp: number;
   attack: number;
@@ -76,4 +78,9 @@ export type OnTurnEndData = BattleHP & MoveData;
 
 export interface AssociateUsernameWithSocketData {
   username: string;
+}
+
+export interface NotificationData {
+  message: string;
+  severity: AlertColor;
 }
