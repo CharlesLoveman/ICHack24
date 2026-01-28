@@ -1,8 +1,7 @@
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { TbPokeball } from "react-icons/tb";
-import { Button, CardActions, CardHeader } from "@mui/material";
+import { CardHeader } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Pokemon, Attack } from "../../sharedTypes";
 import { useGlobalData } from "../../hooks/useGlobalData";
@@ -32,7 +31,7 @@ function MovesDisplay(attacks: Attack[] | undefined) {
 }
 
 export default function PokemonFullCardScreen() {
-  const { pokemon, setPokemon } = useGlobalData();
+  const { pokemon } = useGlobalData();
 
   const [viewPokemon, setViewPokemon] = useState<Pokemon | undefined>(
     undefined
@@ -103,15 +102,6 @@ export default function PokemonFullCardScreen() {
           <Typography variant="body2">
             {MovesDisplay(viewPokemon?.attacks)}
           </Typography>
-          <CardActions>
-            <Button
-              startIcon={<TbPokeball />}
-              onClick={() => setPokemon(viewPokemon ?? null)}
-              color="secondary"
-            >
-              Select
-            </Button>
-          </CardActions>
         </Card>
       </ScrollableMain>
     </>

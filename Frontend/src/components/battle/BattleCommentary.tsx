@@ -1,8 +1,8 @@
-import { Button, Card, CardContent } from "@mui/material";
+import { Card, CardContent } from "@mui/material";
 import { useState } from "react";
-import { TiArrowSortedDown } from "react-icons/ti";
 import styled from "styled-components";
 import { RightAlignedContainer } from "../layout/RightAlignedContainer";
+import { DownArrowButton } from "../layout/DownArrowButton";
 
 const CommentaryContainer = styled.div`
   display: flex;
@@ -29,19 +29,17 @@ export default function BattleCommentary({
           {!(hideArrowOnLast && index === texts.length - 1) ? (
             <>
               <RightAlignedContainer>
-                <Button
-                  onClick={() => {
-                    if (index === texts.length - 1) {
-                      onCommentaryEnd?.();
-                    } else {
-                      setIndex((index) => index + 1);
-                    }
+                <DownArrowButton
+                  buttonProps={{
+                    onClick: () => {
+                      if (index === texts.length - 1) {
+                        onCommentaryEnd?.();
+                      } else {
+                        setIndex((index) => index + 1);
+                      }
+                    },
                   }}
-                  variant="text"
-                  style={{ margin: 0, padding: 0, color: "black" }}
-                >
-                  <TiArrowSortedDown size={50} />
-                </Button>
+                ></DownArrowButton>
               </RightAlignedContainer>
             </>
           ) : (

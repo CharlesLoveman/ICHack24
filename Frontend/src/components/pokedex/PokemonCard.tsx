@@ -2,7 +2,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { TbPokeball } from "react-icons/tb";
-import { Button, CardHeader } from "@mui/material";
+import { Button, CardHeader, Collapse } from "@mui/material";
 import { Link } from "react-router-dom";
 import { Pokemon } from "../../sharedTypes";
 import { assetsFolder } from "../../env";
@@ -10,6 +10,8 @@ import { useGlobalData } from "../../hooks/useGlobalData";
 import styled from "styled-components";
 import { lightGrey } from "../../utils/colors";
 import { socket } from "../../socket";
+import { useState } from "react";
+import { DownArrowButton } from "../layout/DownArrowButton";
 
 interface PokemonCardProps {
   pokemon: Pokemon;
@@ -18,10 +20,12 @@ interface PokemonCardProps {
   canSelect?: boolean;
   canAddToUser?: boolean;
   onDelete?: (id: string) => void;
+  expandable?: boolean;
 }
 
 export const PokemonCardContainer = styled.div`
-  padding: 1rem;
+  // padding: 1rem;
+  padding: 0;
   background-color: white;
   border-radius: 8px;
   margin: 0.5rem; // 3rem for DESKTOP
@@ -59,9 +63,15 @@ export const PokemonImage = styled.div`
 
 export const CardActions = styled.div`
   margin-top: 1rem;
-  > * {
-    margin: 1rem;
-  }
+  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const ColumnLayout = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
 `;
 
 export default function PokemonCard({
@@ -70,6 +80,7 @@ export default function PokemonCard({
   canDelete = false,
   canSelect = true,
   canAddToUser = false,
+  expandable = true,
   onDelete,
 }: PokemonCardProps) {
   const data = useGlobalData();
@@ -77,6 +88,8 @@ export default function PokemonCard({
   const isSelected = pokemon?.id === data.pokemon?.id;
 
   const backgroundColor = isSelected ? "lightblue" : isNew ? "khaki" : "white";
+
+  const [expanded, setExpanded] = useState<boolean>(false);
 
   function deletePokemon(id: string) {
     socket.emit("deletePokemon", { pokemon_id: id }, (succeeded: boolean) => {
@@ -89,6 +102,7 @@ export default function PokemonCard({
     socket.emit(
       "addPokemonToUser",
       { pokemon_id: id, username: data.username },
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       (_: boolean) => {}
     );
   }
@@ -102,61 +116,79 @@ export default function PokemonCard({
         elevation={0}
       >
         <CardHeader
-          title={<PokemonNameContainer>{pokemon.name}</PokemonNameContainer>}
+          title={
+            <ColumnLayout>
+              <PokemonNameContainer style={{ fontSize: "1.5rem" }}>
+                {pokemon.name}
+              </PokemonNameContainer>
+              <DownArrowButton
+                buttonProps={{ onClick: () => setExpanded(!expanded) }}
+                iconProps={{ size: 40 }}
+              />
+            </ColumnLayout>
+          }
           subheader={
-            <PokemonTypeContainer>{pokemon.element}</PokemonTypeContainer>
+            <PokemonTypeContainer style={{ fontSize: "0.8rem" }}>
+              {pokemon.element}
+            </PokemonTypeContainer>
           }
         ></CardHeader>
 
-        <CardContent>
-          <CardLayout>
-            <PokemonImage>
-              <img
-                src={assetsFolder + "/" + pokemon.image_id}
-                // width={500} for DESKTOP
-                height={180}
-              ></img>
-            </PokemonImage>
-            <PokemonDetails>
-              <Typography variant="body2">{pokemon.description}</Typography>
-            </PokemonDetails>
-          </CardLayout>
-          <CardActions>
-            {canSelect ? (
-              <Button
-                startIcon={<TbPokeball />}
-                onClick={() => setPokemon(pokemon)}
-                color="secondary"
-              >
-                Select
-              </Button>
-            ) : (
-              <></>
-            )}
-            {canAddToUser ? (
-              <Button
-                startIcon={<TbPokeball />}
-                onClick={() => addToUser(pokemon.id)}
-                color="warning"
-              >
-                Add to my Pokedex
-              </Button>
-            ) : (
-              <></>
-            )}
+        <Collapse in={!expandable || expanded} timeout="auto" unmountOnExit>
+          <CardContent>
+            <CardLayout>
+              <PokemonImage>
+                <img
+                  src={assetsFolder + "/" + pokemon.image_id}
+                  // width={500} for DESKTOP
+                  height={180}
+                ></img>
+              </PokemonImage>
+              <PokemonDetails>
+                <Typography variant="body2">{pokemon.description}</Typography>
+              </PokemonDetails>
+            </CardLayout>
+            <CardActions>
+              {canSelect ? (
+                <Button
+                  startIcon={<TbPokeball />}
+                  onClick={() => setPokemon(pokemon)}
+                  color="secondary"
+                >
+                  Select
+                </Button>
+              ) : (
+                <></>
+              )}
+              {canAddToUser ? (
+                <Button
+                  startIcon={<TbPokeball />}
+                  onClick={() => addToUser(pokemon.id)}
+                  color="warning"
+                >
+                  Add to my Pokedex
+                </Button>
+              ) : (
+                <></>
+              )}
 
-            <Link to={`../pokemon/${pokemon.id}`}>
-              <Button color="info">View Details</Button>
-            </Link>
-            {canDelete ? (
-              <Button onClick={() => deletePokemon(pokemon.id)} color="error">
-                Delete
+              <Button
+                component={Link}
+                to={`../pokemon/${pokemon.id}`}
+                color="info"
+              >
+                View Details
               </Button>
-            ) : (
-              <></>
-            )}
-          </CardActions>
-        </CardContent>
+              {canDelete ? (
+                <Button onClick={() => deletePokemon(pokemon.id)} color="error">
+                  Delete
+                </Button>
+              ) : (
+                <></>
+              )}
+            </CardActions>
+          </CardContent>
+        </Collapse>
       </Card>
     </PokemonCardContainer>
   );
