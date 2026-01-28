@@ -17,6 +17,7 @@ import { Typography } from "@mui/material";
 import { LongButton } from "../layout/LongButton";
 import { LinkButton } from "../layout/LinkButton";
 import { ScrollableMain } from "../layout/ScrollableMain";
+import { HiddenClicks } from "../BrowserRouter";
 
 const HomeScreenContainer = styled.div`
   text-align: center;
@@ -26,7 +27,7 @@ const HomeScreenContainer = styled.div`
   }
 `;
 
-export default function HomeScreen() {
+export default function HomeScreen(props: HiddenClicks) {
   const { username, pokemon, pokemonReturned, noNewPokemon } = useGlobalData();
 
   const [display, setDisplay] = useState("notReady");
@@ -105,13 +106,20 @@ export default function HomeScreen() {
         >
           Capture Pokemon!
         </LinkButton>
-
-        <LinkButton
-          linkProps={{ to: `../global-pokedex` }}
-          buttonProps={{ fullWidth: true, disabled: !username }}
-        >
-          View Global Pokedex
-        </LinkButton>
+        {props.noClicks > 10 ? (
+          <LinkButton
+            linkProps={{ to: `../global-pokedex` }}
+            buttonProps={{
+              fullWidth: true,
+              disabled: !username,
+              color: "success",
+            }}
+          >
+            View Global Pokedex
+          </LinkButton>
+        ) : (
+          <></>
+        )}
       </HomeScreenContainer>
     </ScrollableMain>
   );

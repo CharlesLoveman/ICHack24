@@ -1,7 +1,7 @@
-import React from "react";
 import styled from "styled-components";
 import { FooterContainer } from "../layout/FooterContainer";
 import { darkGrey } from "../../utils/colors";
+import { HiddenClicks } from "../BrowserRouter";
 
 const Copyright = styled.p`
   margin: 0;
@@ -14,10 +14,12 @@ const CopyrightFooterContainer = styled(FooterContainer)`
   height: 1rem;
 `;
 
-export const CopyrightFooter: React.FC = () => {
+export const CopyrightFooter = ({ noClicks, setNoClicks }: HiddenClicks) => {
   return (
     <CopyrightFooterContainer>
-      <Copyright>&copy; 2026 AR Pokemon</Copyright>
+      <Copyright onClick={() => setNoClicks(noClicks + 1)}>
+        &copy; 2026 AR Pokemon
+      </Copyright>
     </CopyrightFooterContainer>
   );
 };

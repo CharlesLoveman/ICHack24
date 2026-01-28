@@ -53,11 +53,16 @@ const allPokemonLoader = async () => {
   });
 };
 
-export const getBrowserRouter = () =>
+export interface HiddenClicks {
+  noClicks: number;
+  setNoClicks: (noClicks: number) => void;
+}
+
+export const getBrowserRouter = (props: HiddenClicks) =>
   createBrowserRouter([
     {
       path: "/",
-      element: <Root />,
+      element: <Root {...props} />,
       children: [
         {
           path: "",
@@ -65,7 +70,7 @@ export const getBrowserRouter = () =>
         },
         {
           path: "home/",
-          element: <HomeScreen />,
+          element: <HomeScreen {...props} />,
         },
         {
           path: "waiting-room/:game_id/",

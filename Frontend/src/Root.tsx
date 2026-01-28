@@ -5,8 +5,9 @@ import { CopyrightFooter } from "./components/root/CopyrightFooter";
 import NavBar from "./components/root/NavBar";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { Notifications } from "./components/Notifications";
+import { HiddenClicks } from "./components/BrowserRouter";
 
-export default function Root() {
+export default function Root(props: HiddenClicks) {
   useLocalStorage();
   return (
     <LayoutContainer>
@@ -14,7 +15,7 @@ export default function Root() {
       <NavBar />
       <Outlet />
       <Notifications></Notifications>
-      <CopyrightFooter />
+      <CopyrightFooter {...props} />
     </LayoutContainer>
   );
 }

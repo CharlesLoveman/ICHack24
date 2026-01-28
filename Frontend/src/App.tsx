@@ -6,13 +6,16 @@ import { GlobalData, useSetupGlobalData } from "./hooks/useSetupGlobalData";
 import { getBrowserRouter } from "./components/BrowserRouter";
 import { useTheme } from "./hooks/useTheme";
 import { loadLocalStorage } from "./hooks/useLocalStorage";
-
-const router = getBrowserRouter();
+import { useState } from "react";
 
 export default function App() {
   const localStorageData = loadLocalStorage();
   const data = useSetupGlobalData(localStorageData);
   const theme = useTheme();
+
+  const [noClicks, setNoClicks] = useState<number>(0);
+
+  const router = getBrowserRouter({ noClicks, setNoClicks });
 
   return (
     <GlobalData.Provider value={data}>
