@@ -1,9 +1,12 @@
 """ "Pokemon game logic."""
 
 from dataclasses import dataclass
+import os
 import numpy as np
 from bson.objectid import ObjectId
 import random
+
+from Backend.env import PATH_TO_PUBLIC
 from .attack import Attack, delete_attack, delete_attack_stat
 from sharedTypes import PokemonStats
 from typing import List, Self, Tuple
@@ -22,8 +25,10 @@ def delete_pokemon(id: str):
     for attack in pokemon.attacks:
         delete_attack(attack.id)
 
-    # Fix line
     delete_attack_stat(related_ids.stats_id)
+
+    # Delete image
+    os.remove(PATH_TO_PUBLIC + pokemon.image_id)
 
     # Remove the pokemon from all players who have it
     players_collection.update_many({"pokemon_ids": id}, {"$pull": {"pokemon_ids": id}})

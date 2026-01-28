@@ -17,6 +17,7 @@ from random import randrange
 
 from .battle import Battle, BattleEvent
 from .db import (
+    add_pokemon_to_user,
     get_all_pokemons,
     get_pokemon_from_id,
     get_pokemons_from_user,
@@ -25,6 +26,22 @@ from .db import (
 )
 
 from sharedTypes import *
+
+
+@socketio.on("addPokemonToUser")
+def handle_addPokemonToUser(json: CreateBattleData):
+    pokemon_id = json["pokemon_id"]
+    username = json["username"]
+
+    add_pokemon_to_user(username, pokemon_id)
+
+    name = get_pokemon_from_id(pokemon_id)["name"]
+    emit_notification(
+        message=f"Added Pokemon {name} to your Pokedex",
+        severity="success",
+        sid=request.sid,
+    )
+    print(f"Added pokemon {name} with id {pokemon_id} to user {username}'s pokedex")
 
 
 @socketio.on("deletePokemon")

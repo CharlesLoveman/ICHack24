@@ -54,6 +54,10 @@ export interface ClientToServerEvents {
     data: OnePokemonData,
     ack: (succeeded: boolean) => void
   ) => void;
+  addPokemonToUser: (
+    data: CreateBattleData,
+    ack: (succeeded: boolean) => void
+  ) => void;
 }
 
 export interface ServerToClientEvents {

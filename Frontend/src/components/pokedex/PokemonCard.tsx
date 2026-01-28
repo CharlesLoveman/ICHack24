@@ -16,6 +16,7 @@ interface PokemonCardProps {
   isNew?: boolean;
   canDelete?: boolean;
   canSelect?: boolean;
+  canAddToUser?: boolean;
   onDelete?: (id: string) => void;
 }
 
@@ -68,6 +69,7 @@ export default function PokemonCard({
   isNew,
   canDelete = false,
   canSelect = true,
+  canAddToUser = false,
   onDelete,
 }: PokemonCardProps) {
   const data = useGlobalData();
@@ -80,6 +82,15 @@ export default function PokemonCard({
     socket.emit("deletePokemon", { pokemon_id: id }, (succeeded: boolean) => {
       if (succeeded) onDelete?.(pokemon.id);
     });
+  }
+
+  function addToUser(id: string) {
+    if (data.username === undefined) return;
+    socket.emit(
+      "addPokemonToUser",
+      { pokemon_id: id, username: data.username },
+      (_: boolean) => {}
+    );
   }
 
   return (
@@ -122,16 +133,23 @@ export default function PokemonCard({
             ) : (
               <></>
             )}
+            {canAddToUser ? (
+              <Button
+                startIcon={<TbPokeball />}
+                onClick={() => addToUser(pokemon.id)}
+                color="warning"
+              >
+                Add to my Pokedex
+              </Button>
+            ) : (
+              <></>
+            )}
 
             <Link to={`../pokemon/${pokemon.id}`}>
               <Button color="info">View Details</Button>
             </Link>
             {canDelete ? (
-              <Button
-                startIcon={<TbPokeball />}
-                onClick={() => deletePokemon(pokemon.id)}
-                color="error"
-              >
+              <Button onClick={() => deletePokemon(pokemon.id)} color="error">
                 Delete
               </Button>
             ) : (

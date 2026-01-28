@@ -23,6 +23,7 @@ export default function GlobalPokedex({ pokemons }: { pokemons: Pokemon[] }) {
           canDelete={true}
           onDelete={onDelete}
           canSelect={false}
+          canAddToUser={true}
         />
       ));
   }
