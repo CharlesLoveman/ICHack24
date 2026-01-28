@@ -6,8 +6,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { GiForest, GiSpikyExplosion } from "react-icons/gi";
 import { FaDog } from "react-icons/fa";
 import { FaBottleWater } from "react-icons/fa6";
-import { POKEMON_HAS_RETURNED } from "../../types";
-import { useGlobalData } from "../../hooks/useGlobalData";
 import { Title } from "../layout/Title";
 import { Box, Typography } from "@mui/material";
 import styled from "styled-components";
@@ -57,12 +55,10 @@ const Circle = styled.div`
 `;
 
 export default function PokemonCaptureScreen() {
-  const { setPokemonReturned } = useGlobalData();
   const params = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const onFileUpload = async function (file?: File) {
-    setPokemonReturned(POKEMON_HAS_RETURNED.WAITING);
     navigate(-1);
     uploadFile(file, params.id);
   };

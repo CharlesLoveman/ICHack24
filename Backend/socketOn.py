@@ -4,6 +4,7 @@ from .env import PATH_TO_PUBLIC
 from .app import socketio, battles
 from .store import users_to_sockets
 from .socketEmit import (
+    emit_getPokemonCreatedAck,
     emit_joinBattle,
     emit_joinBattleFromRoom,
     emit_joinWaitingRoom,
@@ -86,6 +87,7 @@ def handle_requestUserPokemons(json: AssociateUsernameWithSocketData):
 def handle_createPokemon(data: CreatePokemonData):
     """Create a new Pokemon."""
     emit_notification(message="Pokemon being created", severity="info", sid=request.sid)
+    emit_getPokemonCreatedAck(sid=request.sid)
     img_raw = bytes(data["image_bytes"])
 
     img_name = hash(img_raw)

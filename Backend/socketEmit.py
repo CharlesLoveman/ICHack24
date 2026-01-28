@@ -28,6 +28,7 @@ class SocketEventsTo(Enum):
     loginAck = "loginAck"
     getPokemonCreatedResponse = "getPokemonCreatedResponse"
     rejoinBattle = "rejoinBattle"
+    getPokemonCreatedAck = "getPokemonCreatedAck"
 
 
 def emit_joinWaitingRoom(game_id: str, sid: str):
@@ -104,6 +105,16 @@ def emit_getPokemonCreatedResponse(succeeded: bool, sid: str):
     emit(SocketEventsTo.getPokemonCreatedResponse.value, data, to=sid)
 
 
-def emit_rejoinBattle(game_id: str, sid: str):
-    data: JoinWaitingRoomData = {"game_id": game_id}
+def emit_rejoinBattle(
+    self_pokemon: IPokemon, target_pokemon: IPokemon, game_id: str, sid: str
+):
+    data: JoinBattleData = {
+        "self_pokemon": self_pokemon,
+        "target_pokemon": target_pokemon,
+        "game_id": game_id,
+    }
     emit(SocketEventsTo.rejoinBattle.value, data, to=sid)
+
+
+def emit_getPokemonCreatedAck(sid: str):
+    emit(SocketEventsTo.getPokemonCreatedAck.value, to=sid)

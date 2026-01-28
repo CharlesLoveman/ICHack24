@@ -33,6 +33,7 @@ export enum SocketEventsTo {
   loginAck = "loginAck",
   getPokemonCreatedResponse = "getPokemonCreatedResponse",
   rejoinBattle = "rejoinBattle",
+  getPokemonCreatedAck = "getPokemonCreatedAck",
 }
 export interface ClientToServerEvents {
   attack: (data: AttackData) => void;
@@ -74,7 +75,8 @@ export interface ServerToClientEvents {
   notification: (data: NotificationData) => void;
   loginAck: (data: LoginAckData) => void;
   getPokemonCreatedResponse: (data: PokemonCreatedResponse) => void;
-  rejoinBattle: (data: JoinWaitingRoomData) => void;
+  rejoinBattle: (data: JoinBattleData) => void;
+  getPokemonCreatedAck: () => void;
 }
 
 export const socket = io(backendAddress, {

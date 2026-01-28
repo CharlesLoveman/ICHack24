@@ -96,7 +96,14 @@ export function useSetupSocket() {
     navigate(`/battle/${data.game_id}`);
   }
 
-  function onRejoinBattle(data: JoinWaitingRoomData) {
+  function onRejoinBattle(data: JoinBattleData) {
+    clearBattleStates(globalData);
+    setBattleHP({
+      self_hp: data.self_pokemon.stats.hp,
+      target_hp: data.target_pokemon.stats.hp,
+    });
+    setJoinBattleData(data);
+    setBattleState(BATTLE_STATE.IDLING);
     navigate(`/battle/${data.game_id}`);
   }
 
@@ -165,6 +172,10 @@ export function useSetupSocket() {
     }
   }
 
+  function onGetPokemonCreatedAck() {
+    setPokemonReturned(POKEMON_HAS_RETURNED.WAITING);
+  }
+
   useSocket(SocketEventsTo.connect, onConnect);
   useSocket(SocketEventsTo.disconnect, onDisconnect);
   useSocket(SocketEventsTo.joinWaitingRoom, onJoinWaitingRoom);
@@ -182,6 +193,7 @@ export function useSetupSocket() {
     onGetPokemonCreatedResponse
   );
   useSocket(SocketEventsTo.rejoinBattle, onRejoinBattle);
+  useSocket(SocketEventsTo.getPokemonCreatedAck, onGetPokemonCreatedAck);
 
   return { isConnected };
 }
