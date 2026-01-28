@@ -11,3 +11,4 @@ function getBackendAddress() {
 
 export const backendAddress = getBackendAddress();
 export const assetsFolder = clientURL.fullString() + "/public";
+export const isDebug = import.meta.env.VITE_IS_DEBUG === "true";

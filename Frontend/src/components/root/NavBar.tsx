@@ -6,12 +6,15 @@ import { FaHome } from "react-icons/fa";
 import { HeaderContainer } from "../layout/HeaderContainer";
 import styled from "styled-components";
 import { darkGrey } from "../../utils/colors";
+import { SocketProps } from "../../Root";
+import { TbCircuitCell } from "react-icons/tb";
+import { RightAlignedContainer } from "../layout/RightAlignedContainer";
 
 const NavBarContainer = styled(HeaderContainer)`
   background-color: ${darkGrey};
 `;
 
-export default function NavBar(): JSX.Element {
+export default function NavBar({ isConnected }: SocketProps): JSX.Element {
   const navigate = useNavigate();
 
   return (
@@ -22,6 +25,11 @@ export default function NavBar(): JSX.Element {
       <Button variant="text" color="navigation" onClick={() => navigate("/")}>
         <FaHome size="30px" />
       </Button>
+      <RightAlignedContainer>
+        <Button variant="text">
+          <TbCircuitCell color={isConnected ? "green" : "red"} size="30px" />
+        </Button>
+      </RightAlignedContainer>
     </NavBarContainer>
   );
 }

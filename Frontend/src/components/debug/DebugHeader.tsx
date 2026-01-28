@@ -1,14 +1,13 @@
 import styled from "styled-components";
-import { useSetupSocket } from "../../hooks/useSetupSocket";
 import { ConnectionManager } from "./ConnectionManager";
 import { ConnectionState } from "./ConnectionState";
+import { SocketProps } from "../../Root";
 
 const DebugContainer = styled.div`
   background-color: #dcdcbd;
 `;
 
-export function DebugHeader() {
-  const { isConnected } = useSetupSocket();
+export function DebugHeader({ isConnected }: SocketProps) {
   return (
     <DebugContainer>
       <ConnectionManager />
