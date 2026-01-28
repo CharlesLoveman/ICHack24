@@ -47,8 +47,8 @@ export function useSetupGlobalData(initialOverrides: GlobalStates) {
     initialOverrides.pokemon ?? null
   );
   const [pokemonReturned, setPokemonReturned] = useState<POKEMON_HAS_RETURNED>(
-    initialOverrides.pokemonReturned ?? POKEMON_HAS_RETURNED.RETURNED
-  );
+    POKEMON_HAS_RETURNED.RETURNED
+  ); // Reset the loading icon on refresh
   const [noNewPokemon, setNoNewPokemon] = useState<number>(
     initialOverrides.noNewPokemon ?? 0
   );
