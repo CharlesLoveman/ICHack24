@@ -6,7 +6,7 @@ import numpy as np
 from bson.objectid import ObjectId
 import random
 
-from Backend.env import PATH_TO_PUBLIC
+from .env import PATH_TO_PUBLIC
 from .attack import Attack, delete_attack, delete_attack_stat
 from sharedTypes import PokemonStats
 from typing import List, Self, Tuple
