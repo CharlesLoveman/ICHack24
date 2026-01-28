@@ -16,7 +16,7 @@ ERRORMON_ID = None  # Run create_errormon.py and set this!
 
 def generate_pokemon(username: str, img_path: str):
     # Generate Pokemon
-    print("Generating Pokemon.")
+    print(f"Generating Pokemon for ${username}")
     for i in range(1):
         try:
             pokemon = build_pokemon(img_path)
