@@ -50,6 +50,10 @@ export interface ClientToServerEvents {
     data: OnePokemonData,
     ack: (data: Pokemon) => void
   ) => void;
+  deletePokemon: (
+    data: OnePokemonData,
+    ack: (succeeded: boolean) => void
+  ) => void;
 }
 
 export interface ServerToClientEvents {

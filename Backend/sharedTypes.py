@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import TypedDict, NotRequired, List, Any
 
 

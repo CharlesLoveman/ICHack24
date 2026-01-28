@@ -9,10 +9,14 @@ import { assetsFolder } from "../../env";
 import { useGlobalData } from "../../hooks/useGlobalData";
 import styled from "styled-components";
 import { lightGrey } from "../../utils/colors";
+import { socket } from "../../socket";
 
 interface PokemonCardProps {
   pokemon: Pokemon;
   isNew?: boolean;
+  canDelete?: boolean;
+  canSelect?: boolean;
+  onDelete?: (id: string) => void;
 }
 
 export const PokemonCardContainer = styled.div`
@@ -59,12 +63,24 @@ export const CardActions = styled.div`
   }
 `;
 
-export default function PokemonCard({ pokemon, isNew }: PokemonCardProps) {
+export default function PokemonCard({
+  pokemon,
+  isNew,
+  canDelete = false,
+  canSelect = true,
+  onDelete,
+}: PokemonCardProps) {
   const data = useGlobalData();
   const setPokemon = data.setPokemon;
   const isSelected = pokemon?.id === data.pokemon?.id;
 
   const backgroundColor = isSelected ? "lightblue" : isNew ? "khaki" : "white";
+
+  function deletePokemon(id: string) {
+    socket.emit("deletePokemon", { pokemon_id: id }, (succeeded: boolean) => {
+      if (succeeded) onDelete?.(pokemon.id);
+    });
+  }
 
   return (
     <PokemonCardContainer>
@@ -95,16 +111,32 @@ export default function PokemonCard({ pokemon, isNew }: PokemonCardProps) {
             </PokemonDetails>
           </CardLayout>
           <CardActions>
-            <Button
-              startIcon={<TbPokeball />}
-              onClick={() => setPokemon(pokemon)}
-              color="secondary"
-            >
-              Select
-            </Button>
+            {canSelect ? (
+              <Button
+                startIcon={<TbPokeball />}
+                onClick={() => setPokemon(pokemon)}
+                color="secondary"
+              >
+                Select
+              </Button>
+            ) : (
+              <></>
+            )}
+
             <Link to={`../pokemon/${pokemon.id}`}>
               <Button color="info">View Details</Button>
             </Link>
+            {canDelete ? (
+              <Button
+                startIcon={<TbPokeball />}
+                onClick={() => deletePokemon(pokemon.id)}
+                color="error"
+              >
+                Delete
+              </Button>
+            ) : (
+              <></>
+            )}
           </CardActions>
         </CardContent>
       </Card>

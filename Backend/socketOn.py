@@ -1,3 +1,4 @@
+from .pokemon import delete_pokemon
 from .pokemon_utils import generate_pokemon
 from .env import PATH_TO_PUBLIC
 from .app import socketio, battles
@@ -24,6 +25,27 @@ from .db import (
 )
 
 from sharedTypes import *
+
+
+@socketio.on("deletePokemon")
+def handle_deletePokemon(json: OnePokemonData):
+    pokemon_id = json["pokemon_id"]
+    try:
+        name = delete_pokemon(pokemon_id)
+        emit_notification(
+            message=f"Pokemon {name} deleted", severity="success", sid=request.sid
+        )
+        print(f"Successfully deleted pokemon {name} with id {pokemon_id}")
+        return True
+    except Exception as e:
+        print(f"Failed to delete pokemon {name} with id {pokemon_id}")
+        print(e)
+        emit_notification(
+            message=f"Failed to delete pokemon",
+            severity="error",
+            sid=request.sid,
+        )
+        return False
 
 
 @socketio.on("requestOnePokemon")

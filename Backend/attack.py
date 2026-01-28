@@ -1,11 +1,18 @@
+from dataclasses import dataclass
 import numpy as np
 from bson.objectid import ObjectId
-from typing import Dict
+from typing import Dict, Self, Tuple
 from .db import (
     attacks_collection,
     attack_stats_collection,
 )
-from .pokemon_constants import element_chart, element_options, stats_keys
+from .pokemon_constants import element_options, stats_keys
+
+
+@dataclass
+class AttackRelatedIds:
+    self_status_id: str
+    target_status_id: str
 
 
 def delete_attack_stat(id: str):
@@ -13,10 +20,10 @@ def delete_attack_stat(id: str):
 
 
 def delete_attack(id: str):
-    attack = Attack.load(id)
+    _, related_ids = Attack.load_preserving_ids(id)
 
-    delete_attack_stat(attack.self_status)
-    delete_attack_stat(attack.target_status)
+    delete_attack_stat(related_ids.self_status_id)
+    delete_attack_stat(related_ids.target_status_id)
 
     attacks_collection.delete_one({"_id": ObjectId(id)})
 
@@ -138,7 +145,7 @@ class Attack:
         )
 
     @classmethod
-    def load(cls, id: str) -> "Attack":
+    def load_preserving_ids(cls, id: str) -> Tuple[Self, AttackRelatedIds]:
         """Load an Attack object from the database.
 
         Args:
@@ -170,15 +177,22 @@ class Attack:
             )
         target_status.pop("_id")
 
-        return Attack(
-            attack["name"],
-            attack["element"],
-            attack["power"],
-            attack["special"],
-            self_status,
-            target_status,
-            id,
+        return (
+            Attack(
+                attack["name"],
+                attack["element"],
+                attack["power"],
+                attack["special"],
+                self_status,
+                target_status,
+                id,
+            ),
+            AttackRelatedIds(attack["self_status_id"], attack["target_status_id"]),
         )
+
+    @classmethod
+    def load(cls, id: str):
+        return cls.load_preserving_ids(id)[0]
 
 
 def generate_attack(name: str, element: str, category: str) -> Attack:
