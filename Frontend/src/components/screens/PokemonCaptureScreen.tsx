@@ -29,10 +29,7 @@ const uploadFile = async function (selectedFile?: File, username?: string) {
 };
 
 const CaptureContainer = styled.div`
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  position: absolute;
+  margin-top: 10vh;
   display: grid;
   place-items: center;
   grid-template-areas: "inner-div";
@@ -82,7 +79,9 @@ export default function PokemonCaptureScreen() {
       </Typography>
       <CaptureContainer>
         <Absolute>
-          <Circle></Circle>
+          <label htmlFor="imageUpload" style={{ cursor: "pointer" }}>
+            <Circle></Circle>
+          </label>
         </Absolute>
         <Absolute>
           <label htmlFor="imageUpload" style={{ cursor: "pointer" }}>
