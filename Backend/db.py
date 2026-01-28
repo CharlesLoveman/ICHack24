@@ -168,3 +168,10 @@ def get_all_pokemons():
     str_object_ids = [str(doc["_id"]) for doc in object_ids_docs]
 
     return [get_pokemon_from_id(object_id) for object_id in str_object_ids]
+
+
+def add_pokemon_to_user(username: str, pokemon_id: str):
+    """Add a Pokemon to a user."""
+    players_collection.update_one(
+        {"username": username}, {"$push": {"pokemon_ids": pokemon_id}}
+    )
