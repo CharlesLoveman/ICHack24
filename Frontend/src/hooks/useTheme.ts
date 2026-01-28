@@ -40,7 +40,6 @@ export function useTheme() {
       },
     },
     components: {
-      /** Consider this closely */
       MuiLink: {
         styleOverrides: {
           root: {
