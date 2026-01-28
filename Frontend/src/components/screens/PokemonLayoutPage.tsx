@@ -60,7 +60,7 @@ export const PokemonLayoutPage: React.FC = () => {
           ))}
         </PokemonList>
       </ScrollableMain>
-      <CopyrightFooter />
+      <CopyrightFooter noClicks={0} setNoClicks={() => {}} />
     </>
   );
 };
