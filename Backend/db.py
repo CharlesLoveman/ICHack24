@@ -48,6 +48,7 @@ class DBStats(TypedDict):
     special_attack: int
     special_defence: int
     speed: int
+    type: str
 
 
 mongodb_client = MongoClient(DATABASE_HOST, 27017)

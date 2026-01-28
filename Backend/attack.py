@@ -8,6 +8,19 @@ from .db import (
 from .pokemon_constants import element_chart, element_options, stats_keys
 
 
+def delete_attack_stat(id: str):
+    attack_stats_collection.delete_one({"_id": ObjectId(id)})
+
+
+def delete_attack(id: str):
+    attack = Attack.load(id)
+
+    delete_attack_stat(attack.self_status)
+    delete_attack_stat(attack.target_status)
+
+    attacks_collection.delete_one({"_id": ObjectId(id)})
+
+
 class Attack:
     """Create an attack, to be called when a Pokemon attacks."""
 

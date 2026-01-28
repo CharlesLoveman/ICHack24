@@ -3,7 +3,7 @@
 import numpy as np
 from bson.objectid import ObjectId
 import random
-from .attack import Attack
+from .attack import Attack, delete_attack, delete_attack_stat
 from sharedTypes import PokemonStats
 from typing import List, Self
 from .db import (
@@ -12,9 +12,20 @@ from .db import (
 )
 from .pokemon_constants import element_chart, element_options, stats_keys
 
+def delete_pokemon(id: str):
+    pokemon = Pokemon.load(id)
+
+    for attack in pokemon.attacks:
+        delete_attack(attack.id)
+
+    delete_attack_stat(pokemon.stats_id)
+
+    pokemon_collection.delete_one({"_id": ObjectId(id)})
 
 class Pokemon:
     """Create a Pokemon, with description, battle statistics and an image id."""
+
+    stats_id: str | None
 
     def __init__(
         self,
@@ -22,6 +33,7 @@ class Pokemon:
         description: str,
         element: str,
         stats: PokemonStats,
+        stats_id: str | None,
         attacks: List[Attack],
         image_id: str,
         original_image_id: str,
@@ -31,6 +43,7 @@ class Pokemon:
         self.description = description
         self.element = element
         self.stats = stats
+        self.stats_id = stats_id
         self.attacks = attacks
         self.id = id
         self.image_id = image_id
@@ -222,6 +235,7 @@ class Pokemon:
             pokemon["description"],
             pokemon["element"],
             stats,
+            stats_id,
             attacks,
             image_id,
             original_image_id,
