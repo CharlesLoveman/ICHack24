@@ -7,7 +7,7 @@ export const HomeIcon = ({ size }: { size: string }) => (
     fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
     stroke="currentColor"
-    stroke-width="5"
+    strokeWidth="5"
     color="#fefefe"
     className="raster-icon"
     aria-label="home"
