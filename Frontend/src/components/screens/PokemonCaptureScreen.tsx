@@ -10,22 +10,32 @@ import { Title } from "../layout/Title";
 import { Box, Typography } from "@mui/material";
 import styled from "styled-components";
 import { darkGrey, red } from "../../utils/colors";
-import { socket } from "../../socket";
 import { ScrollableMain } from "../layout/ScrollableMain";
+import FilePicker from "@ihatecode/react-file-picker";
+import { backendAddress } from "../../env";
+import axios from "axios";
 
 const uploadFile = async function (selectedFile?: File, username?: string) {
-  if (!username || !selectedFile) return;
-  const reader = new FileReader();
-  reader.onload = function () {
-    if (this.result) {
-      const networkBytes = new Uint8Array(this.result as ArrayBuffer);
-      socket.emit("createPokemon", {
-        image_bytes: networkBytes,
-        username: username,
-      });
+  const formData = new FormData();
+
+  // Update the formData object
+  if (selectedFile) {
+    formData.append("img", selectedFile);
+    try {
+      const res = await axios.post(
+        `${backendAddress}/create-pokemon/${username}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+      return res.data.message;
+    } catch (err) {
+      console.log(err);
     }
-  };
-  reader.readAsArrayBuffer(selectedFile);
+  }
 };
 
 const CaptureContainer = styled.div`
@@ -62,8 +72,15 @@ export default function PokemonCaptureScreen() {
 
   // On file select (from the pop up)
   const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      onFileUpload(event.target.files[0]);
+    event.preventDefault();
+    console.log("onFileChange has been triggered");
+    _onFileChange(event.target.files);
+  };
+
+  const _onFileChange = (files: FileList | null) => {
+    if (files && files.length > 0) {
+      console.log("Uploading your file");
+      onFileUpload(files[0]);
     }
   };
 
@@ -77,6 +94,7 @@ export default function PokemonCaptureScreen() {
         Take a picture of an animal <FaDog />, object <FaBottleWater /> or
         anything else <GiSpikyExplosion /> you would like to Pokefy!
       </Typography>
+
       <CaptureContainer>
         <Absolute>
           <label htmlFor="imageUpload" style={{ cursor: "pointer" }}>
@@ -107,6 +125,15 @@ export default function PokemonCaptureScreen() {
         style={{ display: "none" }}
         inputProps={{ accept: "image/*;capture=camera" }}
       />
+
+      <FilePicker accept="image/*" onChange={_onFileChange}>
+        <Typography
+          style={{ textAlign: "center", margin: "2rem", color: "grey" }}
+          variant="h6"
+        >
+          Click if you wish to select files directly
+        </Typography>
+      </FilePicker>
     </ScrollableMain>
   );
 }

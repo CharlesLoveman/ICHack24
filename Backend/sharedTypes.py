@@ -84,7 +84,7 @@ class JoinBattleData(TypedDict):
 
 
 class AttackData(TypedDict):
-    attack_id: IPokemon
+    attack_id: str
     game_id: str
 
 

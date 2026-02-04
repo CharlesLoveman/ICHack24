@@ -1,6 +1,7 @@
+from typing import Dict
 from .pokemon import Pokemon
 from .attack import Attack
-from socketEmit import (
+from .socketEmit import (
     emit_lose,
     emit_makeOtherPlayerWait,
     emit_onTurnEnd,
@@ -189,3 +190,6 @@ class WaitingForPlayer2Attack(BattleState):
                 battle.execute()
                 self.broadcast_health(battle)
                 battle.state = WaitingForAttacks()
+
+
+battles: Dict[str, Battle] = {}

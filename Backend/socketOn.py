@@ -1,7 +1,8 @@
 from .pokemon import delete_pokemon
 from .pokemon_utils import generate_pokemon
 from .env import PATH_TO_PUBLIC, POKEMON_FOLDER
-from .app import socketio, battles
+from .server import socketio, app
+from .battle import battles
 from .store import users_to_sockets
 from .socketEmit import (
     emit_getPokemonCreatedAck,
@@ -11,10 +12,12 @@ from .socketEmit import (
     emit_loginAck,
     emit_notification,
     emit_getPokemonCreatedResponse,
+    emit_notification_with_retries,
     emit_rejoinBattle,
 )
 from .sharedTypes import *
 from random import randrange
+from flask import Response, jsonify, request as _request, Request as _Request
 
 from .battle import Battle, BattleEvent
 from .db import (
@@ -23,10 +26,16 @@ from .db import (
     get_pokemon_from_id,
     get_pokemons_from_user,
     initialise_user,
-    request,
 )
 
 from sharedTypes import *
+
+
+class Request(_Request):
+    sid: str
+
+
+socket_request: Request = _request
 
 
 @socketio.on("addPokemonToUser")
@@ -40,7 +49,7 @@ def handle_addPokemonToUser(json: CreateBattleData):
     emit_notification(
         message=f"Added Pokemon {name} to your Pokedex",
         severity="success",
-        sid=request.sid,
+        sid=socket_request.sid,
     )
     print(f"Added pokemon {name} with id {pokemon_id} to user {username}'s pokedex")
 
@@ -51,7 +60,9 @@ def handle_deletePokemon(json: OnePokemonData):
     try:
         name = delete_pokemon(pokemon_id)
         emit_notification(
-            message=f"Pokemon {name} deleted", severity="success", sid=request.sid
+            message=f"Pokemon {name} deleted",
+            severity="success",
+            sid=socket_request.sid,
         )
         print(f"Successfully deleted pokemon {name} with id {pokemon_id}")
         return True
@@ -61,7 +72,7 @@ def handle_deletePokemon(json: OnePokemonData):
         emit_notification(
             message=f"Failed to delete pokemon",
             severity="error",
-            sid=request.sid,
+            sid=socket_request.sid,
         )
         return False
 
@@ -83,40 +94,12 @@ def handle_requestUserPokemons(json: AssociateUsernameWithSocketData):
     return pokemons
 
 
-@socketio.on("createPokemon")
-def handle_createPokemon(data: CreatePokemonData):
-    """Create a new Pokemon."""
-    emit_notification(message="Pokemon being created", severity="info", sid=request.sid)
-    emit_getPokemonCreatedAck(sid=request.sid)
-    img_raw = bytes(data["image_bytes"])
-
-    img_name = hash(img_raw)
-    img_path = f"{POKEMON_FOLDER}/{img_name}.jpg"  # Path from the public folder
-    with open(PATH_TO_PUBLIC + img_path, "wb") as file:
-        file.write(img_raw)
-
-    try:
-        generate_pokemon(data["username"], img_path)
-        emit_getPokemonCreatedResponse(succeeded=True, sid=request.sid)
-        emit_notification(
-            message="Pokemon successfully created", severity="success", sid=request.sid
-        )
-    except Exception as e:
-        print(e)
-        emit_getPokemonCreatedResponse(succeeded=False, sid=request.sid)
-        emit_notification(
-            message="An error occurred when trying to generate your Pokemon..",
-            severity="error",
-            sid=request.sid,
-        )
-
-
 @socketio.on("login")
 def handle_login(json: AssociateUsernameWithSocketData):
     username = json["username"]
     pid = initialise_user(username)
 
-    emit_loginAck(pid=pid, username=username, sid=request.sid)
+    emit_loginAck(pid=pid, username=username, sid=socket_request.sid)
 
 
 @socketio.on("associateUsernameWithSocket")
@@ -124,9 +107,9 @@ def handle_associateUsernameWithSocket(json: AssociateUsernameWithSocketData):
     """Associate a username with a socket."""
     username = json["username"]
 
-    if username not in users_to_sockets:
-        print(f"Overwriting the sid for user {username}")
-    users_to_sockets[username] = request.sid
+    if username in users_to_sockets:
+        print(f"Overwriting the sid for user {username} with {socket_request.sid}")
+    users_to_sockets[username] = socket_request.sid
 
 
 @socketio.on("createBattle")
@@ -137,12 +120,12 @@ def handle_createBattle(json: CreateBattleData):
     username = json["username"]
 
     print(
-        f"Creating battle (id: {game_id}) for user {username} with client id: {request.sid}"
+        f"Creating battle (id: {game_id}) for user {username} with client id: {socket_request.sid}"
     )
 
     battles[game_id] = Battle(username, pokemon_id)
 
-    emit_joinWaitingRoom(game_id=game_id, sid=request.sid)
+    emit_joinWaitingRoom(game_id=game_id, sid=socket_request.sid)
 
 
 @socketio.on("joinBattle")
@@ -156,20 +139,26 @@ def handle_joinBattle(json: PlayerJoinBattleData):
         battle = battles[game_id]
     else:
         print(f"No battle with id {game_id} exists")
-        emit_notification("That battle doesn't exist", "error", request.sid)
+        emit_notification("That battle doesn't exist", "error", socket_request.sid)
         return
 
-    print(f"User {username} with client id {request.sid} joining battle: {game_id}")
+    print(
+        f"User {username} with client id {socket_request.sid} joining battle: {game_id}"
+    )
 
     if battle.is_full():
         # Then consider if the player is trying to rejoin a game they accidentally left
         if battle.is_player_supposed_to_be_in_game(username):
             print(f"User {username} rejoining battle: {game_id}")
-            emit_rejoinBattle(game_id=game_id, sid=request.sid)
-            emit_notification("Rejoining the battle", "success", request.sid)
+            emit_rejoinBattle(
+                game_id=game_id, sid=socket_request.sid
+            )  # Need to fix this
+            emit_notification("Rejoining the battle", "success", socket_request.sid)
         else:
             print(f"The battle with id {game_id} is already full")
-            emit_notification("That battle is already full!", "error", request.sid)
+            emit_notification(
+                "That battle is already full!", "error", socket_request.sid
+            )
 
     else:
         battle.add_player(username, pokemon_id)
@@ -191,4 +180,38 @@ def handle_joinBattle(json: PlayerJoinBattleData):
 
 @socketio.on("attack")
 def handle_attack(json: AttackData):
-    battles[json["game_id"]].handle_event(BattleEvent.attack, json, request.sid)
+    battles[json["game_id"]].handle_event(BattleEvent.attack, json, socket_request.sid)
+
+
+@app.route("/create-pokemon/<username>", methods=["POST"])
+def create_pokemon(username: str) -> Response:
+    print(f"Creating new Pokemon for: {username}")
+    emit_notification_with_retries(
+        message="Pokemon being created", severity="info", username=username
+    )
+    img_raw = _request.files["img"].read()
+
+    img_name = hash(img_raw)
+    img_path = f"{POKEMON_FOLDER}/{img_name}.jpg"  # Path from the public folder
+    with open(PATH_TO_PUBLIC + img_path, "wb") as file:
+        file.write(img_raw)
+
+    try:
+        generate_pokemon(username, img_path)
+        emit_getPokemonCreatedResponse(succeeded=True, sid=users_to_sockets[username])
+        emit_notification(
+            message="Pokemon successfully created",
+            severity="success",
+            sid=users_to_sockets[username],
+        )
+    except Exception as e:
+        print(e)
+        emit_getPokemonCreatedResponse(succeeded=False, sid=users_to_sockets[username])
+        emit_notification(
+            message="An error occurred when trying to generate your Pokemon..",
+            severity="error",
+            sid=users_to_sockets[username],
+        )
+        return jsonify(success=False)
+
+    return jsonify(success=True)

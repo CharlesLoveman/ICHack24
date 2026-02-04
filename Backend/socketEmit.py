@@ -1,7 +1,10 @@
 from enum import Enum
+import time
 
 from flask_socketio import emit
 
+from .server import socketio
+from .store import users_to_sockets
 from sharedTypes import (
     JoinBattleData,
     JoinWaitingRoomData,
@@ -92,7 +95,7 @@ def emit_lose(sid: str):
 
 def emit_notification(message: str, severity: str, sid: str):
     data: NotificationData = {"message": message, "severity": severity}
-    emit(SocketEventsTo.notification.value, data, to=sid)
+    emit(SocketEventsTo.notification.value, data, to=sid, namespace="/")
 
 
 def emit_loginAck(username: str, pid: str, sid: str):
@@ -102,7 +105,7 @@ def emit_loginAck(username: str, pid: str, sid: str):
 
 def emit_getPokemonCreatedResponse(succeeded: bool, sid: str):
     data: PokemonCreatedResponse = {"succeeded": succeeded}
-    emit(SocketEventsTo.getPokemonCreatedResponse.value, data, to=sid)
+    emit(SocketEventsTo.getPokemonCreatedResponse.value, data, to=sid, namespace="/")
 
 
 def emit_rejoinBattle(
@@ -117,4 +120,33 @@ def emit_rejoinBattle(
 
 
 def emit_getPokemonCreatedAck(sid: str):
-    emit(SocketEventsTo.getPokemonCreatedAck.value, to=sid)
+    emit(SocketEventsTo.getPokemonCreatedAck.value, to=sid, namespace="/")
+
+
+def emit_notification_with_retries(message: str, severity: str, username: str):
+    data: NotificationData = {"message": message, "severity": severity}
+    emit_with_retries(
+        SocketEventsTo.notification.value, data, username=username, namespace="/"
+    )
+
+
+def emit_with_retries(event, data, username, namespace, retries=3, delay=10):
+    """
+    Attempt to emit to a specific client SID multiple times if not connected.
+    """
+    attempt = 0
+    while attempt < retries:
+        attempt += 1
+        sid = users_to_sockets[username]
+        # Check if client is connected
+        if socketio.server.manager.is_connected(sid, "/"):
+            emit(event, data, to=sid, namespace=namespace)
+            print(f"Sent {event} to {sid} on attempt {attempt}")
+            return True
+        else:
+            print(
+                f"Client {sid} not connected. Retry {attempt}/{retries} in {delay}s..."
+            )
+            time.sleep(delay)
+    print(f"Failed to send {event} to {username} after {retries} attempts")
+    return False

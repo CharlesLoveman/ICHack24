@@ -203,7 +203,8 @@ def generate_attack(name: str, element: str, category: str) -> Attack:
     if not isinstance(name, str):
         raise TypeError(f"Name must be a string, but {name} is a {type(name).__name__}")
     if element not in element_options:
-        raise ValueError(f"Element must be a valid element, but {element} is not")
+        element = random.choice(element_options)
+        # raise ValueError(f"Element must be a valid element, but {element} is not")
     if category not in ["physical", "special", "status"]:
         raise ValueError(
             f"Category must be either 'physical', 'special' or 'status', but {category} is not"

@@ -1,6 +1,5 @@
 from typing import Union
 from sharedTypes import *
-from flask import request as _request, Request
 from pymongo.collection import Collection
 from pymongo import MongoClient
 from .sharedTypes import IPokemon
@@ -8,13 +7,6 @@ from .env import DATABASE_HOST
 from bson.objectid import ObjectId
 
 from sharedTypes import *
-
-
-class Request:
-    sid: str
-
-
-request: Request = _request
 
 
 class DBPlayer(TypedDict):
