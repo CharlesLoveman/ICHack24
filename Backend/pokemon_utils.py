@@ -16,11 +16,11 @@ ERRORMON_ID = None  # Run create_errormon.py and set this!
 
 def generate_pokemon(username: str, img_path: str):
     # Generate Pokemon
-    print(f"Generating Pokemon for ${username}")
+    print(f"Generating Pokemon for {username}")
     for i in range(1):
         try:
             pokemon = build_pokemon(img_path)
-            pokemon_id = pokemon.save()
+            pokemon_id: str = pokemon.save()
             print(f"Pokemon created successfully. id: {pokemon_id}")
             break
         except GeminiError:

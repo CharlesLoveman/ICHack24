@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import random
 import numpy as np
 from bson.objectid import ObjectId
 from typing import Dict, Self, Tuple
@@ -60,9 +61,10 @@ class Attack:
                 f"Element must be a string, but {self.element} is a {type(self.element).__name__}"
             )
         if self.element not in element_options:
-            raise ValueError(
-                f"Element must be a valid element, but {self.element} is not"
-            )
+            self.element = random.choice(element_options)
+            # raise ValueError(
+            #     f"Element must be a valid element, but {self.element} is not"
+            # )
 
         if not isinstance(self.power, int):
             raise TypeError(

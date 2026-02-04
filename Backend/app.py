@@ -1,11 +1,12 @@
 """Flask app for the backend."""
 
+import os
 from typing import Dict
 from sharedTypes import *
 from flask import Flask
 from flask_cors import CORS
 
-from env import FLASK_SECRET_KEY
+from env import FLASK_SECRET_KEY, PATH_TO_PUBLIC, POKEMON_FOLDER
 
 from .battle import Battle
 from flask_socketio import SocketIO
@@ -21,6 +22,12 @@ sock_cors_or = "*"
 # ip = "http://localhost:3000"
 # py_cors_or = f"{ip}"
 # sock_cors_or = py_cors_or
+
+if not os.path.exists(PATH_TO_PUBLIC + POKEMON_FOLDER):
+    os.makedirs(PATH_TO_PUBLIC + POKEMON_FOLDER)
+    print(f"Path {PATH_TO_PUBLIC + POKEMON_FOLDER} created successfully!")
+else:
+    print("hi")
 
 
 app = Flask(__name__)

@@ -11,5 +11,7 @@ FLASK_SECRET_KEY = os.environ.get("FLASK_SECRET_KEY", "abcd")
 USE_REAL_MODEL = os.environ.get("USE_REAL_MODEL", "False")
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", None)
 
+POKEMON_FOLDER: str = "images/pokemon/uploaded_images"
+
 if GEMINI_API_KEY is None:
     print("GEMINI_API_KEY not set.")

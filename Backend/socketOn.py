@@ -1,6 +1,6 @@
 from .pokemon import delete_pokemon
 from .pokemon_utils import generate_pokemon
-from .env import PATH_TO_PUBLIC
+from .env import PATH_TO_PUBLIC, POKEMON_FOLDER
 from .app import socketio, battles
 from .store import users_to_sockets
 from .socketEmit import (
@@ -91,9 +91,7 @@ def handle_createPokemon(data: CreatePokemonData):
     img_raw = bytes(data["image_bytes"])
 
     img_name = hash(img_raw)
-    img_path = (
-        f"images/pokemon/uploaded_images/{img_name}.jpg"  # Path from the public folder
-    )
+    img_path = f"{POKEMON_FOLDER}/{img_name}.jpg"  # Path from the public folder
     with open(PATH_TO_PUBLIC + img_path, "wb") as file:
         file.write(img_raw)
 
@@ -103,7 +101,8 @@ def handle_createPokemon(data: CreatePokemonData):
         emit_notification(
             message="Pokemon successfully created", severity="success", sid=request.sid
         )
-    except:
+    except Exception as e:
+        print(e)
         emit_getPokemonCreatedResponse(succeeded=False, sid=request.sid)
         emit_notification(
             message="An error occurred when trying to generate your Pokemon..",

@@ -1,5 +1,6 @@
 """API for interfacing with the vision pipeline."""
 
+from .env import POKEMON_FOLDER
 from .sharedTypes import ExtendedPokemonStats
 from gemini import RealGenerativeModel
 from gemini_mock import MockGenerativeModel
@@ -115,7 +116,7 @@ def create_pokemon(
         # Generate the image
         img = generate_image(image_prompt)
         img_name = hash(img)
-        img_path = f"images/pokemon/uploaded_images/{img_name}.jpg"
+        img_path = f"{POKEMON_FOLDER}/{img_name}.jpg"
 
         img.save(PATH_TO_PUBLIC + img_path)
 
