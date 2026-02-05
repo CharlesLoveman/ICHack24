@@ -14,7 +14,6 @@ export function useLocalStorage() {
   useEffect(() => {
     const val = localStorage.getItem(CAPTURE_SCREEN_JUST_REFRESHED);
     localStorage.removeItem(CAPTURE_SCREEN_JUST_REFRESHED);
-    console.log(val);
     if (val === "true") {
       data.addNotification({
         message: "Capture page was just reloaded and any Pokemon just snapped has not been processed. This may be due to launching the Camera and Android memory constraints.",

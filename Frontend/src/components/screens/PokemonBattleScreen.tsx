@@ -16,12 +16,12 @@ import { FightButton } from "../battle/FightButton";
 import { ReturnToHomeButton } from "../battle/ReturnToHomeButton";
 
 interface ImageContainerProps {
-  path: string;
+  $path: string;
 }
 
 const PokemonBattleScreenContainer = styled.div<ImageContainerProps>`
   background: ${(props) =>
-    `url("${props.path}") no-repeat fixed center center`};
+    `url("${props.$path}") no-repeat fixed center center`};
   background-size: cover;
   height: 100%;
   display: flex;
@@ -48,7 +48,7 @@ export default function PokemonBattleScreen() {
   } = useGlobalData();
   const params = useParams<{ game_id: string }>();
   const [chosenAttack, setChosenAttack] = useState<Attack | undefined>(
-    undefined
+    undefined,
   );
 
   const [isChoosingMove, setIsChoosingMove] = useState(false);
@@ -110,7 +110,7 @@ export default function PokemonBattleScreen() {
       <Title>Battle - {params.game_id}</Title>
       {!isChoosingMove ? (
         <PokemonBattleScreenContainer
-          path={assetsFolder + "/" + "background_temp_leeched.webp"}
+          $path={assetsFolder + "/" + "background_temp_leeched.webp"}
         >
           <ScrollableMain>
             <PokemonBattleDisplay

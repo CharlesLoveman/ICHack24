@@ -2,12 +2,12 @@ import { Button, ButtonProps, Typography } from "@mui/material";
 import styled from "styled-components";
 
 interface MaxWidthProps {
-  noMaxWidth?: boolean;
+  $noMaxWidth?: boolean;
 }
 
 const LongButtonContainer = styled.div<MaxWidthProps>`
   ${(props) =>
-    !props.noMaxWidth
+    !props.$noMaxWidth
       ? `
     max-width: 100rem;
     margin: auto;
@@ -24,7 +24,7 @@ export type LongButtonProps = ButtonProps & MaxWidthProps;
 
 export function LongButton(props: LongButtonProps) {
   return (
-    <LongButtonContainer noMaxWidth={props.noMaxWidth}>
+    <LongButtonContainer $noMaxWidth={props.$noMaxWidth}>
       <Button fullWidth={true} color="primary" {...props}>
         <LongButtonTextContainer>
           <Typography variant="h5">{props.children}</Typography>

@@ -77,8 +77,8 @@ const Container = styled.div`
   text-align: center;
 `;
 
-const HideableContainer = styled.div<{ hidden: boolean }>`
-  ${(props) => (props.hidden ? "display: none" : "")}
+const HideableContainer = styled.div<{ $hidden: boolean }>`
+  ${(props) => (props.$hidden ? "display: none" : "")}
 `;
 
 const UploadContainer = styled.div`
@@ -166,7 +166,7 @@ export default function PokemonCaptureScreen() {
         <GiForest />
       </Title>
       <Container>
-        <HideableContainer hidden={isUploading}>
+        <HideableContainer $hidden={isUploading}>
           <Typography style={{ textAlign: "center" }} variant="h6">
             Take a picture of an animal <FaDog />, object <FaBottleWater /> or
             anything else <GiSpikyExplosion /> you would like to Pokefy!
@@ -204,11 +204,11 @@ export default function PokemonCaptureScreen() {
             </Typography>
           </FilePicker>
         </HideableContainer>
-        <HideableContainer hidden={!isUploading}>
+        <HideableContainer $hidden={!isUploading}>
           <UploadContainer>
             <Typography variant="h4"> Uploading your Pokemon </Typography>
             <Bar>
-              <Health maxHp={1} hp={progress ?? 0}></Health>
+              <Health $maxHp={1} $hp={progress ?? 0}></Health>
             </Bar>
           </UploadContainer>
         </HideableContainer>

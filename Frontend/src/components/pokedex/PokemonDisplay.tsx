@@ -15,14 +15,14 @@ export const Bar = styled.div`
 `;
 
 export interface HealthProps {
-  hp: number;
-  maxHp: number;
+  $hp: number;
+  $maxHp: number;
 }
 
 export const Health = styled.div<HealthProps>`
   background-color: #59b859;
   height: 0.5rem;
-  width: ${(props) => (props.hp / props.maxHp) * 15}rem;
+  width: ${(props) => (props.$hp / props.$maxHp) * 15}rem;
   z-index: 100;
   position: relative;
 `;
@@ -37,18 +37,18 @@ const RightPokemonTypeContainer = styled(PokemonTypeContainer)`
 `;
 
 interface OnLeftProps {
-  onLeft: boolean;
+  $onLeft: boolean;
 }
 
 const ImageContainer = styled.div<OnLeftProps>`
   position: relative;
-  float: ${(props) => (props.onLeft ? "left" : "right")};
+  float: ${(props) => (props.$onLeft ? "left" : "right")};
 `;
 
 const PokemonDisplayContainer = styled.div<OnLeftProps>`
   display: flex;
   flex-direction: column;
-  align-items: ${(props) => (props.onLeft ? "flex-start" : "flex-end")};
+  align-items: ${(props) => (props.$onLeft ? "flex-start" : "flex-end")};
 `;
 
 export default function PokemonDisplay(
@@ -80,19 +80,19 @@ export default function PokemonDisplay(
       ></CardHeader>
       {hp + "/" + pokemon.stats.hp}
       <Bar>
-        <Health maxHp={pokemon.stats.hp} hp={hp}></Health>
+        <Health $maxHp={pokemon.stats.hp} $hp={hp}></Health>
       </Bar>
     </Card>
   );
 
   const pokemonImage = (
-    <ImageContainer onLeft={onLeft}>
+    <ImageContainer $onLeft={onLeft}>
       <img src={assetsFolder + "/" + pokemon.image_id} width="100"></img>
     </ImageContainer>
   );
 
   return (
-    <PokemonDisplayContainer onLeft={onLeft}>
+    <PokemonDisplayContainer $onLeft={onLeft}>
       {onLeft ? pokemonImage : pokemonInfo}
       <br />
       {onLeft ? pokemonInfo : pokemonImage}
