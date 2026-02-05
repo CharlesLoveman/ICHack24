@@ -17,11 +17,15 @@ import axios, { AxiosProgressEvent } from "axios";
 import { Bar, Health } from "../pokedex/PokemonDisplay";
 import { useGlobalData } from "../../hooks/useGlobalData";
 import { NotificationData } from "../../sharedTypes";
+import axiosRetry, { linearDelay } from "axios-retry";
+
+axiosRetry(axios, { retries: 3, retryDelay: linearDelay() });
 
 const uploadFile = async function (
   selectedFile?: File,
   username?: string,
   onUploadProgress: (progressEvent: AxiosProgressEvent) => void = () => {},
+  onError: (error: string) => void = () => {},
 ) {
   const formData = new FormData();
 
@@ -42,6 +46,7 @@ const uploadFile = async function (
       return res.data.message;
     } catch (err) {
       console.log(err);
+      onError(err as string);
     }
   }
 };
@@ -94,14 +99,22 @@ export default function PokemonCaptureScreen() {
   const [progress, setProgress] = useState<number | undefined>(undefined);
   const { notifications, setNotifications } = useGlobalData();
 
+  const onError = (message: string) => {
+    const data: NotificationData = {
+      message: "Send Error:" + message,
+      severity: "error",
+    };
+    setNotifications([...notifications, data]);
+    setIsUploading(false);
+  };
+
   const onFileUpload = async function (file?: File) {
     setIsUploading(true);
-    uploadFile(file, params.id, onUploadProgress);
+    uploadFile(file, params.id, onUploadProgress, onError);
   };
 
   // On file select (from the pop up)
   const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
     console.log("onFileChange has been triggered");
     _onFileChange(event.target.files);
   };
@@ -179,7 +192,7 @@ export default function PokemonCaptureScreen() {
         <UploadContainer hidden={!isUploading}>
           <Typography variant="h4"> Uploading your Pokemon </Typography>
           <Bar>
-            <Health maxHp={1} hp={progress ?? 1}></Health>
+            <Health maxHp={1} hp={progress ?? 0}></Health>
           </Bar>
         </UploadContainer>
 
@@ -188,7 +201,7 @@ export default function PokemonCaptureScreen() {
           type="file"
           onChange={onFileChange}
           style={{ display: "none" }}
-          inputProps={{ accept: "image/*;capture=camera" }}
+          inputProps={{ accept: "image/*;capture=camera", capture: true }}
         />
       </Container>
     </ScrollableMain>
