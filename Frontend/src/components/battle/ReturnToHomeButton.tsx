@@ -6,7 +6,7 @@ export function ReturnToHomeButton() {
     <FooterContainer>
       <LinkButton
         linkProps={{ to: `../home` }}
-        buttonProps={{ color: "info", noMaxWidth: true }}
+        buttonProps={{ color: "info", $noMaxWidth: true }}
       >
         Return to home
       </LinkButton>

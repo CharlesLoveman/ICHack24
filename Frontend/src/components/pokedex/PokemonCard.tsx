@@ -103,7 +103,7 @@ export default function PokemonCard({
       "addPokemonToUser",
       { pokemon_id: id, username: data.username },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      (_: boolean) => {}
+      (_: boolean) => {},
     );
   }
 

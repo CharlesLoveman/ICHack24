@@ -19,7 +19,7 @@ export function FightButton({
       <LongButton
         disabled={disabled}
         onClick={switchView}
-        noMaxWidth={true}
+        $noMaxWidth={true}
         color={"warning"}
       >
         {!isChoosingMove ? "Fight" : "Back"}
