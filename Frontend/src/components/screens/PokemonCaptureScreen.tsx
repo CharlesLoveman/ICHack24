@@ -150,11 +150,14 @@ export default function PokemonCaptureScreen() {
         severity: "info",
       });
       setTimeout(() => {
-        navigate("/home");
         setIsUploading(false);
       }, 1000);
     }
   }, [progress]);
+
+  useEffect(() => {
+    if (!isUploading && progress === 1) navigate("/");
+  }, [isUploading]);
 
   return (
     <ScrollableMain>

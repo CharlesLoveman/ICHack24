@@ -17,7 +17,7 @@ export function useLocalStorage() {
     console.log(val);
     if (val === "true") {
       data.addNotification({
-        message: "Capture page was just reloaded and your snapped Pokemon was not processed. This may be due to launching the Camera and Android memory constraints.",
+        message: "Capture page was just reloaded and any Pokemon just snapped has not been processed. This may be due to launching the Camera and Android memory constraints.",
         severity: "warning",
       });
     }
