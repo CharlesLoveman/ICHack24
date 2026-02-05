@@ -57,6 +57,7 @@ def handle_addPokemonToUser(json: CreateBattleData):
 @socketio.on("deletePokemon")
 def handle_deletePokemon(json: OnePokemonData):
     pokemon_id = json["pokemon_id"]
+    name = "unknown"
     try:
         name = delete_pokemon(pokemon_id)
         emit_notification(

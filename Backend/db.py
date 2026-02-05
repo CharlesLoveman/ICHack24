@@ -110,7 +110,10 @@ def get_stats_from_id(stats_id: str, flag: str = "stats") -> PokemonStats:
     """Return stats as a dict."""
     # print(f"Attempting to load data on {flag}: {stats_id}")
     stats = attack_stats_collection.find_one({"_id": ObjectId(stats_id)})
-    stats.pop("_id")
+    if stats is not None:
+        stats.pop("_id")
+    else:
+        stats: DBStats = {}
 
     return stats
 
@@ -119,16 +122,18 @@ def get_attack_from_id(attack_id: str) -> IAttack:
     """Return an attack as a dict."""
     # print(f"Attempting to load data on Attack: {attack_id}")
     attack = attacks_collection.find_one({"_id": ObjectId(attack_id)})
-    attack["id"] = str(attack["_id"])
-    attack.pop("_id")
+    if attack is not None:
+        attack["id"] = str(attack["_id"])
+        attack.pop("_id")
 
-    self_status_id = attack["self_status_id"]
-    attack["self_status_id"] = get_status_from_id(self_status_id)
+        self_status_id = attack["self_status_id"]
+        attack["self_status_id"] = get_status_from_id(self_status_id)
 
-    target_status_id = attack["target_status_id"]
-    attack["target_status_id"] = get_status_from_id(target_status_id)
-
-    return attack
+        target_status_id = attack["target_status_id"]
+        attack["target_status_id"] = get_status_from_id(target_status_id)
+        return attack
+    else:
+        return {}
 
 
 def get_status_from_id(status_id: str) -> PokemonStats:
