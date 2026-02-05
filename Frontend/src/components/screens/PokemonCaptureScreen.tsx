@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 import Input from "@mui/material/Input";
 import { FaCameraRetro } from "react-icons/fa6";
@@ -13,9 +13,16 @@ import { darkGrey, red } from "../../utils/colors";
 import { ScrollableMain } from "../layout/ScrollableMain";
 import FilePicker from "@ihatecode/react-file-picker";
 import { backendAddress } from "../../env";
-import axios from "axios";
+import axios, { AxiosProgressEvent } from "axios";
+import { Bar, Health } from "../pokedex/PokemonDisplay";
+import { useGlobalData } from "../../hooks/useGlobalData";
+import { NotificationData } from "../../sharedTypes";
 
-const uploadFile = async function (selectedFile?: File, username?: string) {
+const uploadFile = async function (
+  selectedFile?: File,
+  username?: string,
+  onUploadProgress: (progressEvent: AxiosProgressEvent) => void = () => {},
+) {
   const formData = new FormData();
 
   // Update the formData object
@@ -29,6 +36,7 @@ const uploadFile = async function (selectedFile?: File, username?: string) {
           headers: {
             "Content-Type": "multipart/form-data",
           },
+          onUploadProgress,
         },
       );
       return res.data.message;
@@ -61,13 +69,34 @@ const Circle = styled.div`
   bottom: -0.9rem;
 `;
 
+const Container = styled.div`
+  text-align: center;
+`;
+
+const HideableContainer = styled.div<{ hidden: boolean }>`
+  ${(props) => (props.hidden ? "display: none" : "")}
+`;
+
+const UploadContainer = styled(HideableContainer)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  margin-top: 20dvh;
+`;
+
 export default function PokemonCaptureScreen() {
   const params = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number | undefined>(undefined);
+  const { notifications, setNotifications } = useGlobalData();
 
   const onFileUpload = async function (file?: File) {
-    navigate(-1);
-    uploadFile(file, params.id);
+    setIsUploading(true);
+    uploadFile(file, params.id, onUploadProgress);
   };
 
   // On file select (from the pop up)
@@ -84,56 +113,84 @@ export default function PokemonCaptureScreen() {
     }
   };
 
+  const onUploadProgress = (progressEvent: AxiosProgressEvent) => {
+    setProgress(progressEvent.progress);
+  };
+
+  useEffect(() => {
+    if (progress === 1) {
+      const data: NotificationData = {
+        message: "Pokemon being sent to the mainframe",
+        severity: "info",
+      };
+      setNotifications([...notifications, data]);
+      setTimeout(() => {
+        navigate("/home");
+        setIsUploading(false);
+      }, 1000);
+    }
+  }, [progress]);
+
   return (
     <ScrollableMain>
       <Title>
         Capture a new Pokemon!
         <GiForest />
       </Title>
-      <Typography style={{ textAlign: "center" }} variant="h6">
-        Take a picture of an animal <FaDog />, object <FaBottleWater /> or
-        anything else <GiSpikyExplosion /> you would like to Pokefy!
-      </Typography>
+      <Container>
+        <HideableContainer hidden={isUploading}>
+          <Typography style={{ textAlign: "center" }} variant="h6">
+            Take a picture of an animal <FaDog />, object <FaBottleWater /> or
+            anything else <GiSpikyExplosion /> you would like to Pokefy!
+          </Typography>
 
-      <CaptureContainer>
-        <Absolute>
-          <label htmlFor="imageUpload" style={{ cursor: "pointer" }}>
-            <Circle></Circle>
-          </label>
-        </Absolute>
-        <Absolute>
-          <label htmlFor="imageUpload" style={{ cursor: "pointer" }}>
-            <Box
-              style={{
-                color: darkGrey,
-                borderRadius: "100rem",
-                backgroundColor: red,
-                padding: "5rem",
-                zIndex: "0",
-              }}
+          <CaptureContainer>
+            <Absolute>
+              <label htmlFor="imageUpload" style={{ cursor: "pointer" }}>
+                <Circle></Circle>
+              </label>
+            </Absolute>
+            <Absolute>
+              <label htmlFor="imageUpload" style={{ cursor: "pointer" }}>
+                <Box
+                  style={{
+                    color: darkGrey,
+                    borderRadius: "100rem",
+                    backgroundColor: red,
+                    padding: "5rem",
+                    zIndex: "0",
+                  }}
+                >
+                  <FaCameraRetro size="10rem"></FaCameraRetro>
+                </Box>
+              </label>
+            </Absolute>
+          </CaptureContainer>
+
+          <FilePicker accept="image/*" onChange={_onFileChange}>
+            <Typography
+              style={{ textAlign: "center", margin: "2rem", color: "grey" }}
+              variant="h6"
             >
-              <FaCameraRetro size="10rem"></FaCameraRetro>
-            </Box>
-          </label>
-        </Absolute>
-      </CaptureContainer>
+              Click if you wish to select files directly
+            </Typography>
+          </FilePicker>
+        </HideableContainer>
+        <UploadContainer hidden={!isUploading}>
+          <Typography variant="h4"> Uploading your Pokemon </Typography>
+          <Bar>
+            <Health maxHp={1} hp={progress ?? 1}></Health>
+          </Bar>
+        </UploadContainer>
 
-      <Input
-        id="imageUpload"
-        type="file"
-        onChange={onFileChange}
-        style={{ display: "none" }}
-        inputProps={{ accept: "image/*;capture=camera" }}
-      />
-
-      <FilePicker accept="image/*" onChange={_onFileChange}>
-        <Typography
-          style={{ textAlign: "center", margin: "2rem", color: "grey" }}
-          variant="h6"
-        >
-          Click if you wish to select files directly
-        </Typography>
-      </FilePicker>
+        <Input
+          id="imageUpload"
+          type="file"
+          onChange={onFileChange}
+          style={{ display: "none" }}
+          inputProps={{ accept: "image/*;capture=camera" }}
+        />
+      </Container>
     </ScrollableMain>
   );
 }

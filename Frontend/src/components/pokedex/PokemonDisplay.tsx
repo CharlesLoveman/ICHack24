@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { darkGrey } from "../../utils/colors";
 import { PokemonTypeContainer } from "./PokemonCard";
 
-const Bar = styled.div`
+export const Bar = styled.div`
   background-color: ${darkGrey};
   height: 0.5rem;
   padding: 0.3rem;
@@ -14,12 +14,12 @@ const Bar = styled.div`
   position: relative;
 `;
 
-interface HealthProps {
+export interface HealthProps {
   hp: number;
   maxHp: number;
 }
 
-const Health = styled.div<HealthProps>`
+export const Health = styled.div<HealthProps>`
   background-color: #59b859;
   height: 0.5rem;
   width: ${(props) => (props.hp / props.maxHp) * 15}rem;
@@ -54,7 +54,7 @@ const PokemonDisplayContainer = styled.div<OnLeftProps>`
 export default function PokemonDisplay(
   pokemon: Pokemon,
   hp: number,
-  onLeft: boolean
+  onLeft: boolean,
 ) {
   const translateStyles = onLeft ? { translate: "-10%" } : { translate: "10%" };
 

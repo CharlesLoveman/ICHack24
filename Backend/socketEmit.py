@@ -125,12 +125,16 @@ def emit_getPokemonCreatedAck(sid: str):
 
 def emit_notification_with_retries(message: str, severity: str, username: str):
     data: NotificationData = {"message": message, "severity": severity}
+    emit_with_retries(SocketEventsTo.notification.value, data, username=username)
+
+
+def emit_getPokemonCreatedAck_with_retries(username: str):
     emit_with_retries(
-        SocketEventsTo.notification.value, data, username=username, namespace="/"
+        SocketEventsTo.getPokemonCreatedAck.value, data=None, username=username
     )
 
 
-def emit_with_retries(event, data, username, namespace, retries=3, delay=10):
+def emit_with_retries(event, data, username, namespace="/", retries=3, delay=10):
     """
     Attempt to emit to a specific client SID multiple times if not connected.
     """

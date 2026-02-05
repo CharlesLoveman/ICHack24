@@ -5,7 +5,7 @@ from .server import socketio, app
 from .battle import battles
 from .store import users_to_sockets
 from .socketEmit import (
-    emit_getPokemonCreatedAck,
+    emit_getPokemonCreatedAck_with_retries,
     emit_joinBattle,
     emit_joinBattleFromRoom,
     emit_joinWaitingRoom,
@@ -186,6 +186,7 @@ def handle_attack(json: AttackData):
 @app.route("/create-pokemon/<username>", methods=["POST"])
 def create_pokemon(username: str) -> Response:
     print(f"Creating new Pokemon for: {username}")
+    emit_getPokemonCreatedAck_with_retries(username)
     emit_notification_with_retries(
         message="Pokemon being created", severity="info", username=username
     )
