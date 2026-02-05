@@ -29,8 +29,7 @@ export function useSetupSocket() {
     username,
     battleState,
     setBattleState,
-    notifications,
-    setNotifications,
+    addNotification,
     setUsername,
     setPokemonReturned,
     setNoNewPokemon,
@@ -154,7 +153,7 @@ export function useSetupSocket() {
   }
 
   function onNotification(data: NotificationData) {
-    setNotifications([...notifications, data]);
+    addNotification(data);
   }
 
   function onLoginAck(data: LoginAckData) {

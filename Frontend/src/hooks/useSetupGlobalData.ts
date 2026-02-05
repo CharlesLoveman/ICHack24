@@ -76,6 +76,10 @@ export function useSetupGlobalData(initialOverrides: GlobalStates) {
   const [notifications, setNotifications] = useState<NotificationData[]>([]);
   // TODO: notifications shouldn't persist on refresh
 
+  const addNotification = (notification: NotificationData) => {
+    setNotifications([...notifications, notification])
+  }
+
   return {
     username,
     setUsername,
@@ -101,5 +105,6 @@ export function useSetupGlobalData(initialOverrides: GlobalStates) {
     setBattleState,
     notifications,
     setNotifications,
+    addNotification,
   };
 }

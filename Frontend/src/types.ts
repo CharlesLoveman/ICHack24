@@ -61,6 +61,7 @@ export interface GlobalSetters {
     React.SetStateAction<BATTLE_STATE | undefined>
   >;
   setNotifications: React.Dispatch<React.SetStateAction<NotificationData[]>>;
+  addNotification: (notification: NotificationData) => void;
 }
 
 export type GlobalContextType = GlobalStates & GlobalSetters;

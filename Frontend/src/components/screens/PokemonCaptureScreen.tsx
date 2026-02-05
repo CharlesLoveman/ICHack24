@@ -12,11 +12,10 @@ import styled from "styled-components";
 import { darkGrey, red } from "../../utils/colors";
 import { ScrollableMain } from "../layout/ScrollableMain";
 import FilePicker from "@ihatecode/react-file-picker";
-import { backendAddress } from "../../env";
+import { backendAddress, CAPTURE_SCREEN_JUST_REFRESHED } from "../../env";
 import axios, { AxiosProgressEvent } from "axios";
 import { Bar, Health } from "../pokedex/PokemonDisplay";
 import { useGlobalData } from "../../hooks/useGlobalData";
-import { NotificationData } from "../../sharedTypes";
 import axiosRetry, { linearDelay } from "axios-retry";
 
 axiosRetry(axios, { retries: 3, retryDelay: linearDelay() });
@@ -97,14 +96,25 @@ export default function PokemonCaptureScreen() {
   const navigate = useNavigate();
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [progress, setProgress] = useState<number | undefined>(undefined);
-  const { notifications, setNotifications } = useGlobalData();
+  const { addNotification } = useGlobalData();
+
+  const beforePageReload = () => {
+    localStorage.setItem(CAPTURE_SCREEN_JUST_REFRESHED, "true");
+  };
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", beforePageReload);
+
+    return () => {
+      window.removeEventListener("beforeunload", beforePageReload);
+    };
+  }, []);
 
   const onError = (message: string) => {
-    const data: NotificationData = {
+    addNotification({
       message: "Send Error:" + message,
       severity: "error",
-    };
-    setNotifications([...notifications, data]);
+    });
     setIsUploading(false);
   };
 
@@ -115,6 +125,9 @@ export default function PokemonCaptureScreen() {
 
   // On file select (from the pop up)
   const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    // event.preventDefault();
+    // event.persist();
+    // event.stopPropagation();
     console.log("onFileChange has been triggered");
     _onFileChange(event.target.files);
   };
@@ -132,11 +145,10 @@ export default function PokemonCaptureScreen() {
 
   useEffect(() => {
     if (progress === 1) {
-      const data: NotificationData = {
-        message: "Pokemon being sent to the mainframe",
+      addNotification({
+        message: "Pokemon has been sent to the mainframe",
         severity: "info",
-      };
-      setNotifications([...notifications, data]);
+      });
       setTimeout(() => {
         navigate("/home");
         setIsUploading(false);
