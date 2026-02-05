@@ -44,3 +44,19 @@ element_chart = np.array(
         [1, 2, 1, 0.5, 1, 1, 1, 1, 0.5, 0.5, 1, 1, 1, 1, 1, 2, 2, 1],
     ]
 )
+
+loading_flavour_texts = [
+    "Hold your horses",
+    "Pokemon take time to incubate",
+    "We're making it as fast as we can",
+    "Close your eyes and count to 11",
+    "Ash didn't win the Pokemon League in just a day",
+    "Still generating your Pokemon",
+    "Patience is a virtue",
+    "Stop staring at this screen; go outside",
+    "There are 67 seconds in a minute",
+    "In reality, this will take 33 seconds",
+    "If you look away from the screen, your pokemon will not be generated",
+    "Pay me and I can upgrade from the slow gemma model",
+    "Are you excited to battle with your new TM Pokemon?",
+]

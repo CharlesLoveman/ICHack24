@@ -59,6 +59,7 @@ export interface ClientToServerEvents {
     data: CreateBattleData,
     ack: (succeeded: boolean) => void
   ) => void;
+  requestCreationUpdate: (data: AssociateUsernameWithSocketData) => void;
 }
 
 export interface ServerToClientEvents {

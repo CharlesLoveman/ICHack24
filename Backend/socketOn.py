@@ -16,8 +16,9 @@ from .socketEmit import (
     emit_rejoinBattle,
 )
 from .sharedTypes import *
-from random import randrange
+from random import choice, randrange
 from flask import Response, jsonify, request as _request, Request as _Request
+from .pokemon_constants import loading_flavour_texts
 
 from .battle import Battle, BattleEvent
 from .db import (
@@ -36,6 +37,15 @@ class Request(_Request):
 
 
 socket_request: Request = _request
+
+
+@socketio.on("requestCreationUpdate")
+def handle_requestCreationUpdate(json: AssociateUsernameWithSocketData):
+    emit_notification(
+        message=choice(loading_flavour_texts),
+        severity="info",
+        sid=socket_request.sid,
+    )
 
 
 @socketio.on("addPokemonToUser")
