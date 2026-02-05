@@ -81,7 +81,7 @@ const HideableContainer = styled.div<{ hidden: boolean }>`
   ${(props) => (props.hidden ? "display: none" : "")}
 `;
 
-const UploadContainer = styled(HideableContainer)`
+const UploadContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -201,12 +201,14 @@ export default function PokemonCaptureScreen() {
             </Typography>
           </FilePicker>
         </HideableContainer>
-        <UploadContainer hidden={!isUploading}>
-          <Typography variant="h4"> Uploading your Pokemon </Typography>
-          <Bar>
-            <Health maxHp={1} hp={progress ?? 0}></Health>
-          </Bar>
-        </UploadContainer>
+        <HideableContainer hidden={!isUploading}>
+          <UploadContainer>
+            <Typography variant="h4"> Uploading your Pokemon </Typography>
+            <Bar>
+              <Health maxHp={1} hp={progress ?? 0}></Health>
+            </Bar>
+          </UploadContainer>
+        </HideableContainer>
 
         <Input
           id="imageUpload"
