@@ -41,8 +41,9 @@ def delete_pokemon(id: str):
         failures.append(f"Failed to delete stats {pokemon.stats['id']}")
 
     try:
-        # Delete image
-        os.remove(PATH_TO_PUBLIC + pokemon.image_id)
+        # Delete image, but we don't delete anything in the protected folder
+        if pokemon.image_id.find("protected") == -1:
+            os.remove(PATH_TO_PUBLIC + pokemon.image_id)
     except:
         failures.append(f"Failed to delete image {pokemon.image_id}")
 

@@ -1,4 +1,6 @@
 import PIL
+
+from .errormon import ErrormonException
 from .pokemon import Pokemon, delete_pokemon
 from .pokemon_utils import generate_pokemon
 from .env import PATH_TO_PUBLIC, POKEMON_FOLDER
@@ -231,6 +233,14 @@ def create_pokemon(username: str) -> Response:
             severity="success",
             sid=users_to_sockets[username],
         )
+    except ErrormonException:
+        emit_getPokemonCreatedResponse(succeeded=True, sid=users_to_sockets[username])
+        emit_notification(
+            message="An error occurred but from the debris, we were able to produce an Errormon.",
+            severity="error",
+            sid=users_to_sockets[username],
+        )
+        return jsonify(success=True)
     except Exception as e:
         print(e)
         emit_getPokemonCreatedResponse(succeeded=False, sid=users_to_sockets[username])

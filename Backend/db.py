@@ -126,15 +126,7 @@ def get_pokemon_ids_from_player(username: str) -> List[str]:
         return []
 
 
-def get_pokemon_from_id(pokemon_id: str) -> IPokemon:
-    """Return a Pokemon as a dict."""
-    # print(f"Attempting to load data on Pokemon: {pokemon_id}")
-    db_pokemon = pokemon_collection.find_one({"_id": ObjectId(pokemon_id)})
-    if db_pokemon is None:
-        raise ValueError(f"Pokemon {pokemon_id} not found")
-
-    # print(f"Attempting to load data on Pokemon: {db_pokemon['name']}")
-    db_pokemon = cast(DBPokemonWithId, db_pokemon)
+def db_pokemon_to_interface(db_pokemon: DBPokemonWithId):
 
     stats_id = db_pokemon["stats_id"]
     stats = get_stats_from_id(stats_id)
@@ -154,6 +146,30 @@ def get_pokemon_from_id(pokemon_id: str) -> IPokemon:
     }
 
     return pokemon
+
+
+def get_pokemon_by_name(name: str) -> IPokemon:
+    """Return a Pokemon as a dict."""
+    db_pokemon = pokemon_collection.find_one({"name": name})
+    if db_pokemon is None:
+        raise ValueError(f"Pokemon {name} not found")
+
+    db_pokemon = cast(DBPokemonWithId, db_pokemon)
+
+    return db_pokemon_to_interface(db_pokemon)
+
+
+def get_pokemon_from_id(pokemon_id: str) -> IPokemon:
+    """Return a Pokemon as a dict."""
+    # print(f"Attempting to load data on Pokemon: {pokemon_id}")
+    db_pokemon = pokemon_collection.find_one({"_id": ObjectId(pokemon_id)})
+    if db_pokemon is None:
+        raise ValueError(f"Pokemon {pokemon_id} not found")
+
+    # print(f"Attempting to load data on Pokemon: {db_pokemon['name']}")
+    db_pokemon = cast(DBPokemonWithId, db_pokemon)
+
+    return db_pokemon_to_interface(db_pokemon)
 
 
 def get_optional_stats_from_id(stats_id: str) -> OptionalPokemonStats:
@@ -259,6 +275,7 @@ def get_all_pokemons():
 
 
 def add_pokemon_to_user(username: str, pokemon_id: str):
+    print(f"Saving Pokemon: {pokemon_id} to user: {username}")
     """Add a Pokemon to a user."""
     players_collection.update_one(
         {"username": username}, {"$push": {"pokemon_ids": pokemon_id}}

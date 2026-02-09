@@ -136,7 +136,7 @@ setup.cfg
 
 Backend/UploadedImages/
 Scripts/Windows/reinstall_backend.bat
-Frontend/public/images/pokemon
+Frontend/public/images/pokemon/uploaded_images/
 Backend/test_uncommited.py
 
 node_modules

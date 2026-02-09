@@ -1,6 +1,8 @@
+from .errormon import ErrormonException, get_errormon_id
 from .api import GeminiError, build_pokemon
 from .pokemon import Pokemon
 from .db import (
+    add_pokemon_to_user,
     players_collection,
 )
 
@@ -9,9 +11,6 @@ class CreationError(Exception):
     """Raised when a Pokemon cannot be created."""
 
     pass
-
-
-ERRORMON_ID = None  # Run create_errormon.py and set this!
 
 
 def generate_pokemon(username: str, img_path: str):
@@ -30,19 +29,22 @@ def generate_pokemon(username: str, img_path: str):
             print(
                 f"Error parsing Pokemon for: {username}. Attempt: {i}. Retrying..."
             )  # Sometimes the regex fails when parsing attacks
+        except Exception as e:
+            print(e)
     else:
         try:
             print(
                 f"Failed to create Pokemon for: {username}. Returning Errormon instead."
             )
-            if ERRORMON_ID:
-                pokemon = Pokemon.load(ERRORMON_ID)
+            pokemon = Pokemon.load(get_errormon_id())
+            pokemon_id = pokemon.id
+            add_pokemon_to_user(username, pokemon_id)
+            raise ErrormonException()
+        except ErrormonException:
+            raise ErrormonException()
         except:
             print(f"Failed to load Erromon for: {username}. No Errormon found.")
             raise CreationError("Failed to create Pokemon.")
 
     if pokemon_id:
-        print(f"Saving Pokemon: {pokemon_id} to user: {username}")
-        players_collection.update_one(
-            {"username": username}, {"$push": {"pokemon_ids": pokemon_id}}
-        )
+        add_pokemon_to_user(username, pokemon_id)
