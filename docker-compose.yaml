@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   frontend:
     build:
@@ -14,7 +12,7 @@ services:
     depends_on:
       - backend
     volumes:
-      - ${IMAGES_PATH}:/home/node/app/public
+      - ${IMAGES_PATH}/images/pokemon/uploaded_images:/home/node/app/public/images/pokemon/uploaded_images
 
   backend:
     build:
