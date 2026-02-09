@@ -31,14 +31,6 @@ class OptionalPokemonStats(TypedDict, total=False):
     max_hp: NotRequired[int]
 
 
-class ExtendedPokemonStats(PokemonStats):
-    type: str
-
-
-class OptionalExtendedPokemonStats(OptionalPokemonStats, total=False):
-    type: str
-
-
 class IAttack(TypedDict):
     id: str
     name: str
@@ -82,11 +74,13 @@ class BattleHP(TypedDict):
     target_hp: float
 
 
-class OnTurnEndData(TypedDict):
-    self_hp: float
-    target_hp: float
+class MoveData(TypedDict):
     self_attack_name: str
     target_attack_name: str
+
+
+class OnTurnEndData(MoveData, BattleHP):
+    pass
 
 
 class JoinWaitingRoomData(TypedDict):
@@ -104,7 +98,7 @@ class AttackData(TypedDict):
     game_id: str
 
 
-class AssociateUsernameWithSocketData(TypedDict):
+class UsernameData(TypedDict):
     username: str
 
 

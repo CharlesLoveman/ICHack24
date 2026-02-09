@@ -8,11 +8,11 @@ import PokemonCaptureScreen from "./screens/PokemonCaptureScreen";
 import PokemonFullCardScreen from "./screens/PokemonFullCardScreen";
 import { PokemonLayoutPage } from "./screens/PokemonLayoutPage";
 import { socket } from "../socket";
-import { Pokemon, PokemonsData } from "../sharedTypes";
+import { IPokemon, PokemonsData } from "../sharedTypes";
 import GlobalPokedexScreen from "./screens/GlobalPokedexScreen";
 
 const onePokemonLoader = async ({ params }: { params: Params<string> }) => {
-  return await new Promise<Pokemon>((resolve, reject) => {
+  return await new Promise<IPokemon>((resolve, reject) => {
     if (!params.id) {
       reject("No id provided");
       return;
@@ -21,9 +21,9 @@ const onePokemonLoader = async ({ params }: { params: Params<string> }) => {
     socket.emit(
       "requestOnePokemon",
       { pokemon_id: params.id },
-      (data: Pokemon) => {
+      (data: IPokemon) => {
         resolve(data);
-      }
+      },
     );
   });
 };
@@ -39,7 +39,7 @@ const userPokemonLoader = async ({ params }: { params: Params<string> }) => {
       { username: params.id },
       (data: PokemonsData) => {
         resolve(data);
-      }
+      },
     );
   });
 };

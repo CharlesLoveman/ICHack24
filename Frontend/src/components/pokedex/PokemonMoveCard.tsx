@@ -1,7 +1,7 @@
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { CardHeader } from "@mui/material";
-import { Attack } from "../../sharedTypes";
+import { IAttack } from "../../sharedTypes";
 import { PokemonNameContainer, PokemonTypeContainer } from "./PokemonCard";
 import { DetailsCard } from "./DetailsCard";
 import { OptionalPokemonStats, StatDisplay } from "./StatsDisplay";
@@ -29,7 +29,7 @@ function MoveStatDisplay(stats: OptionalPokemonStats | undefined) {
   );
 }
 
-export function PokemonMoveCard({ attack }: { attack: Attack }) {
+export function PokemonMoveCard({ attack }: { attack: IAttack }) {
   return (
     <DetailsCard>
       <CardHeader
@@ -44,15 +44,15 @@ export function PokemonMoveCard({ attack }: { attack: Attack }) {
         <Typography>{attack.description}</Typography>
         <Typography>Power: {attack.power}</Typography>
         <Typography>
-          Special: {attack.special ? "Special" : "Physical"}
+          Category: {attack.category?.toUpperCase() ?? "No Category"}
         </Typography>
         <CardHeader title="Effect on self"></CardHeader>
         <CardContent>
-          <Typography>{MoveStatDisplay(attack.self_status_id)}</Typography>
+          <Typography>{MoveStatDisplay(attack.self_status)}</Typography>
         </CardContent>
         <CardHeader title="Effect on enemy"></CardHeader>
         <CardContent>
-          <Typography>{MoveStatDisplay(attack.target_status_id)}</Typography>
+          <Typography>{MoveStatDisplay(attack.target_status)}</Typography>
         </CardContent>
       </CardContent>
     </DetailsCard>

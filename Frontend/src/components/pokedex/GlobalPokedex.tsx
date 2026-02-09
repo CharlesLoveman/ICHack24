@@ -1,10 +1,10 @@
 import PokemonCard from "./PokemonCard";
-import { Pokemon } from "../../sharedTypes";
+import { IPokemon } from "../../sharedTypes";
 import { Title } from "../layout/Title";
 import { ScrollableMain } from "../layout/ScrollableMain";
 import { useState } from "react";
 
-export default function GlobalPokedex({ pokemons }: { pokemons: Pokemon[] }) {
+export default function GlobalPokedex({ pokemons }: { pokemons: IPokemon[] }) {
   const [temporaryFrontendDeletedPokemonIds, setter] = useState<string[]>([]);
 
   function onDelete(id: string) {
@@ -14,9 +14,9 @@ export default function GlobalPokedex({ pokemons }: { pokemons: Pokemon[] }) {
   function GetPokemonList() {
     return pokemons
       .filter(
-        (pokemon) => !temporaryFrontendDeletedPokemonIds.includes(pokemon.id)
+        (pokemon) => !temporaryFrontendDeletedPokemonIds.includes(pokemon.id),
       )
-      .map((pokemon: Pokemon, index) => (
+      .map((pokemon: IPokemon, index) => (
         <PokemonCard
           pokemon={pokemon}
           key={index}

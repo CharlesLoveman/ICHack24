@@ -4,7 +4,7 @@ import {
   JoinBattleData,
   MoveData,
   NotificationData,
-  Pokemon,
+  IPokemon,
 } from "./sharedTypes";
 
 export enum POKEMON_HAS_RETURNED {
@@ -25,7 +25,7 @@ export enum BATTLE_STATE {
 
 export interface GlobalStates {
   username?: string;
-  pokemon: Pokemon | null;
+  pokemon: IPokemon | null;
   pokemonReturned: POKEMON_HAS_RETURNED;
   noNewPokemon: number;
   battleData: BattleData;
@@ -40,7 +40,7 @@ export interface GlobalStates {
 
 export interface GlobalSetters {
   setUsername: React.Dispatch<React.SetStateAction<string | undefined>>;
-  setPokemon: React.Dispatch<React.SetStateAction<Pokemon | null>>;
+  setPokemon: React.Dispatch<React.SetStateAction<IPokemon | null>>;
   setPokemonReturned: React.Dispatch<
     React.SetStateAction<POKEMON_HAS_RETURNED>
   >;

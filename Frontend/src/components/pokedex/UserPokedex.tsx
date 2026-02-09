@@ -1,14 +1,14 @@
 import PokemonCard from "./PokemonCard";
 import { useState, useEffect } from "react";
-import { Pokemon } from "../../sharedTypes";
+import { IPokemon } from "../../sharedTypes";
 import { useGlobalData } from "../../hooks/useGlobalData";
 import { Title } from "../layout/Title";
 import { ScrollableMain } from "../layout/ScrollableMain";
 
-export default function UserPokedex({ pokemons }: { pokemons: Pokemon[] }) {
+export default function UserPokedex({ pokemons }: { pokemons: IPokemon[] }) {
   const { noNewPokemon, setNoNewPokemon } = useGlobalData();
   const [newPokemonMarkers, setter] = useState<boolean[]>(
-    new Array(Object.keys(pokemons).length)
+    new Array(Object.keys(pokemons).length),
   );
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function UserPokedex({ pokemons }: { pokemons: Pokemon[] }) {
 
   function constructPokemonMarkers(
     noNewPokemon: number,
-    newPokemonMarkers: boolean[]
+    newPokemonMarkers: boolean[],
   ) {
     newPokemonMarkers = newPokemonMarkers.fill(false);
     for (let i = 0; i < noNewPokemon; i++) {
@@ -32,10 +32,10 @@ export default function UserPokedex({ pokemons }: { pokemons: Pokemon[] }) {
     const zipped = pokemons
       .toReversed()
       .map(
-        (pokemon: Pokemon, i: number) =>
-          [pokemon, newPokemonMarkers[i]] as [Pokemon, boolean]
+        (pokemon: IPokemon, i: number) =>
+          [pokemon, newPokemonMarkers[i]] as [IPokemon, boolean],
       );
-    return zipped.map(([pokemon, isNew]: [Pokemon, boolean], index) => (
+    return zipped.map(([pokemon, isNew]: [IPokemon, boolean], index) => (
       <PokemonCard pokemon={pokemon} isNew={isNew} key={index} />
     ));
   }

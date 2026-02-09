@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { TbPokeball } from "react-icons/tb";
 import { Button, CardHeader, Collapse } from "@mui/material";
 import { Link } from "react-router-dom";
-import { Pokemon } from "../../sharedTypes";
+import { IPokemon } from "../../sharedTypes";
 import { assetsFolder } from "../../env";
 import { useGlobalData } from "../../hooks/useGlobalData";
 import styled from "styled-components";
@@ -14,7 +14,7 @@ import { useState } from "react";
 import { DownArrowButton } from "../layout/DownArrowButton";
 
 interface PokemonCardProps {
-  pokemon: Pokemon;
+  pokemon: IPokemon;
   isNew?: boolean;
   canDelete?: boolean;
   canSelect?: boolean;

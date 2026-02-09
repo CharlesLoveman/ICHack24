@@ -4,7 +4,7 @@ import PokemonAttacksDisplay from "../battle/PokemonAttacksDisplay";
 import { useParams } from "react-router-dom";
 import { socket } from "../../socket";
 
-import { Attack, AttackData } from "../../sharedTypes";
+import { IAttack, AttackData } from "../../sharedTypes";
 import { BATTLE_RESULT, BATTLE_STATE } from "../../types";
 import { useGlobalData } from "../../hooks/useGlobalData";
 import BattleCommentary from "../battle/BattleCommentary";
@@ -47,7 +47,7 @@ export default function PokemonBattleScreen() {
     setBattleState,
   } = useGlobalData();
   const params = useParams<{ game_id: string }>();
-  const [chosenAttack, setChosenAttack] = useState<Attack | undefined>(
+  const [chosenAttack, setChosenAttack] = useState<IAttack | undefined>(
     undefined,
   );
 
@@ -72,7 +72,7 @@ export default function PokemonBattleScreen() {
     `You used ${currentBattleMoves?.self_attack_name}. It was far more effective, probably.`,
   ];
 
-  function onAttack(attack: Attack) {
+  function onAttack(attack: IAttack) {
     if (!chosenAttack && params.game_id) {
       setChosenAttack(attack);
       socket.emit("attack", {

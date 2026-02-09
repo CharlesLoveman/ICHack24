@@ -3,7 +3,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { CardHeader } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Pokemon, Attack } from "../../sharedTypes";
+import { IPokemon, IAttack } from "../../sharedTypes";
 import { useGlobalData } from "../../hooks/useGlobalData";
 import { Title } from "../layout/Title";
 import { ScrollableMain } from "../layout/ScrollableMain";
@@ -20,7 +20,7 @@ import { DetailsCard } from "../pokedex/DetailsCard";
 import { PokemonMoveCard } from "../pokedex/PokemonMoveCard";
 import { StatDisplay } from "../pokedex/StatsDisplay";
 
-function MovesDisplay(attacks: Attack[] | undefined) {
+function MovesDisplay(attacks: IAttack[] | undefined) {
   if (attacks) {
     return attacks.map((move) => (
       <PokemonMoveCard attack={move}></PokemonMoveCard>
@@ -33,15 +33,15 @@ function MovesDisplay(attacks: Attack[] | undefined) {
 export default function PokemonFullCardScreen() {
   const { pokemon } = useGlobalData();
 
-  const [viewPokemon, setViewPokemon] = useState<Pokemon | undefined>(
-    undefined
+  const [viewPokemon, setViewPokemon] = useState<IPokemon | undefined>(
+    undefined,
   );
 
   const isSelected = viewPokemon?.id === pokemon?.id;
 
   const backgroundColor = isSelected ? "lightblue" : "white";
 
-  const loadedPokemon = useLoaderData() as Pokemon;
+  const loadedPokemon = useLoaderData() as IPokemon;
 
   useEffect(() => {
     if (loadedPokemon) {

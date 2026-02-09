@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Attack } from "../../sharedTypes";
+import { IAttack } from "../../sharedTypes";
 import { Title } from "../layout/Title";
 import { PokemonMoveCard } from "../pokedex/PokemonMoveCard";
 import { Button } from "@mui/material";
@@ -38,7 +38,7 @@ export function PokemonMoveDisplay({
   attack,
   onClose,
 }: {
-  attack: Attack;
+  attack: IAttack;
   onClose: () => void;
 }) {
   return (

@@ -1,12 +1,12 @@
 import Attack from "./Attack";
 import { Grid } from "@mui/material";
-import { Pokemon, Attack as IAttack } from "../../sharedTypes";
+import { IPokemon, IAttack as IAttack } from "../../sharedTypes";
 import { PokemonMoveDisplay } from "./PokemonMoveDisplay";
 import { useState } from "react";
 import { Title } from "../layout/Title";
 
 interface PokemonAttacksDisplayProps {
-  pokemon: Pokemon;
+  pokemon: IPokemon;
   onAttack: (attack: IAttack) => void;
   chosenAttack: IAttack | undefined;
 }
@@ -17,7 +17,7 @@ export default function PokemonAttacksDisplay({
   chosenAttack,
 }: PokemonAttacksDisplayProps) {
   const [viewingAttack, setViewingAttack] = useState<number | undefined>(
-    undefined
+    undefined,
   );
 
   const viewAttack = (index: number) => {

@@ -41,7 +41,7 @@ socket_request: Request = _request  # type: ignore
 
 
 @socketio.on("requestCreationUpdate")
-def handle_requestCreationUpdate(json: AssociateUsernameWithSocketData):
+def handle_requestCreationUpdate(json: UsernameData):
     emit_notification(
         message=choice(loading_flavour_texts),
         severity="info",
@@ -100,14 +100,14 @@ def handle_requestAllPokemons():
 
 
 @socketio.on("requestUserPokemons")
-def handle_requestUserPokemons(json: AssociateUsernameWithSocketData):
+def handle_requestUserPokemons(json: UsernameData):
     username = json["username"]
     pokemons = get_pokemons_from_user(username)
     return pokemons
 
 
 @socketio.on("login")
-def handle_login(json: AssociateUsernameWithSocketData):
+def handle_login(json: UsernameData):
     username = json["username"]
     pid = initialise_user(username)
 
@@ -115,7 +115,7 @@ def handle_login(json: AssociateUsernameWithSocketData):
 
 
 @socketio.on("associateUsernameWithSocket")
-def handle_associateUsernameWithSocket(json: AssociateUsernameWithSocketData):
+def handle_associateUsernameWithSocket(json: UsernameData):
     """Associate a username with a socket."""
     username = json["username"]
 

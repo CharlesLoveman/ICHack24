@@ -1,10 +1,10 @@
 import PokemonDisplay from "../pokedex/PokemonDisplay";
-import { Pokemon } from "../../sharedTypes";
+import { IPokemon } from "../../sharedTypes";
 import styled from "styled-components";
 
 interface PokemonBattleDisplayProps {
-  self_pokemon: Pokemon;
-  target_pokemon: Pokemon;
+  self_pokemon: IPokemon;
+  target_pokemon: IPokemon;
   self_hp: number;
   target_hp: number;
 }

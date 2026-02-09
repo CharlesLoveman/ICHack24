@@ -9,7 +9,7 @@ import LoginInputBox from "../home/LoginInputBox";
 import { TbPokeball } from "react-icons/tb";
 import { GiPokecog } from "react-icons/gi";
 import "./HomeScreen.css";
-import { CreateBattleData, Pokemon } from "../../sharedTypes";
+import { CreateBattleData, IPokemon } from "../../sharedTypes";
 import { POKEMON_HAS_RETURNED } from "../../types";
 import { useGlobalData } from "../../hooks/useGlobalData";
 import styled from "styled-components";
@@ -40,7 +40,7 @@ export default function HomeScreen(props: HiddenClicks) {
     }
   }, [pokemon]);
 
-  function createBattle(pokemon: Pokemon | null) {
+  function createBattle(pokemon: IPokemon | null) {
     if (pokemon) {
       socket.emit("createBattle", {
         username: username,

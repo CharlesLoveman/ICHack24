@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { socket } from "../../socket";
 import { GiBattleAxe } from "react-icons/gi";
-import { PlayerJoinBattleData, Pokemon } from "../../sharedTypes";
+import { PlayerJoinBattleData, IPokemon } from "../../sharedTypes";
 import { LongButton } from "../layout/LongButton";
 import { LongInput } from "../layout/LongInput";
 import styled from "styled-components";
 import { useGlobalData } from "../../hooks/useGlobalData";
 
 interface JoinRoomInputBoxProps {
-  pokemon: Pokemon | null;
+  pokemon: IPokemon | null;
 }
 
 const JoinRoomInputContainer = styled.div`
@@ -21,7 +21,11 @@ export default function JoinRoomInputBox({ pokemon }: JoinRoomInputBoxProps) {
   const [code, setCode] = useState<string>("");
   const { username } = useGlobalData();
 
-  function joinBattle(pokemon: Pokemon | null, username: string, code: string) {
+  function joinBattle(
+    pokemon: IPokemon | null,
+    username: string,
+    code: string,
+  ) {
     if (pokemon) {
       socket.emit("joinBattle", {
         username: username,

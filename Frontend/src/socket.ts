@@ -1,7 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import { backendAddress } from "./env";
 import {
-  AssociateUsernameWithSocketData,
+  UsernameData,
   AttackData,
   CreateBattleData,
   CreatePokemonData,
@@ -12,7 +12,7 @@ import {
   OnePokemonData,
   OnTurnEndData,
   PlayerJoinBattleData,
-  Pokemon,
+  IPokemon,
   PokemonCreatedResponse,
   PokemonsData,
 } from "./sharedTypes";
@@ -39,27 +39,27 @@ export interface ClientToServerEvents {
   attack: (data: AttackData) => void;
   joinBattle: (data: PlayerJoinBattleData) => void;
   createBattle: (data: CreateBattleData) => void;
-  associateUsernameWithSocket: (data: AssociateUsernameWithSocketData) => void;
-  login: (data: AssociateUsernameWithSocketData) => void;
+  associateUsernameWithSocket: (data: UsernameData) => void;
+  login: (data: UsernameData) => void;
   createPokemon: (data: CreatePokemonData) => void;
   requestUserPokemons: (
-    data: AssociateUsernameWithSocketData,
-    ack: (data: PokemonsData) => void
+    data: UsernameData,
+    ack: (data: PokemonsData) => void,
   ) => void;
   requestAllPokemons: (ack: (data: PokemonsData) => void) => void;
   requestOnePokemon: (
     data: OnePokemonData,
-    ack: (data: Pokemon) => void
+    ack: (data: IPokemon) => void,
   ) => void;
   deletePokemon: (
     data: OnePokemonData,
-    ack: (succeeded: boolean) => void
+    ack: (succeeded: boolean) => void,
   ) => void;
   addPokemonToUser: (
     data: CreateBattleData,
-    ack: (succeeded: boolean) => void
+    ack: (succeeded: boolean) => void,
   ) => void;
-  requestCreationUpdate: (data: AssociateUsernameWithSocketData) => void;
+  requestCreationUpdate: (data: UsernameData) => void;
 }
 
 export interface ServerToClientEvents {

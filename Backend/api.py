@@ -1,7 +1,7 @@
 """API for interfacing with the vision pipeline."""
 
 from .env import POKEMON_FOLDER
-from .sharedTypes import (
+from .internal_types import (
     ExtendedPokemonStats,
     OptionalExtendedPokemonStats,
 )

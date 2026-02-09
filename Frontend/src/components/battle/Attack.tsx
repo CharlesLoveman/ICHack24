@@ -1,5 +1,5 @@
 import Button from "@mui/material/Button";
-import { Attack as IAttack } from "../../sharedTypes";
+import { IAttack as IAttack } from "../../sharedTypes";
 import { Typography } from "@mui/material";
 import { PokemonTypeContainer } from "../pokedex/PokemonCard";
 import styled from "styled-components";
@@ -63,7 +63,7 @@ export default function Attack({
           <PokemonTypeContainer style={{ color: "black" }}>
             {attack.element}
           </PokemonTypeContainer>
-          <div>{attack.special ? "Special" : "Physical"}</div>
+          <div>{attack.category?.toUpperCase() ?? "No Category"}</div>
           <div>{"Power: " + attack.power}</div>
         </AttackButtonText>
       </AttackButton>

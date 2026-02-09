@@ -1,24 +1,58 @@
 import { AlertColor } from "@mui/material";
 
+enum AttackCategory {
+  physical = "physical",
+  special = "special",
+  status = "status",
+}
+
 export interface PokemonStats {
+  id: string;
   hp: number;
   attack: number;
   defence: number;
   special_attack: number;
   special_defence: number;
   speed: number;
+  max_hp?: number;
 }
 
-export interface Attack {
+export interface OptionalPokemonStats {
+  id: string;
+  hp?: number;
+  attack?: number;
+  defence?: number;
+  special_attack?: number;
+  special_defence?: number;
+  speed?: number;
+  max_hp?: number;
+}
+
+export interface IAttack {
   id: string;
   name: string;
   element: string;
-  category?: string;
-  description?: string;
-  power?: number;
-  special?: boolean;
-  self_status_id?: PokemonStats;
-  target_status_id?: PokemonStats;
+  category: AttackCategory;
+  description: string;
+  power: number;
+  self_status: OptionalPokemonStats;
+  target_status: OptionalPokemonStats;
+}
+
+export interface IPokemon {
+  id: string;
+  name: string;
+  element: string;
+  description: string;
+  stats: PokemonStats;
+  attacks: IAttack[];
+  image_id?: string;
+  origina_image_id?: string;
+}
+
+export interface BattleData {
+  otherPlayerWaiting: boolean;
+  thisPlayerWaiting: boolean;
 }
 
 export interface CreateBattleData {
@@ -32,41 +66,9 @@ export interface PlayerJoinBattleData {
   game_id: string;
 }
 
-export interface Pokemon {
-  id: string;
-  name: string;
-  element: string;
-  description?: string;
-  stats: PokemonStats;
-  attacks: Attack[];
-  image_id?: string;
-  img_path?: string;
-  original_img_path?: string;
-}
-
-export interface BattleData {
-  otherPlayerWaiting: boolean;
-  thisPlayerWaiting: boolean;
-}
-
 export interface BattleHP {
   self_hp: number;
   target_hp: number;
-}
-
-export interface JoinWaitingRoomData {
-  game_id: string;
-}
-
-export interface JoinBattleData {
-  self_pokemon: Pokemon;
-  target_pokemon: Pokemon;
-  game_id: string;
-}
-
-export interface AttackData {
-  attack_id: string;
-  game_id: string;
 }
 
 export interface MoveData {
@@ -76,7 +78,22 @@ export interface MoveData {
 
 export type OnTurnEndData = BattleHP & MoveData;
 
-export interface AssociateUsernameWithSocketData {
+export interface JoinWaitingRoomData {
+  game_id: string;
+}
+
+export interface JoinBattleData {
+  self_pokemon: IPokemon;
+  target_pokemon: IPokemon;
+  game_id: string;
+}
+
+export interface AttackData {
+  attack_id: string;
+  game_id: string;
+}
+
+export interface UsernameData {
   username: string;
 }
 
@@ -90,19 +107,19 @@ export interface LoginAckData {
   pid: string;
 }
 
+export type NetworkBytes = Uint8Array;
+
 export interface CreatePokemonData {
   username: string;
   image_bytes: NetworkBytes;
 }
-
-export type NetworkBytes = Uint8Array;
 
 export interface PokemonCreatedResponse {
   succeeded: boolean;
 }
 
 export interface PokemonsData {
-  pokemons: Pokemon[];
+  pokemons: IPokemon[];
 }
 
 export interface OnePokemonData {

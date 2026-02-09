@@ -1,5 +1,5 @@
 import { Card, CardHeader } from "@mui/material";
-import { Pokemon } from "../../sharedTypes";
+import { IPokemon } from "../../sharedTypes";
 import { assetsFolder } from "../../env";
 import styled from "styled-components";
 import { darkGrey } from "../../utils/colors";
@@ -52,11 +52,13 @@ const PokemonDisplayContainer = styled.div<OnLeftProps>`
 `;
 
 export default function PokemonDisplay(
-  pokemon: Pokemon,
+  pokemon: IPokemon,
   hp: number,
   onLeft: boolean,
 ) {
   const translateStyles = onLeft ? { translate: "-10%" } : { translate: "10%" };
+
+  const maxHp = pokemon.stats.max_hp ?? pokemon.stats.hp;
 
   const pokemonInfo = (
     <Card
@@ -78,9 +80,9 @@ export default function PokemonDisplay(
         }
         style={{ padding: 0, margin: 0 }}
       ></CardHeader>
-      {hp + "/" + pokemon.stats.hp}
+      {hp + "/" + maxHp}
       <Bar>
-        <Health $maxHp={pokemon.stats.hp} $hp={hp}></Health>
+        <Health $maxHp={maxHp} $hp={hp}></Health>
       </Bar>
     </Card>
   );

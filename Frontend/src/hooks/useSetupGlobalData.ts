@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
 
 import {
-  Pokemon,
+  IPokemon,
   BattleData,
   BattleHP,
   MoveData,
@@ -41,28 +41,28 @@ export const baseBattleData = {
 
 export function useSetupGlobalData(initialOverrides: GlobalStates) {
   const [username, setUsername] = useState<string | undefined>(
-    initialOverrides.username ?? undefined
+    initialOverrides.username ?? undefined,
   );
-  const [pokemon, setPokemon] = useState<Pokemon | null>(
-    initialOverrides.pokemon ?? null
+  const [pokemon, setPokemon] = useState<IPokemon | null>(
+    initialOverrides.pokemon ?? null,
   );
   const [pokemonReturned, setPokemonReturned] = useState<POKEMON_HAS_RETURNED>(
-    POKEMON_HAS_RETURNED.RETURNED
+    POKEMON_HAS_RETURNED.RETURNED,
   ); // Reset the loading icon on refresh
   const [noNewPokemon, setNoNewPokemon] = useState<number>(
-    initialOverrides.noNewPokemon ?? 0
+    initialOverrides.noNewPokemon ?? 0,
   );
   const [battleData, setBattleData] = useState<BattleData>(
-    initialOverrides.battleData ?? baseBattleData
+    initialOverrides.battleData ?? baseBattleData,
   );
   const [newTurn, setNewTurn] = useState<boolean>(
-    initialOverrides.newTurn ?? false
+    initialOverrides.newTurn ?? false,
   );
   const [battleResult, setBattleResult] = useState<BATTLE_RESULT | undefined>(
-    initialOverrides.battleResult ?? undefined
+    initialOverrides.battleResult ?? undefined,
   );
   const [battleHP, setBattleHP] = useState<BattleHP | undefined>(
-    initialOverrides.battleHP ?? undefined
+    initialOverrides.battleHP ?? undefined,
   );
   const [currentBattleMoves, setCurrentBattleMoves] = useState<
     MoveData | undefined
@@ -71,14 +71,14 @@ export function useSetupGlobalData(initialOverrides: GlobalStates) {
     JoinBattleData | undefined
   >(initialOverrides.joinBattleData ?? undefined);
   const [battleState, setBattleState] = useState<BATTLE_STATE | undefined>(
-    initialOverrides.battleState ?? undefined
+    initialOverrides.battleState ?? undefined,
   );
   const [notifications, setNotifications] = useState<NotificationData[]>([]);
   // TODO: notifications shouldn't persist on refresh
 
   const addNotification = (notification: NotificationData) => {
-    setNotifications([...notifications, notification])
-  }
+    setNotifications([...notifications, notification]);
+  };
 
   return {
     username,
