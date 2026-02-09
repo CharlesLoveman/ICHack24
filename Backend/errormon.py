@@ -1,4 +1,4 @@
-from Backend.db import get_pokemon_by_name
+from .db import get_pokemon_by_name
 from .sharedTypes import PokemonStats
 from .env import POKEMON_FOLDER
 from .attack import generate_attack

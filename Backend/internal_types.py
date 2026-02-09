@@ -1,4 +1,4 @@
-from Backend.sharedTypes import OptionalPokemonStats, PokemonStats
+from .sharedTypes import OptionalPokemonStats, PokemonStats
 
 
 class ExtendedPokemonStats(PokemonStats):
