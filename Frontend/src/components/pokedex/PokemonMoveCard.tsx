@@ -35,17 +35,22 @@ export function PokemonMoveCard({ attack }: { attack: IAttack }) {
       <CardHeader
         title={<PokemonNameContainer>{attack.name}</PokemonNameContainer>}
         subheader={
-          <PokemonTypeContainer style={{ backgroundColor: "#9c9c9c" }}>
-            {attack.element}
-          </PokemonTypeContainer>
+          <>
+            <PokemonTypeContainer style={{ backgroundColor: "#ffafaf" }}>
+              {attack.category?.toUpperCase() ?? "Unknown"}
+            </PokemonTypeContainer>
+            <br />
+            <PokemonTypeContainer style={{ backgroundColor: "#9c9c9c" }}>
+              {attack.element}
+            </PokemonTypeContainer>
+            <br />
+            <br />
+            <Typography variant="h6">Power: {attack.power}</Typography>
+          </>
         }
       ></CardHeader>
       <CardContent>
         <Typography>{attack.description}</Typography>
-        <Typography>Power: {attack.power}</Typography>
-        <Typography>
-          Category: {attack.category?.toUpperCase() ?? "No Category"}
-        </Typography>
         <CardHeader title="Effect on self"></CardHeader>
         <CardContent>
           <Typography>{MoveStatDisplay(attack.self_status)}</Typography>

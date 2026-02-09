@@ -169,7 +169,7 @@ def create_attacks(name: str, pokedex: str, element: str) -> List[Attack]:
             element = element_match.group(1).strip().capitalize()
             attack_element = element.split("/")[0]
 
-        description_match = re.search(r"Type:(.*)", attack)
+        description_match = re.search(r"Description:(.*)", attack)
         if description_match:
             description = description_match.group(1)
 
