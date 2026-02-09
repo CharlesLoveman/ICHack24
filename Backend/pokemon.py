@@ -28,20 +28,34 @@ class PokemonRelatedIds:
 def delete_pokemon(id: str):
     pokemon = Pokemon.load(id)
 
+    failures = []
+
     for attack in pokemon.attacks:
-        delete_attack(attack.id)
+        try:
+            delete_attack(attack.id)
+        except:
+            failures.append(f"Failed to delete attack {attack.id}")
+    try:
+        delete_attack_stats(pokemon.stats["id"])
+    except:
+        failures.append(f"Failed to delete stats {pokemon.stats['id']}")
 
-    delete_attack_stats(pokemon.stats["id"])
-
-    # Delete image
-    os.remove(PATH_TO_PUBLIC + pokemon.image_id)
+    try:
+        # Delete image
+        os.remove(PATH_TO_PUBLIC + pokemon.image_id)
+    except:
+        failures.append(f"Failed to delete image {pokemon.image_id}")
 
     # Remove the pokemon from all players who have it
     players_collection.update_many({"pokemon_ids": id}, {"$pull": {"pokemon_ids": id}})
 
-    pokemon_collection.delete_one({"_id": ObjectId(id)})
+    try:
+        pokemon_collection.delete_one({"_id": ObjectId(id)})
+    except:
+        failures.append(f"Failed to finally delete pokemon {id}")
 
-    return pokemon.name
+    if len(failures) > 0:
+        raise Exception(failures)
 
 
 class Pokemon:

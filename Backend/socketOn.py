@@ -1,5 +1,5 @@
 import PIL
-from .pokemon import delete_pokemon
+from .pokemon import Pokemon, delete_pokemon
 from .pokemon_utils import generate_pokemon
 from .env import PATH_TO_PUBLIC, POKEMON_FOLDER
 from .server import socketio, app
@@ -68,9 +68,9 @@ def handle_addPokemonToUser(json: CreateBattleData):
 @socketio.on("deletePokemon")
 def handle_deletePokemon(json: OnePokemonData):
     pokemon_id = json["pokemon_id"]
-    name = "unknown"
+    name = Pokemon.load(pokemon_id).name
     try:
-        name = delete_pokemon(pokemon_id)
+        delete_pokemon(pokemon_id)
         emit_notification(
             message=f"Pokemon {name} deleted",
             severity="success",

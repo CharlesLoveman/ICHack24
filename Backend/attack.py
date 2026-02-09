@@ -115,8 +115,6 @@ class Attack:
                     f"Status effect values must be positive and less than 128, but the {key} status is {self.target_status[key]}"
                 )
 
-        print(self)
-
     def __repr__(self):
         """Return a string representation of the Attack."""
         return f"Attack({repr(self.name)}, {repr(self.element)}, {repr(self.power)}, {repr(self.category)}, {repr(self.self_status)}, {repr(self.target_status)})"

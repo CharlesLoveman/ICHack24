@@ -133,6 +133,7 @@ def get_pokemon_from_id(pokemon_id: str) -> IPokemon:
     if db_pokemon is None:
         raise ValueError(f"Pokemon {pokemon_id} not found")
 
+    # print(f"Attempting to load data on Pokemon: {db_pokemon['name']}")
     db_pokemon = cast(DBPokemonWithId, db_pokemon)
 
     stats_id = db_pokemon["stats_id"]
@@ -157,7 +158,6 @@ def get_pokemon_from_id(pokemon_id: str) -> IPokemon:
 
 def get_optional_stats_from_id(stats_id: str) -> OptionalPokemonStats:
     """Return stats as a dict."""
-    # print(f"Attempting to load data on {flag}: {stats_id}")
     db_stats = attack_stats_collection.find_one({"_id": ObjectId(stats_id)})
     if db_stats is None:
         # raise ValueError(f"Stats {stats_id} not found")
