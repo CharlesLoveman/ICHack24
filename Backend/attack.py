@@ -182,6 +182,21 @@ class Attack:
             id=iattack["id"],
         )
 
+    def to_interface(self):
+        iattack: IAttack = {
+            "id": self.id,
+            "name": self.name,
+            "category": "",
+            "description": self.description,
+            "element": self.element,
+            "power": self.power,
+            "special": self.special,
+            "self_status": self.self_status,
+            "target_status": self.target_status,
+        }
+
+        return iattack
+
 
 def generate_attack(name: str, element: str, category: str, description: str) -> Attack:
     """Generate a random attack with the given name, element and category."""

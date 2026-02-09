@@ -8,7 +8,7 @@ import random
 
 from .env import PATH_TO_PUBLIC
 from .attack import Attack, delete_attack, delete_attack_stats, get_stats_keys
-from sharedTypes import PokemonStats
+from sharedTypes import IPokemon, PokemonStats
 from typing import List, Self, cast
 from .db import (
     DBStats,
@@ -188,6 +188,20 @@ class Pokemon:
 
         if self.stats["hp"] < 0:
             self.stats["hp"] = 0
+
+    def to_interface(self):
+        ipokemon: IPokemon = {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "element": self.element,
+            "stats": self.stats,
+            "attacks": [attack.to_interface() for attack in self.attacks],
+            "image_id": self.image_id,
+            "original_image_id": self.original_image_id,
+        }
+
+        return ipokemon
 
     def save(self) -> str:
         """Save a Pokemon object to the database.

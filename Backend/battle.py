@@ -95,8 +95,13 @@ class Battle:
     def is_full(self):
         return hasattr(self, "u2") and hasattr(self, "u2")
 
-    def is_player_supposed_to_be_in_game(self, username: str):
-        return self.u1 == username or self.u2 == username
+    def which_player_is_this(self, username: str) -> int | None:
+        if self.u1 == username:
+            return 1
+        elif self.u2 == username:
+            return 2
+        else:
+            return None
 
     def broadcast_wins(self, winner: int):
         if winner == 1:

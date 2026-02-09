@@ -160,11 +160,25 @@ def handle_joinBattle(json: PlayerJoinBattleData):
 
     if battle.is_full():
         # Then consider if the player is trying to rejoin a game they accidentally left
-        if battle.is_player_supposed_to_be_in_game(username):
+
+        player_no = battle.which_player_is_this(username)
+        if player_no is not None:
             print(f"User {username} rejoining battle: {game_id}")
+            p1: IPokemon = battle.p1.to_interface()
+            p2: IPokemon = battle.p2.to_interface()
+            if player_no == 1:
+                self_pokemon = p1
+                target_pokemon = p2
+            else:
+                self_pokemon = p2
+                target_pokemon = p1
+
             emit_rejoinBattle(
-                game_id=game_id, sid=socket_request.sid
-            )  # Need to fix this
+                game_id=game_id,
+                sid=socket_request.sid,
+                self_pokemon=self_pokemon,
+                target_pokemon=target_pokemon,
+            )
             emit_notification("Rejoining the battle", "success", socket_request.sid)
         else:
             print(f"The battle with id {game_id} is already full")
