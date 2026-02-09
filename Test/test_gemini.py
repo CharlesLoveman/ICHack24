@@ -4,6 +4,8 @@ from Backend.api import *
 from Backend.prompt_templates import GEMINI_PROMPT_TEMPLATE
 import pytest
 
+from Scripts.image_to_pokemon import load_image_from_file
+
 
 @pytest.mark.parametrize("name", ("banana", "bicycle", "flowers"))
 def test_get_gemini_response(name):

@@ -1,17 +1,33 @@
-from dataclasses import dataclass
-from typing import TypedDict, NotRequired, List, Any
+from typing import TypedDict, NotRequired, List
 
 
-class PokemonStats(TypedDict):
-    hp: float
-    attack: float
-    defence: float
-    special_attack: float
-    special_defence: float
-    speed: float
+class PokemonStats(TypedDict, total=True):
+    id: str
+    hp: int
+    attack: int
+    defence: int
+    special_attack: int
+    special_defence: int
+    speed: int
+    max_hp: NotRequired[int]
+
+
+class OptionalPokemonStats(TypedDict, total=False):
+    id: str
+    hp: int
+    attack: int
+    defence: int
+    special_attack: int
+    special_defence: int
+    speed: int
+    max_hp: NotRequired[int]
 
 
 class ExtendedPokemonStats(PokemonStats):
+    type: str
+
+
+class OptionalExtendedPokemonStats(OptionalPokemonStats, total=False):
     type: str
 
 
@@ -19,30 +35,23 @@ class IAttack(TypedDict):
     id: str
     name: str
     element: str
-    category: NotRequired[str]
-    description: NotRequired[str]
-    power: NotRequired[float]
-    special: NotRequired[bool]
-    self_status_id: NotRequired[PokemonStats]
-    target_status_id: NotRequired[PokemonStats]
+    category: str
+    description: str
+    power: int
+    special: bool
+    self_status: OptionalPokemonStats
+    target_status: OptionalPokemonStats
 
 
 class IPokemon(TypedDict):
     id: str
     name: str
     element: str
-    description: NotRequired[str]
+    description: str
     stats: PokemonStats
     attacks: List[IAttack]
-    image_id: NotRequired[str]
-    img_path: NotRequired[str]
-    original_img_path: NotRequired[str]
-
-
-class Player(TypedDict):
-    _id: NotRequired[Any]
-    username: str
-    pokemon_ids: List[str]
+    image_id: str
+    original_image_id: str
 
 
 class BattleData(TypedDict):

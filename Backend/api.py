@@ -1,7 +1,10 @@
 """API for interfacing with the vision pipeline."""
 
 from .env import POKEMON_FOLDER
-from .sharedTypes import ExtendedPokemonStats
+from .sharedTypes import (
+    ExtendedPokemonStats,
+    OptionalExtendedPokemonStats,
+)
 from gemini import RealGenerativeModel
 from gemini_mock import MockGenerativeModel
 from .prompt_templates import (
@@ -14,9 +17,8 @@ from .pokemon import Pokemon
 from .attack import Attack, generate_attack
 
 import re
-from typing import Union, Tuple, List
+from typing import Tuple, List, cast
 from env import PATH_TO_PUBLIC, USE_REAL_MODEL
-from PIL import Image
 
 
 if USE_REAL_MODEL == "True":
@@ -42,25 +44,9 @@ class GeminiError(Exception):
     pass
 
 
-def load_image_from_file(file_path: str) -> Image:
-    """Load an image from a file.
-
-    Args:
-        file_path (str): The path to the image file.
-
-    Returns:
-        img (Image): The image loaded from the file.
-    """
-    return Image.open(file_path)
-
-
 def create_pokemon(
     img_path: str, create_image: bool = False, return_prompt: bool = False
-) -> Union[
-    Tuple[str, str, ExtendedPokemonStats],
-    Tuple[str, str, ExtendedPokemonStats, str],
-    Tuple[str, str, ExtendedPokemonStats, str, str],
-]:
+) -> Tuple[str, str, ExtendedPokemonStats, str | None, str | None]:
     """Create a new pokemon from an image.
 
     Args:
@@ -72,46 +58,55 @@ def create_pokemon(
     Returns:
         details (dict): The details of the created pokemon.
     """
-
     if create_image:
         template = GEMINI_PROMPT_TEMPLATE_WITH_IMAGE
         cat_names = ["Name", "Pokedex", "Stats", "Image Prompt"]
     else:
         template = GEMINI_PROMPT_TEMPLATE
         cat_names = ["Name", "Pokedex", "Stats"]
+    response, feedback = new_model.get_gemini_response(template, img_path=img_path)
+    sections: list[str] = []
 
-    response = new_model.get_gemini_response(template, img_path=img_path)
+    for key in cat_names:
 
-    sections = [
-        re.search(
+        match = re.search(
             rf"\[Start Output {key}\](.*)\[End Output {key}\]", response, re.DOTALL
         )
-        .group(1)
-        .strip()
-        for key in cat_names
-    ]
+        if match:
+            sections.append(match.group(1).strip())
+    name = None
 
     # Extract the name
-    name = re.search(r"Name:(.*)", sections[0]).group(1).strip()
+    name_match = re.search(r"Name:(.*)", sections[0])
+    if name_match:
+        name = name_match.group(1).strip()
+    name = cast(str, name)  # Asserting that the name exists
 
     # Extract the pokedex entry
-    pokedex = sections[1]
-
+    pokedex_description = cast(str, sections[1])
     # Extract the stats
-    stats: ExtendedPokemonStats = dict()
+    optional_stats: OptionalExtendedPokemonStats = {}
     for key in STATS_KEYS:
-        value = re.search(rf"{key}:(.*)", sections[2]).group(1).strip()
+        value = None
+        match_value = re.search(rf"{key}:(.*)", sections[2])
+        if match_value:
+            value = match_value.group(1).strip()
 
         corrected_key = key.lower().replace(" ", "_")
 
-        if key == "Type":
-            stats[corrected_key] = value
-        else:
-            stats[corrected_key] = int(value)
-
+        if value:
+            if key == "Type":
+                optional_stats[corrected_key] = value
+            else:
+                optional_stats[corrected_key] = int(value)
+    stats = cast(
+        ExtendedPokemonStats, optional_stats
+    )  # Assert that every single stat has been filled
     if create_image:
         # Extract the image prompt
         image_prompt = sections[3]
+
+        raise NotImplementedError("Image creation hasn't been implemented yet")
 
         # Generate the image
         img = generate_image(image_prompt)
@@ -121,12 +116,12 @@ def create_pokemon(
         img.save(PATH_TO_PUBLIC + img_path)
 
         if return_prompt:
-            return name, pokedex, stats, img_path, image_prompt
+            return name, pokedex_description, stats, img_path, image_prompt
         else:
-            return name, pokedex, stats, img_path
+            return name, pokedex_description, stats, img_path, None
 
     else:
-        return name, pokedex, stats
+        return name, pokedex_description, stats, None, None
 
 
 def create_attacks(name: str, pokedex: str, element: str) -> List[Attack]:
@@ -142,26 +137,51 @@ def create_attacks(name: str, pokedex: str, element: str) -> List[Attack]:
     """
 
     prompt = GEMINI_PROMPT_TEMPLATE_ATTACKS.format(name, pokedex, element)
-    response = new_model.get_gemini_response(prompt)
+    response, feedback = new_model.get_gemini_response(prompt)
 
     # Extract the attack names, categories and types
-    attack_responses = [
-        re.search(
+    attack_responses = []
+    for key in range(1, 5):
+        match = re.search(
             rf"\[Start Attack {key}\](.*)\[End Attack {key}\]", response, re.DOTALL
         )
-        .group(1)
-        .strip()
-        for key in range(1, 5)
-    ]
+        if match is not None:
+            attack_responses.append(match.group(1).strip())
 
     attacks = []
-    for attack in attack_responses:
-        name = re.search(r"Name:(.*)", attack).group(1).strip()
-        category = re.search(r"Category:(.*)", attack).group(1).strip().lower()
-        element = re.search(r"Type:(.*)", attack).group(1).strip().capitalize()
-        element = element.split("/")[0]
 
-        attacks.append(generate_attack(name, element, category))
+    for attack in attack_responses:
+        attack_name = None
+        category = None
+        attack_element = None
+        description = None
+
+        name_match = re.search(r"Name:(.*)", attack)
+        if name_match:
+            attack_name = name_match.group(1).strip()
+
+        category_match = re.search(r"Category:(.*)", attack)
+        if category_match:
+            category = category_match.group(1).strip().lower()
+
+        element_match = re.search(r"Type:(.*)", attack)
+        if element_match:
+            element = element_match.group(1).strip().capitalize()
+            attack_element = element.split("/")[0]
+
+        description_match = re.search(r"Type:(.*)", attack)
+        if description_match:
+            description = description_match.group(1)
+
+        # This casting is dangerous, but we do so to be lenient, and because generate_attack handles the types well enough
+        attacks.append(
+            generate_attack(
+                cast(str, attack_name),
+                cast(str, attack_element),
+                cast(str, category),
+                cast(str, description),
+            )
+        )
 
     return attacks
 
@@ -178,18 +198,23 @@ def build_pokemon(original_img_path: str, create_image=False) -> Pokemon:
     """
 
     img_path = original_img_path
+    new_img_path = None
 
     if create_image:
-        name, pokedex, stats, img_path = create_pokemon(img_path, create_image)
+        name, pokedex, stats, new_img_path, _ = create_pokemon(img_path, create_image)
     else:
-        name, pokedex, stats = create_pokemon(img_path, create_image)
+        name, pokedex, stats, _, _ = create_pokemon(img_path, create_image)
 
-    element: str = stats.pop("type")
+    element: str = stats["type"]
+    stats.pop("type")
 
     attacks = create_attacks(name, pokedex, element)
     try:
         element = element.split("/")[0].capitalize()
     except:
         raise GeminiError("Gemini API returned an invalid response.")
+
+    if new_img_path:
+        img_path = new_img_path
 
     return Pokemon(name, pokedex, element, stats, attacks, img_path, original_img_path)

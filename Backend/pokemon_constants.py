@@ -1,5 +1,7 @@
 import numpy as np
 
+from .sharedTypes import IAttack, OptionalPokemonStats
+
 
 element_options = [
     "Normal",
@@ -60,3 +62,25 @@ loading_flavour_texts = [
     "Pay me and I can upgrade from the slow gemma model",
     "Are you excited to battle with your new TM Pokemon?",
 ]
+
+fallback_stats: OptionalPokemonStats = {
+    "hp": 72,
+    "attack": 74,
+    "defence": 71,
+    "special_attack": 80,
+    "special_defence": 99,
+    "speed": 12,
+    "id": "---",
+}
+
+fallback_attack: IAttack = {
+    "id": "---",
+    "name": "Empty Breeze",
+    "description": "Does quite literally nothing. Does this breeze even exist?",
+    "element": "Ghost",
+    "power": 60,
+    "special": True,
+    "category": "special",
+    "self_status": {},
+    "target_status": {},
+}

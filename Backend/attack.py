@@ -2,10 +2,12 @@ from dataclasses import dataclass
 import random
 import numpy as np
 from bson.objectid import ObjectId
-from typing import Dict, Self, Tuple
+
+from Backend.sharedTypes import IAttack, OptionalPokemonStats, PokemonStats
 from .db import (
     attacks_collection,
     attack_stats_collection,
+    get_attack_from_id,
 )
 from .pokemon_constants import element_options, stats_keys
 
@@ -16,15 +18,23 @@ class AttackRelatedIds:
     target_status_id: str
 
 
-def delete_attack_stat(id: str):
+def get_stats_keys(stats: OptionalPokemonStats | PokemonStats):
+    return set(stats_keys) & set(stats.keys())
+
+
+def delete_attack_stats(id: str):
     attack_stats_collection.delete_one({"_id": ObjectId(id)})
 
 
 def delete_attack(id: str):
-    _, related_ids = Attack.load_preserving_ids(id)
+    attack = Attack.load(id)
+    if "id" not in attack.self_status:
+        raise (KeyError(f"Attack with id {id} has no self status id"))
+    if "id" not in attack.target_status:
+        raise (KeyError(f"Attack with id {id} has no self status id"))
 
-    delete_attack_stat(related_ids.self_status_id)
-    delete_attack_stat(related_ids.target_status_id)
+    delete_attack_stats(attack.self_status["id"])
+    delete_attack_stats(attack.target_status["id"])
 
     attacks_collection.delete_one({"_id": ObjectId(id)})
 
@@ -35,15 +45,17 @@ class Attack:
     def __init__(
         self,
         name: str,
+        description: str,
         element: str,
         power: int = 0,
         special: bool = False,
-        self_status: Dict[str, int] = {},
-        target_status: Dict[str, int] = {},
+        self_status: OptionalPokemonStats = {},
+        target_status: OptionalPokemonStats = {},
         id: str = "",
     ):
         """Create an attack with a name, element and optional power and status effects."""
         self.name = name
+        self.description = description
         self.element = element
         self.power = power
         self.special = special
@@ -84,9 +96,7 @@ class Attack:
             raise TypeError(
                 f"Status must be a dictionary, but {self.self_status} is a {type(self.self_status).__name__}"
             )
-        for key in self.self_status.keys():
-            if key not in stats_keys:
-                raise ValueError(f"Status must have valid keys, but {key} is not")
+        for key in get_stats_keys(self.self_status):
             if not isinstance(self.self_status[key], int):
                 raise TypeError(
                     f"Status effect value must be an integer, but the {key} status {self.self_status[key]} is a {type(self.self_status[key]).__name__}"
@@ -100,9 +110,7 @@ class Attack:
             raise TypeError(
                 f"Status must be a dictionary, but {self.target_status} is a {type(self.target_status).__name__}"
             )
-        for key in self.target_status.keys():
-            if key not in stats_keys:
-                raise ValueError(f"Status must have valid keys, but {key} is not")
+        for key in get_stats_keys(self.target_status):
             if not isinstance(self.target_status[key], int):
                 raise TypeError(
                     f"Status effect value must be an integer, but the {key} status {self.target_status[key]} is a {type(self.target_status[key]).__name__}"
@@ -137,6 +145,7 @@ class Attack:
             attacks_collection.insert_one(
                 {
                     "name": self.name,
+                    "description": self.description,
                     "element": self.element,
                     "power": self.power,
                     "special": self.special,
@@ -147,7 +156,7 @@ class Attack:
         )
 
     @classmethod
-    def load_preserving_ids(cls, id: str) -> Tuple[Self, AttackRelatedIds]:
+    def load(cls, id: str):
         """Load an Attack object from the database.
 
         Args:
@@ -157,47 +166,24 @@ class Attack:
         Returns:
             attack (Attack): the resulting Attack object
         """
-        attack = attacks_collection.find_one({"_id": ObjectId(id)})
-        if attack is None:
-            raise KeyError(f"No Attack object with the id {repr(id)} was found.")
-
-        self_status = attack_stats_collection.find_one(
-            {"_id": ObjectId(attack["self_status_id"])}
-        )
-        if self_status is None:
-            raise KeyError(
-                f"No Stats object with the id {repr(attack["self_status_id"])} was found."
-            )
-        self_status.pop("_id")
-
-        target_status = attack_stats_collection.find_one(
-            {"_id": ObjectId(attack["target_status_id"])}
-        )
-        if target_status is None:
-            raise KeyError(
-                f"No Stats object with the id {repr(attack["target_status_id"])} was found."
-            )
-        target_status.pop("_id")
-
-        return (
-            Attack(
-                attack["name"],
-                attack["element"],
-                attack["power"],
-                attack["special"],
-                self_status,
-                target_status,
-                id,
-            ),
-            AttackRelatedIds(attack["self_status_id"], attack["target_status_id"]),
-        )
+        iattack = get_attack_from_id(id)
+        return cls.from_interface(iattack)
 
     @classmethod
-    def load(cls, id: str):
-        return cls.load_preserving_ids(id)[0]
+    def from_interface(cls, iattack: IAttack):
+        return cls(
+            name=iattack["name"],
+            description=iattack["description"],
+            element=iattack["element"],
+            power=iattack["power"],
+            special=iattack["special"],
+            self_status=iattack["self_status"],
+            target_status=iattack["target_status"],
+            id=iattack["id"],
+        )
 
 
-def generate_attack(name: str, element: str, category: str) -> Attack:
+def generate_attack(name: str, element: str, category: str, description: str) -> Attack:
     """Generate a random attack with the given name, element and category."""
 
     if not isinstance(name, str):
@@ -212,8 +198,8 @@ def generate_attack(name: str, element: str, category: str) -> Attack:
 
     power = 0
     special = False
-    self_status = {}
-    target_status = {}
+    self_status: OptionalPokemonStats = {}
+    target_status: OptionalPokemonStats = {}
 
     if category == "physical":
         power = np.random.randint(1, 256)
@@ -289,4 +275,6 @@ def generate_attack(name: str, element: str, category: str) -> Attack:
                 stat_to_modify = np.random.choice(stats_keys)
                 target_status[stat_to_modify] = stat_modify_by
             stat_changes -= 1
-    return Attack(name, element, power, special, self_status, target_status)
+    return Attack(
+        name, description, element, power, special, self_status, target_status
+    )

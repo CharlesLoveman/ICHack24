@@ -1,12 +1,16 @@
-from typing import Union
+from typing import Union, cast
 from sharedTypes import *
 from pymongo.collection import Collection
 from pymongo import MongoClient
+from pymongo.cursor import Cursor
 from .sharedTypes import IPokemon
 from .env import DATABASE_HOST
 from bson.objectid import ObjectId
+from .pokemon_constants import stats_keys, fallback_stats, fallback_attack
 
-from sharedTypes import *
+
+class _Id(TypedDict):
+    _id: ObjectId
 
 
 class DBPlayer(TypedDict):
@@ -26,6 +30,7 @@ class DBPokemon(TypedDict):
 
 class DBAttack(TypedDict):
     name: str
+    description: NotRequired[str]
     element: str
     power: int
     special: bool
@@ -40,7 +45,35 @@ class DBStats(TypedDict):
     special_attack: int
     special_defence: int
     speed: int
-    type: str
+
+
+class OptionalDBStats(TypedDict, total=False):
+    hp: int
+    attack: int
+    defence: int
+    special_attack: int
+    special_defence: int
+    speed: int
+
+
+class DBPlayerWithId(DBPlayer, _Id):
+    pass
+
+
+class DBPokemonWithId(DBPokemon, _Id):
+    pass
+
+
+class DBAttackWithId(DBAttack, _Id):
+    pass
+
+
+class DBStatsWithId(DBStats, _Id):
+    pass
+
+
+class OptionalDBStatsWithId(OptionalDBStats, _Id):
+    pass
 
 
 mongodb_client = MongoClient(DATABASE_HOST, 27017)
@@ -50,7 +83,7 @@ database = mongodb_client.db
 players_collection: Collection[DBPlayer] = database.players
 pokemon_collection: Collection[DBPokemon] = database.pokemon
 attacks_collection: Collection[DBAttack] = database.attacks
-attack_stats_collection: Collection[DBStats] = database.attack_stats
+attack_stats_collection: Collection[OptionalDBStats] = database.attack_stats
 
 
 def initialise_user(username: str):
@@ -61,7 +94,7 @@ def initialise_user(username: str):
     if player is None:
         # Create a new user id
         print(f"User: {username} not found. Creating new user.")
-        new_user: Player = {"pokemon_ids": [], "username": username}
+        new_user: DBPlayer = {"pokemon_ids": [], "username": username}
         pid = str(players_collection.insert_one(new_user).inserted_id)
     else:
         # Return existing user id
@@ -72,11 +105,14 @@ def initialise_user(username: str):
     return pid
 
 
-def get_player_by_username(username: str) -> Union[Player, None]:
+def get_player_by_username(username: str) -> Union[DBPlayerWithId, None]:
     """Return a player object from the database using a username."""
     player = players_collection.find_one({"username": username})
 
-    return player
+    if player is None:
+        return None
+    else:
+        return cast(DBPlayerWithId, player)
 
 
 def get_pokemon_ids_from_player(username: str) -> List[str]:
@@ -93,52 +129,107 @@ def get_pokemon_ids_from_player(username: str) -> List[str]:
 def get_pokemon_from_id(pokemon_id: str) -> IPokemon:
     """Return a Pokemon as a dict."""
     # print(f"Attempting to load data on Pokemon: {pokemon_id}")
-    pokemon = pokemon_collection.find_one({"_id": ObjectId(pokemon_id)})
-    pokemon["id"] = str(pokemon["_id"])
-    pokemon.pop("_id")
+    db_pokemon = pokemon_collection.find_one({"_id": ObjectId(pokemon_id)})
+    if db_pokemon is None:
+        raise ValueError(f"Pokemon {pokemon_id} not found")
 
-    stats_id = pokemon["stats_id"]
-    pokemon["stats"] = get_stats_from_id(stats_id)
+    db_pokemon = cast(DBPokemonWithId, db_pokemon)
 
-    attack_ids = pokemon["attack_ids"]
-    pokemon["attacks"] = [get_attack_from_id(attack_id) for attack_id in attack_ids]
+    stats_id = db_pokemon["stats_id"]
+    stats = get_stats_from_id(stats_id)
+
+    attack_ids = db_pokemon["attack_ids"]
+    attacks = [get_attack_from_id(attack_id) for attack_id in attack_ids]
+
+    pokemon: IPokemon = {
+        "id": str(db_pokemon["_id"]),
+        "name": db_pokemon["name"],
+        "element": db_pokemon["element"],
+        "description": db_pokemon["description"],
+        "image_id": db_pokemon["image_id"],
+        "original_image_id": db_pokemon["original_image_id"],
+        "stats": stats,
+        "attacks": attacks,
+    }
 
     return pokemon
 
 
-def get_stats_from_id(stats_id: str, flag: str = "stats") -> PokemonStats:
+def get_optional_stats_from_id(stats_id: str) -> OptionalPokemonStats:
     """Return stats as a dict."""
     # print(f"Attempting to load data on {flag}: {stats_id}")
-    stats = attack_stats_collection.find_one({"_id": ObjectId(stats_id)})
-    if stats is not None:
-        stats.pop("_id")
-    else:
-        stats: DBStats = {}
+    db_stats = attack_stats_collection.find_one({"_id": ObjectId(stats_id)})
+    if db_stats is None:
+        # raise ValueError(f"Stats {stats_id} not found")
+        print(f"Stats {stats_id} not found")
+        return fallback_stats
+
+    db_stats = cast(OptionalDBStatsWithId, db_stats)
+
+    stats: OptionalPokemonStats = {}
+
+    stats["id"] = str(db_stats["_id"])
+
+    if "hp" in db_stats:
+        stats["hp"] = db_stats["hp"]
+    if "attack" in db_stats:
+        stats["attack"] = db_stats["attack"]
+    if "defence" in db_stats:
+        stats["defence"] = db_stats["defence"]
+    if "special_attack" in db_stats:
+        stats["special_attack"] = db_stats["special_attack"]
+    if "special_defence" in db_stats:
+        stats["special_defence"] = db_stats["special_defence"]
+    if "speed" in db_stats:
+        stats["speed"] = db_stats["speed"]
 
     return stats
+
+
+def get_stats_from_id(stats_id: str) -> PokemonStats:
+    """Return (non-optional) stats as a dict."""
+
+    optional_stats = get_optional_stats_from_id(stats_id=stats_id)
+
+    if True in [key not in optional_stats.keys() for key in stats_keys]:
+        raise ValueError(f"These stats don't contain all the values.")
+
+    return cast(PokemonStats, optional_stats)
 
 
 def get_attack_from_id(attack_id: str) -> IAttack:
     """Return an attack as a dict."""
     # print(f"Attempting to load data on Attack: {attack_id}")
-    attack = attacks_collection.find_one({"_id": ObjectId(attack_id)})
-    if attack is not None:
-        attack["id"] = str(attack["_id"])
-        attack.pop("_id")
+    db_attack = attacks_collection.find_one({"_id": ObjectId(attack_id)})
+    if db_attack is None:
+        # raise ValueError(f"Attack {attack_id} not found")
+        print(f"Attack {attack_id} not found")
+        return fallback_attack
+    db_attack = cast(DBAttackWithId, db_attack)
 
-        self_status_id = attack["self_status_id"]
-        attack["self_status_id"] = get_status_from_id(self_status_id)
+    self_status_id = db_attack["self_status_id"]
+    self_status = get_status_from_id(self_status_id)
 
-        target_status_id = attack["target_status_id"]
-        attack["target_status_id"] = get_status_from_id(target_status_id)
-        return attack
-    else:
-        return {}
+    target_status_id = db_attack["target_status_id"]
+    target_status = get_status_from_id(target_status_id)
+
+    attack: IAttack = {
+        "id": str(db_attack["_id"]),
+        "name": db_attack["name"],
+        "description": db_attack["description"] if "description" in db_attack else "",
+        "element": db_attack["element"],
+        "power": db_attack["power"],
+        "special": db_attack["special"],
+        "category": db_attack["special"] == True and "special" or "physical",
+        "self_status": self_status,
+        "target_status": target_status,
+    }
+    return attack
 
 
-def get_status_from_id(status_id: str) -> PokemonStats:
+def get_status_from_id(status_id: str) -> OptionalPokemonStats:
     """Return a status as a dict."""
-    return get_stats_from_id(status_id, flag="status")
+    return get_optional_stats_from_id(status_id)
 
 
 def get_pokemons_from_user(username: str):
@@ -161,6 +252,7 @@ def get_pokemons_from_user(username: str):
 
 def get_all_pokemons():
     object_ids_docs = pokemon_collection.find({}, {"_id": 1})
+    object_ids_docs = cast(Cursor[DBPokemonWithId], object_ids_docs)
 
     str_object_ids = [str(doc["_id"]) for doc in object_ids_docs]
 

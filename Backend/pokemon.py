@@ -7,10 +7,17 @@ from bson.objectid import ObjectId
 import random
 
 from .env import PATH_TO_PUBLIC
-from .attack import Attack, delete_attack, delete_attack_stat
+from .attack import Attack, delete_attack, delete_attack_stats, get_stats_keys
 from sharedTypes import PokemonStats
-from typing import List, Self, Tuple
-from .db import pokemon_collection, attack_stats_collection, players_collection
+from typing import List, Self, cast
+from .db import (
+    DBStats,
+    OptionalDBStats,
+    get_pokemon_from_id,
+    pokemon_collection,
+    attack_stats_collection,
+    players_collection,
+)
 from .pokemon_constants import element_chart, element_options, stats_keys
 
 
@@ -20,12 +27,12 @@ class PokemonRelatedIds:
 
 
 def delete_pokemon(id: str):
-    pokemon, related_ids = Pokemon.load_preserving_ids(id)
+    pokemon = Pokemon.load(id)
 
     for attack in pokemon.attacks:
         delete_attack(attack.id)
 
-    delete_attack_stat(related_ids.stats_id)
+    delete_attack_stats(pokemon.stats["id"])
 
     # Delete image
     os.remove(PATH_TO_PUBLIC + pokemon.image_id)
@@ -85,13 +92,7 @@ class Pokemon:
             raise TypeError(
                 f"Stats must be a dictionary, but {self.stats} is a {type(self.stats).__name__}"
             )
-        if not len(self.stats) == 6:
-            raise ValueError(
-                f"Stats must have 6 values, but {len(self.stats)} were given: {self.stats}"
-            )
-        for key in self.stats.keys():
-            if key not in stats_keys:
-                raise ValueError(f"Stats must have valid keys, but {key} is not")
+        for key in stats_keys:
             if not isinstance(self.stats[key], int):
                 raise TypeError(
                     f"Stats must have integer values, but the {key} stat is {self.stats[key]} is a {type(self.stats[key]).__name__}"
@@ -131,16 +132,14 @@ class Pokemon:
                 f"Attack must be an Attack, but {attack} is a {type(attack).__name__}"
             )
 
-        """
-        if attack not in self.attacks:
-            raise ValueError(
-                f"Chosen attack must be one of the Pokemon's attacks, but {attack} is not"
-            )
-        """
         if not isinstance(target, Pokemon):
             raise TypeError(
                 f"Target must be a Pokemon, but {target} is a {type(target).__name__}"
             )
+
+        if self.stats["hp"] == 0:
+            print(f"Dead Pokemon ${self.name} cannot attack.")
+            return
 
         if attack.power:
             # calculate elemental multipliers
@@ -172,14 +171,14 @@ class Pokemon:
                 damage *= 1.5
 
             # apply damage
-            target.stats["hp"] -= damage
+            target.stats["hp"] -= int(damage)
 
         if not len(attack.self_status) == 0:
-            for key in attack.self_status.keys():
+            for key in get_stats_keys(attack.self_status):
                 self.stats[key] += attack.self_status[key]
 
         if not len(attack.target_status) == 0:
-            for key in attack.target_status.keys():
+            for key in get_stats_keys(attack.target_status):
                 target.stats[key] = max(
                     1, target.stats[key] + attack.target_status[key]
                 )
@@ -199,8 +198,13 @@ class Pokemon:
         Returns:
             id (str): the id where the Pokemon is located in the database
         """
+        self.stats
         attack_ids = [attack.save() for attack in self.attacks]
-        stats_id = str(attack_stats_collection.insert_one(self.stats).inserted_id)
+        stats_id = str(
+            attack_stats_collection.insert_one(
+                cast(OptionalDBStats, self.stats)
+            ).inserted_id
+        )
 
         return str(
             pokemon_collection.insert_one(
@@ -217,42 +221,18 @@ class Pokemon:
         )
 
     @classmethod
-    def load_preserving_ids(cls, id: str) -> Tuple[Self, PokemonRelatedIds]:
-        """Load a Pokemon object from the database.
+    def load(cls, id: str):
+        pokemon = get_pokemon_from_id(id)
 
-        Args:
-            id (str): the Pokemon id to load
+        attacks = [Attack.from_interface(attack) for attack in pokemon["attacks"]]
 
-        Returns:
-            pokemon (Pokemon): the resulting Pokemon object
-        """
-        pokemon = pokemon_collection.find_one({"_id": ObjectId(id)})
-        if pokemon is None:
-            raise KeyError(f"No Pokemon with the id {repr(id)} was found.")
-
-        stats_id = pokemon["stats_id"]
-        stats = attack_stats_collection.find_one({"_id": ObjectId(stats_id)})
-        if stats is None:
-            raise KeyError(f"No Stats object with the id {repr(stats_id)} was found.")
-
-        stats.pop("_id")
-
-        attacks = [Attack.load(attack_id) for attack_id in pokemon["attack_ids"]]
-
-        image_id = pokemon["image_id"]
-        original_image_id = pokemon["original_image_id"]
-
-        return Pokemon(
+        return cls(
             pokemon["name"],
             pokemon["description"],
             pokemon["element"],
-            stats,
+            pokemon["stats"],
             attacks,
-            image_id,
-            original_image_id,
+            pokemon["image_id"],
+            pokemon["original_image_id"],
             id,
-        ), PokemonRelatedIds(stats_id)
-
-    @classmethod
-    def load(cls, id: str):
-        return cls.load_preserving_ids(id)[0]
+        )

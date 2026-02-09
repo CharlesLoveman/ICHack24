@@ -1,5 +1,6 @@
 from google import genai
 from generative_model import GenerativeModel
+from google.genai.types import GenerateContentResponsePromptFeedback
 from response_recorder import ResponseRecorder
 from env import GEMINI_API_KEY, PATH_TO_PUBLIC
 from typing import Union, Tuple, Any, Optional
@@ -23,7 +24,7 @@ class RealGenerativeModel(GenerativeModel):
         template: str,
         safety_feedback: bool = False,
         img_path: Optional[str] = None,
-    ) -> Union[str, Tuple[str, Any]]:
+    ) -> Tuple[str, Optional[GenerateContentResponsePromptFeedback]]:
         """Get a response from the Gemini model.
 
         Args:
@@ -46,10 +47,13 @@ class RealGenerativeModel(GenerativeModel):
                 model=self.MODEL_NAME, contents=list([template, img_ref])
             )
 
-        if RECORD_RESPONSES:
-            recorder.record(response.text)
+        if response.text:
+            if RECORD_RESPONSES:
+                recorder.record(response.text)
 
-        if safety_feedback:
-            return response.text, response.prompt_feedback
+            if safety_feedback:
+                return response.text, response.prompt_feedback
+            else:
+                return response.text, None
         else:
-            return response.text
+            raise Exception("No response text from Gemini model.")

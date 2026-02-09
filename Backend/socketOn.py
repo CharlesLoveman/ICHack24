@@ -1,3 +1,4 @@
+import PIL
 from .pokemon import delete_pokemon
 from .pokemon_utils import generate_pokemon
 from .env import PATH_TO_PUBLIC, POKEMON_FOLDER
@@ -36,7 +37,7 @@ class Request(_Request):
     sid: str
 
 
-socket_request: Request = _request
+socket_request: Request = _request  # type: ignore
 
 
 @socketio.on("requestCreationUpdate")
@@ -201,7 +202,7 @@ def create_pokemon(username: str) -> Response:
     emit_notification_with_retries(
         message="Pokemon being created", severity="info", username=username
     )
-    img_raw = _request.files["img"].read()
+    img_raw: bytes = _request.files["img"].read()
 
     img_name = hash(img_raw)
     img_path = f"{POKEMON_FOLDER}/{img_name}.jpg"  # Path from the public folder

@@ -1,3 +1,6 @@
+from __future__ import (
+    annotations,
+)  # Required because Battle and BattleState depend on each other for types
 from typing import Dict
 from .pokemon import Pokemon
 from .attack import Attack
@@ -25,8 +28,9 @@ class Battle:
     attack2: Attack
     p1: Pokemon
     p2: Pokemon
-    u1: str | None
-    u2: str | None
+    u1: str
+    u2: str
+    state: BattleState
 
     def __init__(self, u1: str, p1_id: str):
         """Create a battle between two Pokemon.
@@ -106,7 +110,7 @@ class Battle:
 class BattleState(ABC):
     @abstractmethod
     def handle_event(
-        self, battle: Battle, event: str, json: AttackData, socket_id: str
+        self, battle: Battle, event: BattleEvent, json: AttackData, socket_id: str
     ):
         pass
 
@@ -117,6 +121,8 @@ class BattleState(ABC):
         elif number == 2:
             chosen_user = battle.s2()
             not_yet_chosen_user = battle.s1()
+        else:
+            raise ValueError("Number must be 1 or 2.")
 
         emit_makeOtherPlayerWait(not_yet_chosen_user)
         emit_onWaitOnOtherPlayer(chosen_user)
@@ -143,7 +149,7 @@ class WaitingForAttacks(BattleState):
         super()
 
     def handle_event(
-        self, battle: Battle, event: str, json: AttackData, socket_id: str
+        self, battle: Battle, event: BattleEvent, json: AttackData, socket_id: str
     ):
         if event == BattleEvent.attack:
             if socket_id == battle.s1():
@@ -165,7 +171,7 @@ class WaitingForPlayer1Attack(BattleState):
         super()
 
     def handle_event(
-        self, battle: Battle, event: str, json: AttackData, socket_id: str
+        self, battle: Battle, event: BattleEvent, json: AttackData, socket_id: str
     ):
         if event == BattleEvent.attack:
             if socket_id == battle.s1():
@@ -181,7 +187,7 @@ class WaitingForPlayer2Attack(BattleState):
         super()
 
     def handle_event(
-        self, battle: Battle, event: str, json: AttackData, socket_id: str
+        self, battle: Battle, event: BattleEvent, json: AttackData, socket_id: str
     ):
         if event == BattleEvent.attack:
             if socket_id == battle.s2():

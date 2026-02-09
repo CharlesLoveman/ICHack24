@@ -9,5 +9,5 @@ class GenerativeModel(ABC):
         template: str,
         safety_feedback: bool = False,
         img_path: Optional[str] = None,
-    ) -> Union[str, Tuple[str, Any]]:
+    ) -> Tuple[str, Optional[Any]]:
         pass

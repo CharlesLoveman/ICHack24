@@ -2,10 +2,11 @@ from enum import Enum
 import time
 
 from flask_socketio import emit
+from socketio import Server
 
 from .server import socketio
 from .store import users_to_sockets
-from sharedTypes import (
+from .sharedTypes import (
     JoinBattleData,
     JoinWaitingRoomData,
     LoginAckData,
@@ -143,7 +144,8 @@ def emit_with_retries(event, data, username, namespace="/", retries=3, delay=10)
         attempt += 1
         sid = users_to_sockets[username]
         # Check if client is connected
-        if socketio.server.manager.is_connected(sid, "/"):
+        server: Server = socketio.server  # type: ignore
+        if server.manager.is_connected(sid, "/"):
             emit(event, data, to=sid, namespace=namespace)
             print(f"Sent {event} to {sid} on attempt {attempt}")
             return True

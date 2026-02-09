@@ -23,7 +23,7 @@ class MockGenerativeModel(GenerativeModel):
         template: str,
         safety_feedback: bool = False,
         img_path: Optional[str] = None,
-    ) -> Union[str, Tuple[str, Any]]:
+    ) -> Tuple[str, None]:
         with open(self.get_response_path(), "r") as file:
             response = file.read()
 
@@ -32,4 +32,4 @@ class MockGenerativeModel(GenerativeModel):
         if self.current_response >= self.number_of_responses:
             self.current_response = 0
 
-        return response
+        return response, None
