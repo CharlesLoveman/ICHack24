@@ -11,7 +11,6 @@ from .attack import Attack, delete_attack, delete_attack_stats, get_stats_keys
 from sharedTypes import IPokemon, PokemonStats
 from typing import List, Self, cast
 from .db import (
-    DBStats,
     OptionalDBStats,
     get_pokemon_from_id,
     pokemon_collection,
@@ -153,7 +152,7 @@ class Pokemon:
             # calculate hp damage
             atk = self.stats["attack"]
             dfs = target.stats["defence"]
-            if attack.special:
+            if attack.category:
                 atk = self.stats["special_attack"]
                 dfs = target.stats["special_defence"]
             damage = int(

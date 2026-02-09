@@ -3,7 +3,7 @@ from sharedTypes import *
 from pymongo.collection import Collection
 from pymongo import MongoClient
 from pymongo.cursor import Cursor
-from .sharedTypes import IPokemon
+from .sharedTypes import IPokemon, AttackCategory
 from .env import DATABASE_HOST
 from bson.objectid import ObjectId
 from .pokemon_constants import stats_keys, fallback_stats, fallback_attack
@@ -30,10 +30,10 @@ class DBPokemon(TypedDict):
 
 class DBAttack(TypedDict):
     name: str
-    description: NotRequired[str]
+    description: NotRequired[str]  # TODO: remove; added for db compatibility
     element: str
     power: int
-    special: bool
+    category: NotRequired[str]  # TODO: remove; added for db compatibility
     self_status_id: str
     target_status_id: str
 
@@ -219,8 +219,7 @@ def get_attack_from_id(attack_id: str) -> IAttack:
         "description": db_attack["description"] if "description" in db_attack else "",
         "element": db_attack["element"],
         "power": db_attack["power"],
-        "special": db_attack["special"],
-        "category": db_attack["special"] == True and "special" or "physical",
+        "category": (db_attack["category"] if "category" in db_attack else "physical"),
         "self_status": self_status,
         "target_status": target_status,
     }

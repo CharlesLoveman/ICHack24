@@ -79,7 +79,6 @@ fallback_attack: IAttack = {
     "description": "Does quite literally nothing. Does this breeze even exist?",
     "element": "Ghost",
     "power": 60,
-    "special": True,
     "category": "special",
     "self_status": {},
     "target_status": {},

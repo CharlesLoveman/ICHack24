@@ -1,21 +1,14 @@
-from dataclasses import dataclass
 import random
 import numpy as np
 from bson.objectid import ObjectId
 
-from Backend.sharedTypes import IAttack, OptionalPokemonStats, PokemonStats
+from .sharedTypes import IAttack, OptionalPokemonStats, PokemonStats, AttackCategory
 from .db import (
     attacks_collection,
     attack_stats_collection,
     get_attack_from_id,
 )
 from .pokemon_constants import element_options, stats_keys
-
-
-@dataclass
-class AttackRelatedIds:
-    self_status_id: str
-    target_status_id: str
 
 
 def get_stats_keys(stats: OptionalPokemonStats | PokemonStats):
@@ -47,8 +40,8 @@ class Attack:
         name: str,
         description: str,
         element: str,
+        category: AttackCategory,
         power: int = 0,
-        special: bool = False,
         self_status: OptionalPokemonStats = {},
         target_status: OptionalPokemonStats = {},
         id: str = "",
@@ -58,7 +51,7 @@ class Attack:
         self.description = description
         self.element = element
         self.power = power
-        self.special = special
+        self.category = category
         self.self_status = self_status
         self.target_status = target_status
         self.id = id
@@ -87,9 +80,9 @@ class Attack:
                 f"Power must be a non-negative value less than 385, but {self.power} is not"
             )
 
-        if not isinstance(self.special, bool):
+        if not isinstance(self.category, AttackCategory):
             raise TypeError(
-                f"Special must be a boolean, but {self.special} is a {type(self.special).__name__}"
+                f"Special must be an AttackCategory, but {self.category} is a {type(self.category).__name__}"
             )
 
         if not isinstance(self.self_status, dict):
@@ -122,9 +115,11 @@ class Attack:
                     f"Status effect values must be positive and less than 128, but the {key} status is {self.target_status[key]}"
                 )
 
+        print(self)
+
     def __repr__(self):
         """Return a string representation of the Attack."""
-        return f"Attack({repr(self.name)}, {repr(self.element)}, {repr(self.power)}, {repr(self.special)}, {repr(self.self_status)}, {repr(self.target_status)})"
+        return f"Attack({repr(self.name)}, {repr(self.element)}, {repr(self.power)}, {repr(self.category)}, {repr(self.self_status)}, {repr(self.target_status)})"
 
     def save(self) -> str:
         """Save an Attack object to the database.
@@ -148,7 +143,7 @@ class Attack:
                     "description": self.description,
                     "element": self.element,
                     "power": self.power,
-                    "special": self.special,
+                    "category": self.category.value,
                     "self_status_id": stats_ids[0],
                     "target_status_id": stats_ids[1],
                 }
@@ -176,7 +171,7 @@ class Attack:
             description=iattack["description"],
             element=iattack["element"],
             power=iattack["power"],
-            special=iattack["special"],
+            category=AttackCategory[iattack["category"]],
             self_status=iattack["self_status"],
             target_status=iattack["target_status"],
             id=iattack["id"],
@@ -186,11 +181,10 @@ class Attack:
         iattack: IAttack = {
             "id": self.id,
             "name": self.name,
-            "category": "",
+            "category": self.category.value,
             "description": self.description,
             "element": self.element,
             "power": self.power,
-            "special": self.special,
             "self_status": self.self_status,
             "target_status": self.target_status,
         }
@@ -198,7 +192,9 @@ class Attack:
         return iattack
 
 
-def generate_attack(name: str, element: str, category: str, description: str) -> Attack:
+def generate_attack(
+    name: str, element: str, _category: str, description: str
+) -> Attack:
     """Generate a random attack with the given name, element and category."""
 
     if not isinstance(name, str):
@@ -206,21 +202,21 @@ def generate_attack(name: str, element: str, category: str, description: str) ->
     if element not in element_options:
         element = random.choice(element_options)
         # raise ValueError(f"Element must be a valid element, but {element} is not")
-    if category not in ["physical", "special", "status"]:
+    if _category not in AttackCategory:
         raise ValueError(
-            f"Category must be either 'physical', 'special' or 'status', but {category} is not"
+            f"Category must be either 'physical', 'special' or 'status', but {_category} is not"
         )
+    else:
+        category = AttackCategory[_category]
 
     power = 0
-    special = False
     self_status: OptionalPokemonStats = {}
     target_status: OptionalPokemonStats = {}
 
-    if category == "physical":
+    if category == AttackCategory.physical:
         power = np.random.randint(1, 256)
-    elif category == "special":
+    elif category == AttackCategory.special:
         power = np.random.randint(1, 256)
-        special = True
         stat_ind = np.random.rand()
         if stat_ind <= 0.2:
             good_bad_ind = np.random.rand()
@@ -291,5 +287,11 @@ def generate_attack(name: str, element: str, category: str, description: str) ->
                 target_status[stat_to_modify] = stat_modify_by
             stat_changes -= 1
     return Attack(
-        name, description, element, power, special, self_status, target_status
+        name=name,
+        description=description,
+        element=element,
+        power=power,
+        category=category,
+        self_status=self_status,
+        target_status=target_status,
     )

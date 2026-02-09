@@ -1,5 +1,13 @@
 from typing import TypedDict, NotRequired, List
 
+from enum import Enum
+
+
+class AttackCategory(Enum):
+    physical = "physical"
+    special = "special"
+    status = "status"
+
 
 class PokemonStats(TypedDict, total=True):
     id: str
@@ -38,7 +46,6 @@ class IAttack(TypedDict):
     category: str
     description: str
     power: int
-    special: bool
     self_status: OptionalPokemonStats
     target_status: OptionalPokemonStats
 
