@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 import os
 
-dotenv_path = ".prod" if os.getenv("FLASK_ENV") == "prod" else ".dev"
+dotenv_path = ".env"
 load_dotenv(dotenv_path)
 
 

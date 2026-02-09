@@ -130,7 +130,6 @@ dmypy.json
 
 setup.cfg
 
-*.dev
 *.prod
 *.env*
 

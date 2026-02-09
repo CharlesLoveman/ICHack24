@@ -16,13 +16,12 @@ services:
     volumes:
       - ${IMAGES_PATH}:/home/node/app/public
 
-
   backend:
     build:
       context: ./Backend
     container_name: backend
     env_file:
-      - ./Backend/.dev
+      - ./Backend/.env
     environment:
       - BACKEND_PORT=${BACKEND_PORT}
       - DATABASE_HOST=${DATABASE_HOST}
@@ -35,7 +34,6 @@ services:
       - database
     volumes:
       - ${IMAGES_PATH}:${PATH_TO_PUBLIC}
-
 
   database:
     build:
