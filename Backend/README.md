@@ -53,3 +53,8 @@ You can simply rename `.example` and fill in the values you need (and for any yo
 | APP_SECRET     | A randomly generated (semi-)static key used by Flask. Doesn't matter what the value is, so generate it once and fill it in.                |
 | GEMINI_API_KEY | An API key for Google Gemini. This can be gotten by signing up at https://aistudio.google.com/                                             |
 | USE_REAL_MODEL | Whether to use the real model (Gemini) or the mock model (a static model that returns the same cached output on repeat). `True` or `False` |
+
+## Development
+
+Use Black Formatter with default settings as your linter.
+Use Pylance for type checking.
