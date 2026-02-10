@@ -12,14 +12,35 @@ from .pokemon_constants import element_options, stats_keys
 
 
 def get_stats_keys(stats: OptionalPokemonStats | PokemonStats):
+    """Get the valid stat keys present in a stats dictionary.
+
+    Args:
+        stats (OptionalPokemonStats | PokemonStats): A dictionary of stats.
+
+    Returns:
+        set: A set of stat keys that are valid and present in the input dict.
+    """
     return set(stats_keys) & set(stats.keys())
 
 
 def delete_attack_stats(id: str):
+    """Delete an attack stats document from the database.
+
+    Args:
+        id (str): The ObjectId of the attack stats document to delete.
+    """
     attack_stats_collection.delete_one({"_id": ObjectId(id)})
 
 
 def delete_attack(id: str):
+    """Delete an attack and its associated status effect stats from the database.
+
+    Args:
+        id (str): The ObjectId of the attack to delete.
+
+    Raises:
+        KeyError: If the attack's status objects do not have an 'id' key.
+    """
     attack = Attack.load(id)
     if "id" not in attack.self_status:
         raise (KeyError(f"Attack with id {id} has no self status id"))
@@ -33,7 +54,7 @@ def delete_attack(id: str):
 
 
 class Attack:
-    """Create an attack, to be called when a Pokemon attacks."""
+    """Represents a Pokemon's attack, including its properties and effects."""
 
     def __init__(
         self,
@@ -46,7 +67,24 @@ class Attack:
         target_status: OptionalPokemonStats = {},
         id: str = "",
     ):
-        """Create an attack with a name, element and optional power and status effects."""
+        """Initialise an Attack.
+
+        Args:
+            name (str): The name of the attack.
+            description (str): A description of the attack.
+            element (str): The elemental type of the attack.
+            category (AttackCategory): The category (physical, special, or status).
+            power (int, optional): The base power of the attack. Defaults to 0.
+            self_status (OptionalPokemonStats, optional): Status changes applied to the
+                user. Defaults to {}.
+            target_status (OptionalPokemonStats, optional): Status changes applied to
+                the target. Defaults to {}.
+            id (str, optional): The database ID of the attack. Defaults to "".
+
+        Raises:
+            TypeError: If any argument has an incorrect type.
+            ValueError: If any argument has an invalid value.
+        """
         self.name = name
         self.description = description
         self.element = element
@@ -122,11 +160,8 @@ class Attack:
     def save(self) -> str:
         """Save an Attack object to the database.
 
-        Args:
-            db (database): MongoDB database
-
         Returns:
-            id (str): the id where the Attack is located in the database
+            str: The ObjectId of the newly saved attack document.
         """
 
         stats_object_ids = attack_stats_collection.insert_many(
@@ -153,17 +188,24 @@ class Attack:
         """Load an Attack object from the database.
 
         Args:
-            db (database): MongoDB database
-            id (str): the Attack id to load
+            id (str): The ObjectId of the attack to load.
 
         Returns:
-            attack (Attack): the resulting Attack object
+            Attack: The loaded Attack object.
         """
         iattack = get_attack_from_id(id)
         return cls.from_interface(iattack)
 
     @classmethod
     def from_interface(cls, iattack: IAttack):
+        """Create an Attack instance from an IAttack interface object.
+
+        Args:
+            iattack (IAttack): The interface object representing an attack.
+
+        Returns:
+            Attack: A new Attack instance created from the interface data.
+        """
         return cls(
             name=iattack["name"],
             description=iattack["description"],
@@ -176,6 +218,11 @@ class Attack:
         )
 
     def to_interface(self):
+        """Convert the Attack instance to an IAttack interface object.
+
+        Returns:
+            IAttack: The interface object representation of the attack.
+        """
         iattack: IAttack = {
             "id": self.id,
             "name": self.name,
@@ -193,7 +240,23 @@ class Attack:
 def generate_attack(
     name: str, element: str, _category: str, description: str
 ) -> Attack:
-    """Generate a random attack with the given name, element and category."""
+    """Generate an attack with randomized power and status effects.
+
+    The randomization logic depends on the attack's category.
+
+    Args:
+        name (str): The name for the new attack.
+        element (str): The elemental type for the new attack.
+        _category (str): The category of the attack ('physical', 'special', 'status').
+        description (str): The description for the new attack.
+
+    Raises:
+        TypeError: If the name is not a string.
+        ValueError: If the category is not a valid AttackCategory.
+
+    Returns:
+        Attack: A newly generated Attack object with randomized properties.
+    """
 
     if not isinstance(name, str):
         raise TypeError(f"Name must be a string, but {name} is a {type(name).__name__}")

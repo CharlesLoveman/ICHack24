@@ -11,10 +11,12 @@ recorder = ResponseRecorder()
 
 
 class RealGenerativeModel(GenerativeModel):
+    """A concrete implementation of GenerativeModel using Google's Gemini API."""
+
     client = genai.Client(api_key=GEMINI_API_KEY)
     MODEL_NAME = "gemma-3-27b-it"
     # MODEL_NAME = "gemini-2.5-flash-lite"
-    # MODEL_NAME = "gemini-1.5-flash" # not this
+    # MODEL_NAME = "gemini-1.5-flash"
     # MODEL_NAME = "gemini-2.0-flash"
     # MODEL_NAME = "gemini-live-2.5-flash-native-audio"
     # MODEL_NAME = "gemini-2.5-flash-image"
@@ -28,12 +30,18 @@ class RealGenerativeModel(GenerativeModel):
         """Get a response from the Gemini model.
 
         Args:
-            template (str): The prompt to use to get a response.
-            img (PIL.Image): The image to use to get a response.
-            safety_feedback (bool): Whether to get safety feedback.
+            template (str): The prompt template to use to get a response.
+            safety_feedback (bool, optional): Whether to return safety feedback. Defaults to False.
+            img_path (Optional[str], optional): The path to the image file to include in the prompt.
+                Defaults to None.
 
         Returns:
-            response (str): The response from the Gemini model.
+            Tuple[str, Optional[GenerateContentResponsePromptFeedback]]: A tuple containing:
+                - The text response from the model.
+                - The prompt feedback object if safety_feedback is True, else None.
+
+        Raises:
+            Exception: If the model returns no text response.
         """
 
         if img_path is None:

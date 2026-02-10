@@ -22,10 +22,20 @@ from .pokemon_constants import element_chart, element_options, stats_keys
 
 @dataclass
 class PokemonRelatedIds:
+    """Data class for holding IDs related to a Pokemon."""
+
     stats_id: str
 
 
 def delete_pokemon(id: str):
+    """Delete a Pokemon and its associated data (attacks, stats, image) from the database.
+
+    Args:
+        id (str): The ObjectId of the Pokemon to delete.
+
+    Raises:
+        Exception: If any part of the deletion process fails, returning a list of failures.
+    """
     pokemon = Pokemon.load(id)
 
     failures = []
@@ -60,7 +70,7 @@ def delete_pokemon(id: str):
 
 
 class Pokemon:
-    """Create a Pokemon, with description, battle statistics and an image id."""
+    """Represents a Pokemon entity with stats, attacks, and metadata."""
 
     def __init__(
         self,
@@ -73,6 +83,22 @@ class Pokemon:
         original_image_id: str,
         id: str = "",
     ):
+        """Initialise a Pokemon.
+
+        Args:
+            name (str): The name of the Pokemon.
+            description (str): The Pokedex description.
+            element (str): The elemental type.
+            stats (PokemonStats): The base stats.
+            attacks (List[Attack]): A list of 4 Attack objects.
+            image_id (str): The path/ID of the generated image.
+            original_image_id (str): The path/ID of the original uploaded image.
+            id (str, optional): The database ID. Defaults to "".
+
+        Raises:
+            TypeError: If arguments are of incorrect types.
+            ValueError: If arguments have invalid values (e.g. stats out of range).
+        """
         self.name = name
         self.description = description
         self.element = element
@@ -140,7 +166,18 @@ class Pokemon:
         return f"Pokemon({repr(self.name)}, {repr(self.description)}, {repr(self.element)}, {repr(self.stats)}, {repr(self.attacks)}, {repr(self.image_id)})"
 
     def attack(self, attack: Attack, target: Self):
-        """Hit the target Pokemon with an attack."""
+        """Execute an attack against a target Pokemon.
+
+        Calculates damage based on stats, element multipliers, and randomness.
+        Applies status effects if applicable.
+
+        Args:
+            attack (Attack): The attack being used.
+            target (Pokemon): The target Pokemon.
+
+        Raises:
+            TypeError: If arguments are not of the expected types.
+        """
         if not isinstance(attack, Attack):
             raise TypeError(
                 f"Attack must be an Attack, but {attack} is a {type(attack).__name__}"
@@ -204,6 +241,11 @@ class Pokemon:
             self.stats["hp"] = 0
 
     def to_interface(self):
+        """Convert the Pokemon instance to an IPokemon interface dictionary.
+
+        Returns:
+            IPokemon: The dictionary representation of the Pokemon.
+        """
         ipokemon: IPokemon = {
             "id": self.id,
             "name": self.name,
@@ -218,13 +260,10 @@ class Pokemon:
         return ipokemon
 
     def save(self) -> str:
-        """Save a Pokemon object to the database.
-
-        Args:
-            db (database): MongoDB database
+        """Save the Pokemon and its components to the database.
 
         Returns:
-            id (str): the id where the Pokemon is located in the database
+            str: The ObjectId of the saved Pokemon document.
         """
         self.stats
         attack_ids = [attack.save() for attack in self.attacks]
@@ -250,6 +289,14 @@ class Pokemon:
 
     @classmethod
     def load(cls, id: str):
+        """Load a Pokemon from the database by ID.
+
+        Args:
+            id (str): The ObjectId of the Pokemon to load.
+
+        Returns:
+            Pokemon: The loaded Pokemon instance.
+        """
         pokemon = get_pokemon_from_id(id)
 
         attacks = [Attack.from_interface(attack) for attack in pokemon["attacks"]]

@@ -18,11 +18,13 @@ from abc import ABC, abstractmethod
 
 
 class BattleEvent(Enum):
+    """Enum representing possible events during a battle."""
+
     attack = "attack"
 
 
 class Battle:
-    """Create a battle between two Pokemon."""
+    """Manages the state and logic of a Pokemon battle between two players."""
 
     attack1: Attack
     attack2: Attack
@@ -33,14 +35,11 @@ class Battle:
     state: BattleState
 
     def __init__(self, u1: str, p1_id: str):
-        """Create a battle between two Pokemon.
+        """Initialise a battle with the first player.
 
         Args:
-            u1 (str): user/ player 1 client id
-            p1 (str): pokemon id for player 1
-
-        Returns:
-            self (Battle)
+            u1 (str): The username/client ID of player 1.
+            p1_id (str): The ID of player 1's Pokemon.
         """
         self.u1 = u1
         self.p1_id = p1_id
@@ -50,20 +49,38 @@ class Battle:
         self.state = WaitingForAttacks()
 
     def s1(self):
+        """Get the socket ID for player 1.
+
+        Returns:
+            str: The socket ID associated with player 1.
+        """
         return self.get_socket(self.u1)
 
     def s2(self):
+        """Get the socket ID for player 2.
+
+        Returns:
+            str: The socket ID associated with player 2.
+        """
         return self.get_socket(self.u2)
 
     def get_socket(self, username: str):
+        """Retrieve the socket ID for a given username.
+
+        Args:
+            username (str): The username to look up.
+
+        Returns:
+            str: The socket ID associated with the username.
+        """
         return users_to_sockets[username]
 
     def add_player(self, u2: str, p2_id: str):
-        """Add a second player to the battle.
+        """Add the second player to the battle.
 
         Args:
-            u2 (str): user/ player 2 client id
-            p2 (str): pokemon id for player 2
+            u2 (str): The username/client ID of player 2.
+            p2_id (str): The ID of player 2's Pokemon.
         """
         self.u2 = u2
         self.p2_id = p2_id
@@ -71,9 +88,20 @@ class Battle:
         self.p2.stats["max_hp"] = self.p2.stats["hp"]
 
     def handle_event(self, event: BattleEvent, json: AttackData, socket_id: str):
+        """Delegate event handling to the current state.
+
+        Args:
+            event (BattleEvent): The type of event occurring.
+            json (AttackData): The data associated with the event (e.g., attack details).
+            socket_id (str): The socket ID of the player triggering the event.
+        """
         return self.state.handle_event(self, event, json, socket_id)
 
     def execute(self):
+        """Execute a turn of the battle.
+
+        Determines turn order based on speed, applies attacks, and checks for knockouts.
+        """
         if self.p1.stats["speed"] <= self.p2.stats["speed"]:
             self.p1.attack(self.attack1, self.p2)
             self.check_hps()
@@ -87,15 +115,29 @@ class Battle:
         print("Battle finished executing.")
 
     def check_hps(self):
+        """Check if either Pokemon has fainted and declare a winner if so."""
         if self.p1.stats["hp"] <= 0:
             self.broadcast_wins(2)
         elif self.p2.stats["hp"] <= 0:
             self.broadcast_wins(1)
 
     def is_full(self):
+        """Check if the battle has two players.
+
+        Returns:
+            bool: True if both players have joined, False otherwise.
+        """
         return hasattr(self, "u2") and hasattr(self, "u2")
 
     def which_player_is_this(self, username: str) -> int | None:
+        """Determine if the username corresponds to player 1 or player 2.
+
+        Args:
+            username (str): The username to check.
+
+        Returns:
+            int | None: 1 for player 1, 2 for player 2, or None if not found.
+        """
         if self.u1 == username:
             return 1
         elif self.u2 == username:
@@ -104,6 +146,11 @@ class Battle:
             return None
 
     def broadcast_wins(self, winner: int):
+        """Notify players of the battle result.
+
+        Args:
+            winner (int): The player number (1 or 2) who won.
+        """
         if winner == 1:
             emit_win(self.s1())
             emit_lose(self.s2())
@@ -113,13 +160,32 @@ class Battle:
 
 
 class BattleState(ABC):
+    """Abstract base class representing the state of a battle."""
+
     @abstractmethod
     def handle_event(
         self, battle: Battle, event: BattleEvent, json: AttackData, socket_id: str
     ):
+        """Handle an event based on the current state.
+
+        Args:
+            battle (Battle): The current battle instance.
+            event (BattleEvent): The event type.
+            json (AttackData): Data associated with the event.
+            socket_id (str): The socket ID of the triggering player.
+        """
         pass
 
     def player_has_chosen(self, battle: Battle, number: int):
+        """Notify players that one has made a move and the other needs to wait.
+
+        Args:
+            battle (Battle): The current battle instance.
+            number (int): The player number (1 or 2) who has chosen.
+
+        Raises:
+            ValueError: If number is not 1 or 2.
+        """
         if number == 1:
             chosen_user = battle.s1()
             not_yet_chosen_user = battle.s2()
@@ -133,6 +199,11 @@ class BattleState(ABC):
         emit_onWaitOnOtherPlayer(chosen_user)
 
     def broadcast_health(self, battle: Battle):
+        """Send updated health and move information to both players.
+
+        Args:
+            battle (Battle): The current battle instance.
+        """
         emit_onTurnEnd(
             self_hp=battle.p1.stats["hp"],
             target_hp=battle.p2.stats["hp"],
@@ -150,12 +221,23 @@ class BattleState(ABC):
 
 
 class WaitingForAttacks(BattleState):
+    """State where the battle is waiting for both players to select an attack."""
+
     def __init__(self):
+        """Initialise the WaitingForAttacks state."""
         super()
 
     def handle_event(
         self, battle: Battle, event: BattleEvent, json: AttackData, socket_id: str
     ):
+        """Handle attack selection from either player.
+
+        Args:
+            battle (Battle): The current battle instance.
+            event (BattleEvent): The event type.
+            json (AttackData): Data containing the selected attack ID.
+            socket_id (str): The socket ID of the player selecting the attack.
+        """
         if event == BattleEvent.attack:
             if socket_id == battle.s1():
                 battle.attack1 = Attack.load(json["attack_id"])
@@ -172,12 +254,23 @@ class WaitingForAttacks(BattleState):
 
 
 class WaitingForPlayer1Attack(BattleState):
+    """State where player 2 has chosen, waiting for player 1."""
+
     def __init__(self):
+        """Initialise the WaitingForPlayer1Attack state."""
         super()
 
     def handle_event(
         self, battle: Battle, event: BattleEvent, json: AttackData, socket_id: str
     ):
+        """Handle attack selection from player 1.
+
+        Args:
+            battle (Battle): The current battle instance.
+            event (BattleEvent): The event type.
+            json (AttackData): Data containing the selected attack ID.
+            socket_id (str): The socket ID of the player selecting the attack.
+        """
         if event == BattleEvent.attack:
             if socket_id == battle.s1():
                 battle.attack1 = Attack.load(json["attack_id"])
@@ -188,12 +281,23 @@ class WaitingForPlayer1Attack(BattleState):
 
 
 class WaitingForPlayer2Attack(BattleState):
+    """State where player 1 has chosen, waiting for player 2."""
+
     def __init__(self):
+        """Initialise the WaitingForPlayer2Attack state."""
         super()
 
     def handle_event(
         self, battle: Battle, event: BattleEvent, json: AttackData, socket_id: str
     ):
+        """Handle attack selection from player 2.
+
+        Args:
+            battle (Battle): The current battle instance.
+            event (BattleEvent): The event type.
+            json (AttackData): Data containing the selected attack ID.
+            socket_id (str): The socket ID of the player selecting the attack.
+        """
         if event == BattleEvent.attack:
             if socket_id == battle.s2():
                 battle.attack2 = Attack.load(json["attack_id"])

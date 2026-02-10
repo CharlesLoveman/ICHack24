@@ -13,7 +13,19 @@ class CreationError(Exception):
 
 
 def generate_pokemon(username: str, img_path: str):
-    # Generate Pokemon
+    """Generate a Pokemon from an image and add it to the user's collection.
+
+    Attempts to create a Pokemon using the generative model. If creation fails,
+    it falls back to assigning 'Errormon' to the user.
+
+    Args:
+        username (str): The username of the player.
+        img_path (str): The path to the image used for generation.
+
+    Raises:
+        ErrormonException: If generation fails but Errormon is successfully assigned.
+        CreationError: If generation fails and Errormon cannot be assigned.
+    """
     print(f"Generating Pokemon for {username}")
     pokemon_id: str | None = None
     for i in range(1):

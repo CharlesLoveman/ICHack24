@@ -50,13 +50,17 @@ def create_pokemon(
     """Create a new pokemon from an image.
 
     Args:
-        prompt (str): The prompt to use to create the pokemon.
         img_path (str): The path to the image to use to create the pokemon.
         create_image (bool): Whether to create an image of the pokemon.
-        return_prompt (bool): Whether to return the prompt.
+        return_prompt (bool): Whether to return the prompt used for image generation.
 
     Returns:
-        details (dict): The details of the created pokemon.
+        tuple: A tuple containing:
+            - name (str): The name of the Pokemon.
+            - pokedex_description (str): The Pokedex entry.
+            - stats (ExtendedPokemonStats): The stats of the Pokemon.
+            - img_path (str | None): The path to the generated image, if created.
+            - image_prompt (str | None): The prompt used to generate the image, if requested.
     """
     if create_image:
         template = GEMINI_PROMPT_TEMPLATE_WITH_IMAGE
@@ -125,15 +129,15 @@ def create_pokemon(
 
 
 def create_attacks(name: str, pokedex: str, element: str) -> List[Attack]:
-    """Create attacks for a pokemon.
+    """Create attacks for a pokemon using the generative model.
 
     Args:
         name (str): The name of the pokemon.
-        pokedex (str): The pokedex entry of the pokemon.
-        element (str): The element of the pokemon.
+        pokedex (str): The pokedex entry/description of the pokemon.
+        element (str): The element/type of the pokemon.
 
     Returns:
-        attacks (list): The attacks for the pokemon.
+        List[Attack]: A list of 4 generated Attack objects.
     """
 
     prompt = GEMINI_PROMPT_TEMPLATE_ATTACKS.format(name, pokedex, element)
@@ -187,14 +191,17 @@ def create_attacks(name: str, pokedex: str, element: str) -> List[Attack]:
 
 
 def build_pokemon(original_img_path: str, create_image=False) -> Pokemon:
-    """Build a pokemon from its details.
+    """Build a complete Pokemon object from an image path.
+
+    This function coordinates the creation of Pokemon stats, details, and attacks
+    based on the provided image.
 
     Args:
-        img_path (str): The path to the image of the pokemon.
-        create_image (bool): Whether to create an image of the pokemon.
+        original_img_path (str): The path to the original image used to generate the Pokemon.
+        create_image (bool): Whether to generate a new image for the Pokemon using AI.
 
     Returns:
-        pokemon (Pokemon): The pokemon built from its details.
+        Pokemon: The fully constructed Pokemon object.
     """
 
     img_path = original_img_path

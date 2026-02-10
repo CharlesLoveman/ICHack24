@@ -3,22 +3,28 @@ from sharedTypes import *
 from pymongo.collection import Collection
 from pymongo import MongoClient
 from pymongo.cursor import Cursor
-from .sharedTypes import IPokemon, AttackCategory
+from .sharedTypes import IPokemon
 from .env import DATABASE_HOST
 from bson.objectid import ObjectId
 from .pokemon_constants import stats_keys, fallback_stats, fallback_attack
 
 
 class _Id(TypedDict):
+    """Type definition for MongoDB _id field."""
+
     _id: ObjectId
 
 
 class DBPlayer(TypedDict):
+    """Type definition for a Player document in MongoDB."""
+
     pokemon_ids: List[str]
     username: str
 
 
 class DBPokemon(TypedDict):
+    """Type definition for a Pokemon document in MongoDB."""
+
     name: str
     description: str
     element: str
@@ -29,6 +35,8 @@ class DBPokemon(TypedDict):
 
 
 class DBAttack(TypedDict):
+    """Type definition for an Attack document in MongoDB."""
+
     name: str
     description: NotRequired[str]  # TODO: remove; added for db compatibility
     element: str
@@ -39,6 +47,8 @@ class DBAttack(TypedDict):
 
 
 class DBStats(TypedDict):
+    """Type definition for a Stats document in MongoDB."""
+
     hp: int
     attack: int
     defence: int
@@ -48,6 +58,8 @@ class DBStats(TypedDict):
 
 
 class OptionalDBStats(TypedDict, total=False):
+    """Type definition for an Optional Stats document in MongoDB."""
+
     hp: int
     attack: int
     defence: int
@@ -57,22 +69,32 @@ class OptionalDBStats(TypedDict, total=False):
 
 
 class DBPlayerWithId(DBPlayer, _Id):
+    """Type definition for a Player document with ID."""
+
     pass
 
 
 class DBPokemonWithId(DBPokemon, _Id):
+    """Type definition for a Pokemon document with ID."""
+
     pass
 
 
 class DBAttackWithId(DBAttack, _Id):
+    """Type definition for an Attack document with ID."""
+
     pass
 
 
 class DBStatsWithId(DBStats, _Id):
+    """Type definition for a Stats document with ID."""
+
     pass
 
 
 class OptionalDBStatsWithId(OptionalDBStats, _Id):
+    """Type definition for an Optional Stats document with ID."""
+
     pass
 
 
@@ -87,7 +109,14 @@ attack_stats_collection: Collection[OptionalDBStats] = database.attack_stats
 
 
 def initialise_user(username: str):
-    """Initialise a user using a username."""
+    """Initialise a user in the database if they don't exist.
+
+    Args:
+        username (str): The username of the user to initialise.
+
+    Returns:
+        str: The user's ID (pid).
+    """
     print(f"Attempting to log in user: {username}")
     player = get_player_by_username(username)
 
@@ -106,7 +135,14 @@ def initialise_user(username: str):
 
 
 def get_player_by_username(username: str) -> Union[DBPlayerWithId, None]:
-    """Return a player object from the database using a username."""
+    """Retrieve a player document from the database by username.
+
+    Args:
+        username (str): The username to search for.
+
+    Returns:
+        Union[DBPlayerWithId, None]: The player document if found, else None.
+    """
     player = players_collection.find_one({"username": username})
 
     if player is None:
@@ -116,7 +152,14 @@ def get_player_by_username(username: str) -> Union[DBPlayerWithId, None]:
 
 
 def get_pokemon_ids_from_player(username: str) -> List[str]:
-    """Return a list of Pokemon ids for the given user."""
+    """Retrieve the list of Pokemon IDs associated with a user.
+
+    Args:
+        username (str): The username of the player.
+
+    Returns:
+        List[str]: A list of Pokemon IDs owned by the user.
+    """
     # print(f"Attempting to load Pokemon ids for user: {username}")
     player = players_collection.find_one({"username": username})
     if player is not None:
@@ -127,6 +170,14 @@ def get_pokemon_ids_from_player(username: str) -> List[str]:
 
 
 def db_pokemon_to_interface(db_pokemon: DBPokemonWithId):
+    """Convert a database Pokemon document to an IPokemon interface.
+
+    Args:
+        db_pokemon (DBPokemonWithId): The Pokemon document from the database.
+
+    Returns:
+        IPokemon: The Pokemon data in interface format.
+    """
 
     stats_id = db_pokemon["stats_id"]
     stats = get_stats_from_id(stats_id)
@@ -149,7 +200,17 @@ def db_pokemon_to_interface(db_pokemon: DBPokemonWithId):
 
 
 def get_pokemon_by_name(name: str) -> IPokemon:
-    """Return a Pokemon as a dict."""
+    """Retrieve a Pokemon by its name.
+
+    Args:
+        name (str): The name of the Pokemon.
+
+    Raises:
+        ValueError: If the Pokemon is not found.
+
+    Returns:
+        IPokemon: The Pokemon data.
+    """
     db_pokemon = pokemon_collection.find_one({"name": name})
     if db_pokemon is None:
         raise ValueError(f"Pokemon {name} not found")
@@ -160,7 +221,17 @@ def get_pokemon_by_name(name: str) -> IPokemon:
 
 
 def get_pokemon_from_id(pokemon_id: str) -> IPokemon:
-    """Return a Pokemon as a dict."""
+    """Retrieve a Pokemon by its ID.
+
+    Args:
+        pokemon_id (str): The ObjectId string of the Pokemon.
+
+    Raises:
+        ValueError: If the Pokemon is not found.
+
+    Returns:
+        IPokemon: The Pokemon data.
+    """
     # print(f"Attempting to load data on Pokemon: {pokemon_id}")
     db_pokemon = pokemon_collection.find_one({"_id": ObjectId(pokemon_id)})
     if db_pokemon is None:
@@ -173,7 +244,14 @@ def get_pokemon_from_id(pokemon_id: str) -> IPokemon:
 
 
 def get_optional_stats_from_id(stats_id: str) -> OptionalPokemonStats:
-    """Return stats as a dict."""
+    """Retrieve optional stats from the database.
+
+    Args:
+        stats_id (str): The ObjectId string of the stats document.
+
+    Returns:
+        OptionalPokemonStats: The stats dictionary. Returns fallback stats if not found.
+    """
     db_stats = attack_stats_collection.find_one({"_id": ObjectId(stats_id)})
     if db_stats is None:
         # raise ValueError(f"Stats {stats_id} not found")
@@ -203,7 +281,17 @@ def get_optional_stats_from_id(stats_id: str) -> OptionalPokemonStats:
 
 
 def get_stats_from_id(stats_id: str) -> PokemonStats:
-    """Return (non-optional) stats as a dict."""
+    """Retrieve required stats from the database.
+
+    Args:
+        stats_id (str): The ObjectId string of the stats document.
+
+    Raises:
+        ValueError: If the retrieved stats are incomplete.
+
+    Returns:
+        PokemonStats: The complete stats dictionary.
+    """
 
     optional_stats = get_optional_stats_from_id(stats_id=stats_id)
 
@@ -214,7 +302,14 @@ def get_stats_from_id(stats_id: str) -> PokemonStats:
 
 
 def get_attack_from_id(attack_id: str) -> IAttack:
-    """Return an attack as a dict."""
+    """Retrieve an attack from the database.
+
+    Args:
+        attack_id (str): The ObjectId string of the attack.
+
+    Returns:
+        IAttack: The attack data. Returns fallback attack if not found.
+    """
     # print(f"Attempting to load data on Attack: {attack_id}")
     db_attack = attacks_collection.find_one({"_id": ObjectId(attack_id)})
     if db_attack is None:
@@ -243,19 +338,25 @@ def get_attack_from_id(attack_id: str) -> IAttack:
 
 
 def get_status_from_id(status_id: str) -> OptionalPokemonStats:
-    """Return a status as a dict."""
+    """Retrieve status effects (stats) from the database.
+
+    Args:
+        status_id (str): The ObjectId string of the status stats.
+
+    Returns:
+        OptionalPokemonStats: The status effects.
+    """
     return get_optional_stats_from_id(status_id)
 
 
 def get_pokemons_from_user(username: str):
-    """
-        Return a list of Pokemon stats as a JSON object.
+    """Retrieve all Pokemon owned by a specific user.
 
     Args:
-        username (str): the username
+        username (str): The username of the player.
 
     Returns:
-        pokemon_list (json): a list of Pokemon as a JSON object
+        List[IPokemon]: A list of Pokemon objects owned by the user.
     """
     print(f"Generating Pokemon list for user: {username}")
 
@@ -266,6 +367,11 @@ def get_pokemons_from_user(username: str):
 
 
 def get_all_pokemons():
+    """Retrieve all Pokemon existing in the database.
+
+    Returns:
+        List[IPokemon]: A list of all Pokemon.
+    """
     object_ids_docs = pokemon_collection.find({}, {"_id": 1})
     object_ids_docs = cast(Cursor[DBPokemonWithId], object_ids_docs)
 
@@ -275,8 +381,13 @@ def get_all_pokemons():
 
 
 def add_pokemon_to_user(username: str, pokemon_id: str):
+    """Add a Pokemon ID to a user's list of owned Pokemon.
+
+    Args:
+        username (str): The username of the player.
+        pokemon_id (str): The ID of the Pokemon to add.
+    """
     print(f"Saving Pokemon: {pokemon_id} to user: {username}")
-    """Add a Pokemon to a user."""
     players_collection.update_one(
         {"username": username}, {"$push": {"pokemon_ids": pokemon_id}}
     )
