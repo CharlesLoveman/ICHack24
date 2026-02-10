@@ -127,7 +127,7 @@ class Battle:
         Returns:
             bool: True if both players have joined, False otherwise.
         """
-        return hasattr(self, "u2") and hasattr(self, "u2")
+        return hasattr(self, "u2") and hasattr(self, "u1")
 
     def which_player_is_this(self, username: str) -> int | None:
         """Determine if the username corresponds to player 1 or player 2.
