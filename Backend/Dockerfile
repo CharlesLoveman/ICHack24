@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.12
 
 WORKDIR /usr/src/app
 
@@ -7,10 +7,8 @@ COPY requirements.txt ./
 # Installing python packages
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Installing gcloud
-RUN curl https://sdk.cloud.google.com > install.sh
-RUN bash install.sh --disable-prompts
+COPY . .
 
-COPY Backend .
+RUN pip install .
 
-CMD [ "python", "-m", "flask", "--app", "app", "run" ]
+CMD [ "python", "-m", "flask", "--app", "app", "run", "--host=0.0.0.0" ]

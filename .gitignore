@@ -130,10 +130,12 @@ dmypy.json
 
 setup.cfg
 
-*.dev
 *.prod
+*.env*
 
 Backend/UploadedImages/
 Scripts/Windows/reinstall_backend.bat
-Frontend/app/public/images/pokemon
+Frontend/public/images/pokemon/uploaded_images/
 Backend/test_uncommited.py
+
+node_modules

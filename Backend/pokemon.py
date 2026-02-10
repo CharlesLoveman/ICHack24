@@ -1,71 +1,104 @@
-""""Pokemon game logic."""
+""" "Pokemon game logic."""
 
-from flask_socketio import emit
+from dataclasses import dataclass
+import os
 import numpy as np
 from bson.objectid import ObjectId
-from PIL import Image
-import io
 import random
 
-element_options = [
-    "Normal",
-    "Fighting",
-    "Flying",
-    "Poison",
-    "Ground",
-    "Rock",
-    "Bug",
-    "Ghost",
-    "Steel",
-    "Fire",
-    "Water",
-    "Grass",
-    "Electric",
-    "Psychic",
-    "Ice",
-    "Dragon",
-    "Dark",
-    "Fairy",
-]
-stats_keys = ["hp", "attack", "defence", "special attack", "special defence", "speed"]
-element_chart = np.array(
-    [
-        [1, 1, 1, 1, 1, 0.5, 1, 0, 0.5, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [2, 1, 0.5, 0.5, 1, 2, 0.5, 0, 2, 1, 1, 1, 1, 0.5, 2, 1, 2, 0.5],
-        [1, 2, 1, 1, 1, 0.5, 2, 1, 0.5, 1, 1, 2, 0.5, 1, 1, 1, 1, 1],
-        [1, 1, 1, 0.5, 0.5, 0.5, 1, 0.5, 0, 1, 1, 2, 1, 1, 1, 1, 1, 2],
-        [1, 1, 0, 2, 1, 2, 0.5, 1, 2, 2, 1, 0.5, 2, 1, 1, 1, 1, 1],
-        [1, 0.5, 2, 1, 0.5, 1, 2, 1, 0.5, 2, 1, 1, 1, 1, 2, 1, 1, 1],
-        [1, 0.5, 0.5, 0.5, 1, 1, 1, 0.5, 0.5, 0.5, 1, 2, 1, 2, 1, 1, 2, 0.5],
-        [0, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 0.5, 1],
-        [1, 1, 1, 1, 1, 2, 1, 1, 0.5, 0.5, 0.5, 1, 0.5, 1, 2, 1, 1, 2],
-        [1, 1, 1, 1, 1, 0.5, 2, 1, 2, 0.5, 0.5, 2, 1, 1, 2, 0.5, 1, 1],
-        [1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 0.5, 0.5, 1, 1, 1, 0.5, 1, 1],
-        [1, 1, 0.5, 0.5, 2, 2, 0.5, 1, 0.5, 0.5, 2, 0.5, 1, 1, 1, 0.5, 1, 1],
-        [1, 1, 2, 1, 0, 1, 1, 1, 1, 1, 2, 0.5, 0.5, 1, 1, 0.5, 1, 1],
-        [1, 2, 1, 2, 1, 1, 1, 1, 0.5, 1, 1, 1, 1, 0.5, 1, 1, 0, 1],
-        [1, 1, 2, 1, 2, 1, 1, 1, 0.5, 0.5, 0.5, 2, 1, 1, 0.5, 2, 1, 1],
-        [1, 1, 1, 1, 1, 1, 1, 1, 0.5, 1, 1, 1, 1, 1, 1, 2, 1, 0],
-        [1, 0.5, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 0.5, 0.5],
-        [1, 2, 1, 0.5, 1, 1, 1, 1, 0.5, 0.5, 1, 1, 1, 1, 1, 2, 2, 1],
-    ]
+from .env import PATH_TO_PUBLIC
+from .attack import Attack, delete_attack, delete_attack_stats, get_stats_keys
+from sharedTypes import IPokemon, PokemonStats
+from typing import List, Self, cast
+from .db import (
+    OptionalDBStats,
+    get_pokemon_from_id,
+    pokemon_collection,
+    attack_stats_collection,
+    players_collection,
 )
+from .pokemon_constants import element_chart, element_options, stats_keys
+
+
+@dataclass
+class PokemonRelatedIds:
+    """Data class for holding IDs related to a Pokemon."""
+
+    stats_id: str
+
+
+def delete_pokemon(id: str):
+    """Delete a Pokemon and its associated data (attacks, stats, image) from the database.
+
+    Args:
+        id (str): The ObjectId of the Pokemon to delete.
+
+    Raises:
+        Exception: If any part of the deletion process fails, returning a list of failures.
+    """
+    pokemon = Pokemon.load(id)
+
+    failures = []
+
+    for attack in pokemon.attacks:
+        try:
+            delete_attack(attack.id)
+        except:
+            failures.append(f"Failed to delete attack {attack.id}")
+    try:
+        delete_attack_stats(pokemon.stats["id"])
+    except:
+        failures.append(f"Failed to delete stats {pokemon.stats['id']}")
+
+    try:
+        # Delete image, but we don't delete anything in the protected folder
+        if pokemon.image_id.find("protected") == -1:
+            os.remove(PATH_TO_PUBLIC + pokemon.image_id)
+    except:
+        failures.append(f"Failed to delete image {pokemon.image_id}")
+
+    # Remove the pokemon from all players who have it
+    players_collection.update_many({"pokemon_ids": id}, {"$pull": {"pokemon_ids": id}})
+
+    try:
+        pokemon_collection.delete_one({"_id": ObjectId(id)})
+    except:
+        failures.append(f"Failed to finally delete pokemon {id}")
+
+    if len(failures) > 0:
+        raise Exception(failures)
 
 
 class Pokemon:
-    """Create a Pokemon, with description, battle statistics and an image id."""
+    """Represents a Pokemon entity with stats, attacks, and metadata."""
 
     def __init__(
         self,
         name: str,
         description: str,
         element: str,
-        stats: dict,
-        attacks: list,
-        image_id : str,
-        original_image_id : str,
+        stats: PokemonStats,
+        attacks: List[Attack],
+        image_id: str,
+        original_image_id: str,
         id: str = "",
     ):
+        """Initialise a Pokemon.
+
+        Args:
+            name (str): The name of the Pokemon.
+            description (str): The Pokedex description.
+            element (str): The elemental type.
+            stats (PokemonStats): The base stats.
+            attacks (List[Attack]): A list of 4 Attack objects.
+            image_id (str): The path/ID of the generated image.
+            original_image_id (str): The path/ID of the original uploaded image.
+            id (str, optional): The database ID. Defaults to "".
+
+        Raises:
+            TypeError: If arguments are of incorrect types.
+            ValueError: If arguments have invalid values (e.g. stats out of range).
+        """
         self.name = name
         self.description = description
         self.element = element
@@ -99,13 +132,7 @@ class Pokemon:
             raise TypeError(
                 f"Stats must be a dictionary, but {self.stats} is a {type(self.stats).__name__}"
             )
-        if not len(self.stats) == 6:
-            raise ValueError(
-                f"Stats must have 6 values, but {len(self.stats)} were given: {self.stats}"
-            )
-        for key in self.stats.keys():
-            if key not in stats_keys:
-                raise ValueError(f"Stats must have valid keys, but {key} is not")
+        for key in stats_keys:
             if not isinstance(self.stats[key], int):
                 raise TypeError(
                     f"Stats must have integer values, but the {key} stat is {self.stats[key]} is a {type(self.stats[key]).__name__}"
@@ -138,23 +165,32 @@ class Pokemon:
         """Return a string representation of the Pokemon."""
         return f"Pokemon({repr(self.name)}, {repr(self.description)}, {repr(self.element)}, {repr(self.stats)}, {repr(self.attacks)}, {repr(self.image_id)})"
 
-    def attack(self, attack, target):
-        """Hit the target Pokemon with an attack."""
+    def attack(self, attack: Attack, target: Self):
+        """Execute an attack against a target Pokemon.
+
+        Calculates damage based on stats, element multipliers, and randomness.
+        Applies status effects if applicable.
+
+        Args:
+            attack (Attack): The attack being used.
+            target (Pokemon): The target Pokemon.
+
+        Raises:
+            TypeError: If arguments are not of the expected types.
+        """
         if not isinstance(attack, Attack):
             raise TypeError(
                 f"Attack must be an Attack, but {attack} is a {type(attack).__name__}"
             )
-        
-        """
-        if attack not in self.attacks:
-            raise ValueError(
-                f"Chosen attack must be one of the Pokemon's attacks, but {attack} is not"
-            )
-        """
+
         if not isinstance(target, Pokemon):
             raise TypeError(
                 f"Target must be a Pokemon, but {target} is a {type(target).__name__}"
             )
+
+        if self.stats["hp"] == 0:
+            print(f"Dead Pokemon ${self.name} cannot attack.")
+            return
 
         if attack.power:
             # calculate elemental multipliers
@@ -168,9 +204,9 @@ class Pokemon:
             # calculate hp damage
             atk = self.stats["attack"]
             dfs = target.stats["defence"]
-            if attack.special:
-                atk = self.stats["special attack"]
-                dfs = target.stats["special defence"]
+            if attack.category:
+                atk = self.stats["special_attack"]
+                dfs = target.stats["special_defence"]
             damage = int(
                 2
                 / 5
@@ -186,32 +222,59 @@ class Pokemon:
                 damage *= 1.5
 
             # apply damage
-            target.stats["hp"] -= damage
+            target.stats["hp"] -= int(damage)
 
         if not len(attack.self_status) == 0:
-            for key in attack.self_status.keys():
+            for key in get_stats_keys(attack.self_status):
                 self.stats[key] += attack.self_status[key]
 
         if not len(attack.target_status) == 0:
-            for key in attack.target_status.keys():
+            for key in get_stats_keys(attack.target_status):
                 target.stats[key] = max(
                     1, target.stats[key] + attack.target_status[key]
                 )
 
-    def save(self, db):
-        """Save a Pokemon object to the database.
+        if target.stats["hp"] < 0:
+            target.stats["hp"] = 0
 
-        Args:
-            db (database): MongoDB database
+        if self.stats["hp"] < 0:
+            self.stats["hp"] = 0
+
+    def to_interface(self):
+        """Convert the Pokemon instance to an IPokemon interface dictionary.
 
         Returns:
-            id (str): the id where the Pokemon is located in the database
+            IPokemon: The dictionary representation of the Pokemon.
         """
-        attack_ids = [attack.save(db) for attack in self.attacks]
-        stats_id = str(db.attack_stats.insert_one(self.stats).inserted_id)
+        ipokemon: IPokemon = {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "element": self.element,
+            "stats": self.stats,
+            "attacks": [attack.to_interface() for attack in self.attacks],
+            "image_id": self.image_id,
+            "original_image_id": self.original_image_id,
+        }
+
+        return ipokemon
+
+    def save(self) -> str:
+        """Save the Pokemon and its components to the database.
+
+        Returns:
+            str: The ObjectId of the saved Pokemon document.
+        """
+        self.stats
+        attack_ids = [attack.save() for attack in self.attacks]
+        stats_id = str(
+            attack_stats_collection.insert_one(
+                cast(OptionalDBStats, self.stats)
+            ).inserted_id
+        )
 
         return str(
-            db.pokemon.insert_one(
+            pokemon_collection.insert_one(
                 {
                     "name": self.name,
                     "description": self.description,
@@ -219,431 +282,32 @@ class Pokemon:
                     "stats_id": stats_id,
                     "attack_ids": attack_ids,
                     "image_id": self.image_id,
-                    "original_image_id": self.original_image_id
+                    "original_image_id": self.original_image_id,
                 }
             ).inserted_id
         )
 
     @classmethod
-    def load(cls, db, id):
-        """Load a Pokemon object from the database.
+    def load(cls, id: str):
+        """Load a Pokemon from the database by ID.
 
         Args:
-            db (atabase): MongoDB database
-            id (str): the Pokemon id to load
+            id (str): The ObjectId of the Pokemon to load.
 
         Returns:
-            pokemon (Pokemon): the resulting Pokemon object
+            Pokemon: The loaded Pokemon instance.
         """
-        pokemon = db.pokemon.find_one({"_id": ObjectId(id)})
-        if pokemon is None:
-            raise KeyError(f"No Pokemon with the id {repr(id)} was found.")
+        pokemon = get_pokemon_from_id(id)
 
-        stats_id = pokemon["stats_id"]
-        stats = db.attack_stats.find_one({"_id": ObjectId(stats_id)})
-        if stats is None:
-            raise KeyError(f"No Stats object with the id {repr(stats_id)} was found.")
+        attacks = [Attack.from_interface(attack) for attack in pokemon["attacks"]]
 
-        stats.pop("_id")
-
-        attacks = [Attack.load(db, attack_id) for attack_id in pokemon["attack_ids"]]
-
-        image_id = pokemon["image_id"]
-        original_image_id = pokemon["original_image_id"]
-
-        return Pokemon(
+        return cls(
             pokemon["name"],
             pokemon["description"],
             pokemon["element"],
-            stats,
+            pokemon["stats"],
             attacks,
-            image_id,
-            original_image_id,
+            pokemon["image_id"],
+            pokemon["original_image_id"],
             id,
         )
-
-
-class Attack:
-    """Create an attack, to be called when a Pokemon attacks."""
-
-    def __init__(
-        self,
-        name: str,
-        element: str,
-        power: int = 0,
-        special: bool = False,
-        self_status: dict = {},
-        target_status: dict = {},
-        id: str = "",
-    ):
-        """Create an attack with a name, element and optional power and status effects."""
-        self.name = name
-        self.element = element
-        self.power = power
-        self.special = special
-        self.self_status = self_status
-        self.target_status = target_status
-        self.id = id
-
-        if not isinstance(self.name, str):
-            raise TypeError(
-                f"Name must be a string, but {self.name} is a {type(self.name).__name__}"
-            )
-
-        if not isinstance(self.element, str):
-            raise TypeError(
-                f"Element must be a string, but {self.element} is a {type(self.element).__name__}"
-            )
-        if self.element not in element_options:
-            raise ValueError(
-                f"Element must be a valid element, but {self.element} is not"
-            )
-
-        if not isinstance(self.power, int):
-            raise TypeError(
-                f"Power must be an integer, but {self.power} is a {type(self.power).__name__}"
-            )
-        if (not 385 > self.power) or (not self.power >= 0):
-            raise ValueError(
-                f"Power must be a non-negative value less than 385, but {self.power} is not"
-            )
-
-        if not isinstance(self.special, bool):
-            raise TypeError(
-                f"Special must be a boolean, but {self.special} is a {type(self.special).__name__}"
-            )
-
-        if not isinstance(self.self_status, dict):
-            raise TypeError(
-                f"Status must be a dictionary, but {self.self_status} is a {type(self.self_status).__name__}"
-            )
-        for key in self.self_status.keys():
-            if key not in stats_keys:
-                raise ValueError(f"Status must have valid keys, but {key} is not")
-            if not isinstance(self.self_status[key], int):
-                raise TypeError(
-                    f"Status effect value must be an integer, but the {key} status {self.self_status[key]} is a {type(self.self_status[key]).__name__}"
-                )
-            if (not 128 > self.self_status[key]) or (not self.self_status[key] > -128):
-                raise ValueError(
-                    f"Status effect values must be positive and less than 128, but the {key} status is {self.self_status[key]}"
-                )
-
-        if not isinstance(self.target_status, dict):
-            raise TypeError(
-                f"Status must be a dictionary, but {self.target_status} is a {type(self.target_status).__name__}"
-            )
-        for key in self.target_status.keys():
-            if key not in stats_keys:
-                raise ValueError(f"Status must have valid keys, but {key} is not")
-            if not isinstance(self.target_status[key], int):
-                raise TypeError(
-                    f"Status effect value must be an integer, but the {key} status {self.target_status[key]} is a {type(self.target_status[key]).__name__}"
-                )
-            if (not -128 < self.target_status[key]) or (
-                not self.target_status[key] < 128
-            ):
-                raise ValueError(
-                    f"Status effect values must be positive and less than 128, but the {key} status is {self.target_status[key]}"
-                )
-
-    def __repr__(self):
-        """Return a string representation of the Attack."""
-        return f"Attack({repr(self.name)}, {repr(self.element)}, {repr(self.power)}, {repr(self.special)}, {repr(self.self_status)}, {repr(self.target_status)})"
-
-    def save(self, db):
-        """Save an Attack object to the database.
-
-        Args:
-            db (database): MongoDB database
-
-        Returns:
-            id (str): the id where the Attack is located in the database
-        """
-
-        stats_object_ids = db.attack_stats.insert_many(
-            [self.self_status, self.target_status]
-        ).inserted_ids
-        stats_ids = [str(object_id) for object_id in stats_object_ids]
-
-        return str(
-            db.attacks.insert_one(
-                {
-                    "name": self.name,
-                    "element": self.element,
-                    "power": self.power,
-                    "special": self.special,
-                    "self_status_id": stats_ids[0],
-                    "target_status_id": stats_ids[1],
-                }
-            ).inserted_id
-        )
-
-    @classmethod
-    def load(cls, db, id):
-        """Load an Attack object from the database.
-
-        Args:
-            db (atabase): MongoDB database
-            id (str): the Attack id to load
-
-        Returns:
-            attack (Attack): the resulting Attack object
-        """
-        attack = db.attacks.find_one({"_id": ObjectId(id)})
-        if attack is None:
-            raise KeyError(f"No Attack object with the id {repr(id)} was found.")
-
-        self_status = db.attack_stats.find_one(
-            {"_id": ObjectId(attack["self_status_id"])}
-        )
-        if self_status is None:
-            raise KeyError(f"No Stats object with the id {repr(attack["self_status_id"])} was found.")
-        self_status.pop("_id")
-
-        target_status = db.attack_stats.find_one(
-            {"_id": ObjectId(attack["target_status_id"])}
-        )
-        if target_status is None:
-            raise KeyError(f"No Stats object with the id {repr(attack["target_status_id"])} was found.")
-        target_status.pop("_id")
-
-        return Attack(
-            attack["name"],
-            attack["element"],
-            attack["power"],
-            attack["special"],
-            self_status,
-            target_status,
-            id,
-        )
-
-
-def generate_attack(name: str, element: str, category: str):
-    """Generate a random attack with the given name, element and category."""
-
-    if not isinstance(name, str):
-        raise TypeError(f"Name must be a string, but {name} is a {type(name).__name__}")
-    if element not in element_options:
-        raise ValueError(f"Element must be a valid element, but {element} is not")
-    if category not in ["physical", "special", "status"]:
-        raise ValueError(
-            f"Category must be either 'physical', 'special' or 'status', but {category} is not"
-        )
-
-    power = 0
-    special = False
-    self_status = {}
-    target_status = {}
-
-    if category == "physical":
-        power = np.random.randint(1, 256)
-    elif category == "special":
-        power = np.random.randint(1, 256)
-        special = True
-        stat_ind = np.random.rand()
-        if stat_ind <= 0.2:
-            good_bad_ind = np.random.rand()
-            if good_bad_ind <= 0.5:
-                # + status to me, - status to them, less powerful
-                stat_changes = min(int(np.random.gamma(1, 1, 1)[0]) + 1, 6)
-                budget = 192
-                while stat_changes > 0 and budget > 0:
-                    me_or_them_ind = np.random.rand()
-                    if me_or_them_ind <= 0.5:
-                        stat_modify_by = int(np.random.gamma(10, 3.5, 100)[0])
-                        budget -= stat_modify_by
-                        if budget < 0:
-                            stat_modify_by += budget
-                        stat_to_modify = np.random.choice(stats_keys)
-                        self_status[stat_to_modify] = stat_modify_by
-                    else:
-                        stat_modify_by = int(np.random.gamma(10, 3.5, 100)[0])
-                        budget -= stat_modify_by
-                        if budget < 0:
-                            stat_modify_by += budget
-                        stat_to_modify = np.random.choice(stats_keys)
-                        target_status[stat_to_modify] = -stat_modify_by
-                    stat_changes -= 1
-                power_change = np.random.randint(50, 100)
-                power = int(power * power_change / 100)
-            else:
-                # - status to me, + status to them, more powerful
-                stat_changes = min(int(np.random.gamma(1, 1, 1)[0]) + 1, 6)
-                budget = 192
-                while stat_changes > 0 and budget > 0:
-                    me_or_them_ind = np.random.rand()
-                    if me_or_them_ind <= 0.5:
-                        stat_modify_by = int(np.random.gamma(10, 3.5, 100)[0])
-                        budget -= stat_modify_by
-                        if budget < 0:
-                            stat_modify_by += budget
-                        stat_to_modify = np.random.choice(stats_keys)
-                        self_status[stat_to_modify] = -stat_modify_by
-                    else:
-                        stat_modify_by = int(np.random.gamma(10, 3.5, 100)[0])
-                        budget -= stat_modify_by
-                        if budget < 0:
-                            stat_modify_by += budget
-                        stat_to_modify = np.random.choice(stats_keys)
-                        target_status[stat_to_modify] = stat_modify_by
-                    stat_changes -= 1
-                power_change = np.random.randint(100, 150)
-                power = int(power * power_change / 100)
-    else:
-        stat_changes = min(int(np.random.gamma(2, 1, 1)[0]) + 1, 6)
-        budget = 256
-        while stat_changes > 0 and budget > 0:
-            me_or_them_ind = np.random.rand()
-            if me_or_them_ind <= 0.5:
-                stat_modify_by = int(np.random.gamma(10, 5, 100)[0])
-                budget -= stat_modify_by
-                if budget < 0:
-                    stat_modify_by += budget
-                stat_to_modify = np.random.choice(stats_keys)
-                self_status[stat_to_modify] = stat_modify_by
-            else:
-                stat_modify_by = int(np.random.gamma(10, 5, 100)[0])
-                budget -= stat_modify_by
-                if budget < 0:
-                    stat_modify_by += budget
-                stat_to_modify = np.random.choice(stats_keys)
-                target_status[stat_to_modify] = stat_modify_by
-            stat_changes -= 1
-    return Attack(name, element, power, special, self_status, target_status)
-
-
-class Battle:
-    """Create a battle between two Pokemon."""
-
-    def __init__(self, u1, p1_id, db):
-        """Create a battle between two Pokemon.
-
-        Args:
-            u1 (str): user/ player 1 client id
-            p1 (str): pokemon id for player 1
-            db (database): the MongoDB database
-
-        Returns:
-            self (Battle)
-        """
-        self.u1 = u1
-        self.p1_id = p1_id
-        self.db = db
-
-        self.p1 = Pokemon.load(self.db, self.p1_id)
-        self.p1.stats["max_hp"] = self.p1.stats["hp"]
-        self.state = WaitingForAttacks()
-
-    def add_player(self, u2, p2_id):
-        """Add a second player to the battle.
-
-        Args:
-            u2 (str): user/ player 2 client id
-            p2 (str): pokemon id for player 2
-        """
-        self.u2 = u2
-        self.p2_id = p2_id
-        self.p2 = Pokemon.load(self.db, self.p2_id)
-        self.p2.stats["max_hp"] = self.p2.stats["hp"]
-
-    def handle_event(self, event: str, json: dict, socket_id: str, db):
-        return self.state.handle_event(self, event, json, socket_id, db)
-
-    def execute(self):
-        if self.p1.stats["speed"] <= self.p2.stats["speed"]:
-            self.p1.attack(self.attack1, self.p2)
-            if self.p2.stats["hp"] <= 0:
-                emit("win", {}, to=self.u1)
-                emit("lose", {}, to=self.u2)
-            elif self.p1.stats["hp"] <= 0:
-                emit("lose", {}, to=self.u1)
-                emit("win", {}, to=self.u2)
-            self.p2.attack(self.attack2, self.p1)
-            if self.p1.stats["hp"] <= 0:
-                emit("lose", {}, to=self.u1)
-                emit("win", {}, to=self.u2)
-            elif self.p2.stats["hp"] <= 0:
-                emit("win", {}, to=self.u1)
-                emit("lose", {}, to=self.u2)
-        else:
-            self.p2.attack(self.attack2, self.p1)
-            if self.p1.stats["hp"] <= 0:
-                emit("lose", {}, to=self.u1)
-                emit("win", {}, to=self.u2)
-            elif self.p2.stats["hp"] <= 0:
-                emit("win", {}, to=self.u1)
-                emit("lose", {}, to=self.u2)
-            self.p1.attack(self.attack1, self.p2)
-            if self.p2.stats["hp"] <= 0:
-                emit("win", {}, to=self.u1)
-                emit("lose", {}, to=self.u2)
-            elif self.p1.stats["hp"] <= 0:
-                emit("lose", {}, to=self.u1)
-                emit("win", {}, to=self.u2)
-        print("Battle finished executing.")
-
-
-class BattleState:
-    def handle_event(
-        self, battle: Battle, event: str, json: dict, socket_id: str, db
-    ):
-        pass
-
-
-class WaitingForAttacks(BattleState):
-    def __init__(self):
-        super()
-
-    def handle_event(
-        self, battle: Battle, event: str, json: dict, socket_id: str, db
-    ):
-        if event == "attack":
-            if socket_id == battle.u1:
-                battle.attack1 = Attack.load(db, json["attack_id"])
-                battle.state = WaitingForPlayer2Attack()
-                print("Waiting for player 2.")
-                print(battle.attack1)
-                emit("makeOtherPlayerWait", {}, to=battle.u2)
-                emit("onWaitOnOtherPlayer", {}, to=battle.u1)
-            elif socket_id == battle.u2:
-                battle.attack2 = Attack.load(db, json["attack_id"])
-                print(battle.attack2)
-                battle.state = WaitingForPlayer1Attack()
-                print("Waiting for player 1.")
-                emit("makeOtherPlayerWait", {}, to=battle.u1)
-                emit("onWaitOnOtherPlayer", {}, to=battle.u2)
-
-
-class WaitingForPlayer1Attack(BattleState):
-    def __init__(self):
-        super()
-
-    def handle_event(
-        self, battle: Battle, event: str, json: dict, socket_id: str, db
-    ):
-        if event == "attack":
-            if socket_id == battle.u1:
-                battle.attack1 = Attack.load(db, json["attack_id"])
-                print(battle.attack1)
-                battle.execute()
-                emit("onTurnEnd", {"self_hp": battle.p1.stats["hp"], "target_hp": battle.p2.stats["hp"]}, to=battle.u1)
-                emit("onTurnEnd", {"target_hp": battle.p1.stats["hp"], "self_hp": battle.p2.stats["hp"]}, to=battle.u2)
-                battle.state = WaitingForAttacks()
-
-
-class WaitingForPlayer2Attack(BattleState):
-    def __init__(self):
-        super()
-
-    def handle_event(
-        self, battle: Battle, event: str, json: dict, socket_id: str, db
-    ):
-        if event == "attack":
-            if socket_id == battle.u2:
-                battle.attack2 = Attack.load(db, json["attack_id"])
-                print(battle.attack2)
-                battle.execute()
-                emit("onTurnEnd", {"self_hp": battle.p1.stats["hp"], "target_hp": battle.p2.stats["hp"]}, to=battle.u1)
-                emit("onTurnEnd", {"target_hp": battle.p1.stats["hp"], "self_hp": battle.p2.stats["hp"]}, to=battle.u2)
-                battle.state = WaitingForAttacks()

@@ -1,18 +1,18 @@
 from PIL import Image as PILImage
 import requests
 import io
-import os
-from dotenv import dotenv_values
 
-config = dotenv_values(".prod" if os.getenv("FLASK_ENV") == "prod" else ".dev")
+"""
+Currently an archive for pokemon image generation capabilities
+"""
 
-HF_KEY = config["HF_KEY"]
+HF_KEY = ""
 
 API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
 headers = {"Authorization": f"Bearer {HF_KEY}"}
 
 
-def generate_image(image_prompt):
+def generate_image(image_prompt: str) -> PILImage.Image:
     """Generate an image from a prompt.
 
     Args:
@@ -28,7 +28,7 @@ def generate_image(image_prompt):
     return PILImage.open(io.BytesIO(image_bytes))
 
 
-def pixelate_image(img):
+def pixelate_image(img: PILImage.Image) -> PILImage.Image:
     """Pixelate an image.
 
     Args:

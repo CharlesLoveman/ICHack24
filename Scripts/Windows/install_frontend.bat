@@ -1,5 +1,5 @@
 REM Desc: Install the frontend using npm.
 
-cd ../../Frontend/app
-npm install
+cd ../../Frontend
+pnpm install
 cd ../../Scripts/Windows

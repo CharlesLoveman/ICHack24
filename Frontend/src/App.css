@@ -1,0 +1,12 @@
+/** @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap'); **/
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans&family=Silkscreen:wght@400;700&family=VT323&display=swap');
+
+body {
+  overflow: hidden;
+
+
+}
+
+* {
+  font-family: 'Silkscreen';
+}
