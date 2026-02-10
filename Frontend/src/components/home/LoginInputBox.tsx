@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useGlobalData } from "../../hooks/useGlobalData";
 import { generate } from "random-words";
-import { LongButton } from "../layout/LongButton";
+import { LongButton } from "../button/LongButton";
 import styled from "styled-components";
 import { LongInput } from "../layout/LongInput";
 import { socket } from "../../socket";
@@ -16,7 +16,7 @@ const LoginInputContainer = styled.div`
 
 export default function LoginInputBox() {
   const [formUsername, setFormUsername] = useState<string>(
-    generateRandomUserName()
+    generateRandomUserName(),
   );
   const { username, setUsername, setPokemon } = useGlobalData();
 

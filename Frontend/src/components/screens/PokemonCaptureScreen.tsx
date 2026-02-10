@@ -14,9 +14,9 @@ import { ScrollableMain } from "../layout/ScrollableMain";
 import FilePicker from "@ihatecode/react-file-picker";
 import { backendAddress, CAPTURE_SCREEN_JUST_REFRESHED } from "../../env";
 import axios, { AxiosProgressEvent } from "axios";
-import { Bar, Health } from "../pokedex/PokemonDisplay";
 import { useGlobalData } from "../../hooks/useGlobalData";
 import axiosRetry, { linearDelay } from "axios-retry";
+import { FilledBar } from "../layout/FilledBar";
 
 axiosRetry(axios, { retries: 3, retryDelay: linearDelay() });
 
@@ -207,9 +207,7 @@ export default function PokemonCaptureScreen() {
         <HideableContainer $hidden={!isUploading}>
           <UploadContainer>
             <Typography variant="h4"> Uploading your Pokemon </Typography>
-            <Bar>
-              <Health $maxHp={1} $hp={progress ?? 0}></Health>
-            </Bar>
+            <FilledBar hp={progress ?? 0} maxHp={1}></FilledBar>
           </UploadContainer>
         </HideableContainer>
 

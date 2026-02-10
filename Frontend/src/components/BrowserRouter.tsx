@@ -6,7 +6,6 @@ import PokemonBattleScreen from "./screens/PokemonBattleScreen";
 import UserPokedexScreen from "./screens/UserPokedexScreen";
 import PokemonCaptureScreen from "./screens/PokemonCaptureScreen";
 import PokemonFullCardScreen from "./screens/PokemonFullCardScreen";
-import { PokemonLayoutPage } from "./screens/PokemonLayoutPage";
 import { socket } from "../socket";
 import { IPokemon, PokemonsData } from "../sharedTypes";
 import GlobalPokedexScreen from "./screens/GlobalPokedexScreen";
@@ -75,10 +74,6 @@ export const getBrowserRouter = (props: HiddenClicks) =>
         {
           path: "waiting-room/:game_id/",
           element: <WaitingRoomScreen />,
-        },
-        {
-          path: "example/",
-          element: <PokemonLayoutPage />,
         },
         {
           path: "battle/:game_id/",

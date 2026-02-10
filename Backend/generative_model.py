@@ -1,4 +1,4 @@
-from typing import Union, Tuple, Any, Optional
+from typing import Tuple, Any, Optional
 from abc import ABC, abstractmethod
 
 

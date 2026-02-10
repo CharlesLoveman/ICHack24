@@ -14,10 +14,10 @@ import { POKEMON_HAS_RETURNED } from "../../types";
 import { useGlobalData } from "../../hooks/useGlobalData";
 import styled from "styled-components";
 import { Typography } from "@mui/material";
-import { LongButton } from "../layout/LongButton";
-import { LinkButton } from "../layout/LinkButton";
+import { LongButton } from "../button/LongButton";
 import { ScrollableMain } from "../layout/ScrollableMain";
 import { HiddenClicks } from "../BrowserRouter";
+import { LinkButton } from "../button/LinkButton";
 
 const HomeScreenContainer = styled.div`
   text-align: center;

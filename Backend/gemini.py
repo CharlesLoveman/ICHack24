@@ -3,7 +3,7 @@ from generative_model import GenerativeModel
 from google.genai.types import GenerateContentResponsePromptFeedback
 from response_recorder import ResponseRecorder
 from env import GEMINI_API_KEY, PATH_TO_PUBLIC
-from typing import Union, Tuple, Any, Optional
+from typing import Tuple, Optional
 
 
 RECORD_RESPONSES = True

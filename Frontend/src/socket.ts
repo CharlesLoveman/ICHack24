@@ -82,7 +82,4 @@ export interface ServerToClientEvents {
 
 export const socket = io(backendAddress, {
   withCredentials: true,
-  extraHeaders: {
-    "my-custom-header": "abcd",
-  },
 }) as Socket<ServerToClientEvents, ClientToServerEvents>;

@@ -1,5 +1,3 @@
-import PIL
-
 from .errormon import ErrormonException
 from .pokemon import Pokemon, delete_pokemon
 from .pokemon_utils import generate_pokemon

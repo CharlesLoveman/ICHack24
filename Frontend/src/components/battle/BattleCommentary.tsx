@@ -2,7 +2,7 @@ import { Card, CardContent } from "@mui/material";
 import { useState } from "react";
 import styled from "styled-components";
 import { RightAlignedContainer } from "../layout/RightAlignedContainer";
-import { DownArrowButton } from "../layout/DownArrowButton";
+import { DownArrowButton } from "../button/DownArrowButton";
 
 const CommentaryContainer = styled.div`
   display: flex;

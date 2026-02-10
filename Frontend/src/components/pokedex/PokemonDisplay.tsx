@@ -2,30 +2,8 @@ import { Card, CardHeader } from "@mui/material";
 import { IPokemon } from "../../sharedTypes";
 import { assetsFolder } from "../../env";
 import styled from "styled-components";
-import { darkGrey } from "../../utils/colors";
 import { PokemonTypeContainer } from "./PokemonCard";
-
-export const Bar = styled.div`
-  background-color: ${darkGrey};
-  height: 0.5rem;
-  padding: 0.3rem;
-  width: 15rem;
-  z-index: 100;
-  position: relative;
-`;
-
-export interface HealthProps {
-  $hp: number;
-  $maxHp: number;
-}
-
-export const Health = styled.div<HealthProps>`
-  background-color: #59b859;
-  height: 0.5rem;
-  width: ${(props) => (props.$hp / props.$maxHp) * 15}rem;
-  z-index: 100;
-  position: relative;
-`;
+import { FilledBar } from "../layout/FilledBar";
 
 const RightPokemonTypeContainer = styled(PokemonTypeContainer)`
   text-align: right;
@@ -81,9 +59,7 @@ export default function PokemonDisplay(
         style={{ padding: 0, margin: 0 }}
       ></CardHeader>
       {hp + "/" + maxHp}
-      <Bar>
-        <Health $maxHp={maxHp} $hp={hp}></Health>
-      </Bar>
+      <FilledBar hp={hp} maxHp={maxHp}></FilledBar>
     </Card>
   );
 

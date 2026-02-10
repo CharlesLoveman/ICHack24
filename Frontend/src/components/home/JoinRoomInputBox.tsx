@@ -2,7 +2,7 @@ import { useState } from "react";
 import { socket } from "../../socket";
 import { GiBattleAxe } from "react-icons/gi";
 import { PlayerJoinBattleData, IPokemon } from "../../sharedTypes";
-import { LongButton } from "../layout/LongButton";
+import { LongButton } from "../button/LongButton";
 import { LongInput } from "../layout/LongInput";
 import styled from "styled-components";
 import { useGlobalData } from "../../hooks/useGlobalData";

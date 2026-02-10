@@ -11,7 +11,7 @@ import styled from "styled-components";
 import { lightGrey } from "../../utils/colors";
 import { socket } from "../../socket";
 import { useState } from "react";
-import { DownArrowButton } from "../layout/DownArrowButton";
+import { DownArrowButton } from "../button/DownArrowButton";
 
 interface PokemonCardProps {
   pokemon: IPokemon;

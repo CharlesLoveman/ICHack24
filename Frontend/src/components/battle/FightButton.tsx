@@ -1,5 +1,5 @@
 import { FooterContainer } from "../layout/FooterContainer";
-import { LongButton } from "../layout/LongButton";
+import { LongButton } from "../button/LongButton";
 
 export function FightButton({
   isChoosingMove,

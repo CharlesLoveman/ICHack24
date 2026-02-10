@@ -3,7 +3,6 @@ from .api import GeminiError, build_pokemon
 from .pokemon import Pokemon
 from .db import (
     add_pokemon_to_user,
-    players_collection,
 )
 
 

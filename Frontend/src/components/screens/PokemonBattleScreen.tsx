@@ -110,7 +110,7 @@ export default function PokemonBattleScreen() {
       <Title>Battle - {params.game_id}</Title>
       {!isChoosingMove ? (
         <PokemonBattleScreenContainer
-          $path={assetsFolder + "/" + "background_temp_leeched.webp"}
+          $path={assetsFolder + "/" + "background.webp"}
         >
           <ScrollableMain>
             <PokemonBattleDisplay
