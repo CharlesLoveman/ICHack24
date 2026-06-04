@@ -14,7 +14,9 @@ class RealGenerativeModel(GenerativeModel):
     """A concrete implementation of GenerativeModel using Google's Gemini API."""
 
     client = genai.Client(api_key=GEMINI_API_KEY)
-    MODEL_NAME = "gemma-3-27b-it"
+    MODEL_NAME = "gemini-3.1-flash-lite"
+    # MODEL_NAME = "gemma-4-31b-it"
+    # MODEL_NAME = "gemma-3-27b-it"
     # MODEL_NAME = "gemini-2.5-flash-lite"
     # MODEL_NAME = "gemini-1.5-flash"
     # MODEL_NAME = "gemini-2.0-flash"
